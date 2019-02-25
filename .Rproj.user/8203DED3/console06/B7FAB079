@@ -1,0 +1,26 @@
+[KVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ touch gi[K[K.gitignore
+]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ vim .gitignore
+[?2004h]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ ls -a
+.			Data_2310		path_study_viz_2.R
+..			Output			path_study_viz_3.R
+.DS_Store		path_study.R		path_study_viz_4.R
+.Rproj.user		path_study.Rproj	race.jpeg
+.gitignore		path_study_viz_1.R
+]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git init
+Initialized empty Git repository in /Users/vergara-spagnola/Desktop/A3SR/APSTA-2310/path_study/.git/
+]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git remote add '[K'https://github.com /wspagnola/path_study.git'
+usage: git remote add [<options>] <name> <url>
+
+    -f, --fetch           fetch the remote branches
+    --tags                import all tags and associated objects when fetching
+                          or do not fetch any tag at all (--no-tags)
+    -t, --track <branch>  branch(es) to track
+    -m, --master <branch>
+                          master branch
+    --mirror[=<push|fetch>]
+                          set up remote as a mirror to push to or fetch from
+
+]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git remote -v
+]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git remote
+]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git remote -v
+]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git push [K[K[K[K[Kadd .
