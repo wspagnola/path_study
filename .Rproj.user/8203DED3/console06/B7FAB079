@@ -24,3 +24,95 @@ usage: git remote add [<options>] <name> <url>
 ]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git remote
 ]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git remote -v
 ]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git push [K[K[K[K[Kadd .
+]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git commit -m 'First commit'
+[master (root-commit) c5154ca] First commit
+ Committer: Vergara-Spagnola <vergara-spagnola@Vergara-Spagnolas-MacBook-Pro.local>
+Your name and email address were configured automatically based
+on your username and hostname. Please check that they are accurate.
+You can suppress this message by setting them explicitly:
+
+    git config --global user.name "Your Name"
+    git config --global user.email you@example.com
+
+After doing this, you may fix the identity used for this commit with:
+
+    git commit --amend --reset-author
+
+ 32 files changed, 1708 insertions(+)
+ create mode 100644 .DS_Store
+ create mode 100644 .Rproj.user/8203DED3/console06/B7FAB079
+ create mode 100644 .Rproj.user/8203DED3/console06/B7FAB079.env
+ create mode 100644 .Rproj.user/8203DED3/console06/INDEX001
+ create mode 100644 .Rproj.user/8203DED3/pcs/debug-breakpoints.pper
+ create mode 100644 .Rproj.user/8203DED3/pcs/files-pane.pper
+ create mode 100644 .Rproj.user/8203DED3/pcs/source-pane.pper
+ create mode 100644 .Rproj.user/8203DED3/pcs/source-window.pper
+ create mode 100644 .Rproj.user/8203DED3/pcs/windowlayoutstate.pper
+ create mode 100644 .Rproj.user/8203DED3/pcs/workbench-pane.pper
+ create mode 100644 .Rproj.user/8203DED3/rmd-outputs
+ create mode 100644 .Rproj.user/8203DED3/saved_source_markers
+ create mode 100644 .Rproj.user/8203DED3/sources/prop/38966E6B
+ create mode 100644 .Rproj.user/8203DED3/sources/prop/412B3707
+ create mode 100644 .Rproj.user/8203DED3/sources/prop/57218FAD
+ create mode 100644 .Rproj.user/8203DED3/sources/prop/667B8594
+ create mode 100644 .Rproj.user/8203DED3/sources/prop/9F19DFB2
+ create mode 100644 .Rproj.user/8203DED3/sources/prop/CEA517F
+ create mode 100644 .Rproj.user/8203DED3/sources/prop/DF22FB9A
+ create mode 100644 .Rproj.user/8203DED3/sources/prop/INDEX
+ create mode 100644 .Rproj.user/8203DED3/sources/s-C4D99626/lock_file
+ create mode 100644 .Rproj.user/shared/notebooks/patch-chunk-names
+ create mode 100644 .Rproj.user/shared/notebooks/paths
+ create mode 100644 .gitignore
+ create mode 100644 Data_2310/.DS_Store
+ create mode 100644 Output/.DS_Store
+ create mode 100644 path_study.R
+ create mode 100644 path_study.Rproj
+ create mode 100644 path_study_viz_1.R
+ create mode 100644 path_study_viz_2.R
+ create mode 100644 path_study_viz_3.R
+ create mode 100644 path_study_viz_4.R
+]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git push 
+fatal: No configured push destination.
+Either specify the URL from the command-line or configure a remote repository using
+
+    git remote add <name> <url>
+
+and then push using the remote name
+
+    git push <name>
+
+]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git init
+Reinitialized existing Git repository in /Users/vergara-spagnola/Desktop/A3SR/APSTA-2310/path_study/.git/
+]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git remote add https://github.com/ wspagnola/path_study.git
+usage: git remote add [<options>] <name> <url>
+
+    -f, --fetch           fetch the remote branches
+    --tags                import all tags and associated objects when fetching
+                          or do not fetch any tag at all (--no-tags)
+    -t, --track <branch>  branch(es) to track
+    -m, --master <branch>
+                          master branch
+    --mirror[=<push|fetch>]
+                          set up remote as a mirror to push to or fetch from
+
+]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git remote add master https://gith ub.com/wspagnola/path_study.git
+]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git remote -v
+master	https://github.com/wspagnola/path_study.git (fetch)
+master	https://github.com/wspagnola/path_study.git (push)
+]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git push
+fatal: No configured push destination.
+Either specify the URL from the command-line or configure a remote repository using
+
+    git remote add <name> <url>
+
+and then push using the remote name
+
+    git push <name>
+
+]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ ig[K[Kgit push master branch
+error: src refspec branch does not match any.
+error: failed to push some refs to 'https://github.com/wspagnola/path_study.git'
+]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git remote -v
+master	https://github.com/wspagnola/path_study.git (fetch)
+master	https://github.com/wspagnola/path_study.git (push)
+]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ ig[K[Kgit add .
