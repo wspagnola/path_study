@@ -1,298 +1,0 @@
-[KVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ touch gi[K[K.gitignore
-]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ vim .gitignore
-[?2004h]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ ls -a
-.			Data_2310		path_study_viz_2.R
-..			Output			path_study_viz_3.R
-.DS_Store		path_study.R		path_study_viz_4.R
-.Rproj.user		path_study.Rproj	race.jpeg
-.gitignore		path_study_viz_1.R
-]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git init
-Initialized empty Git repository in /Users/vergara-spagnola/Desktop/A3SR/APSTA-2310/path_study/.git/
-]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git remote add '[K'https://github.com /wspagnola/path_study.git'
-usage: git remote add [<options>] <name> <url>
-
-    -f, --fetch           fetch the remote branches
-    --tags                import all tags and associated objects when fetching
-                          or do not fetch any tag at all (--no-tags)
-    -t, --track <branch>  branch(es) to track
-    -m, --master <branch>
-                          master branch
-    --mirror[=<push|fetch>]
-                          set up remote as a mirror to push to or fetch from
-
-]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git remote -v
-]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git remote
-]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git remote -v
-]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git push [K[K[K[K[Kadd .
-]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git commit -m 'First commit'
-[master (root-commit) c5154ca] First commit
- Committer: Vergara-Spagnola <vergara-spagnola@Vergara-Spagnolas-MacBook-Pro.local>
-Your name and email address were configured automatically based
-on your username and hostname. Please check that they are accurate.
-You can suppress this message by setting them explicitly:
-
-    git config --global user.name "Your Name"
-    git config --global user.email you@example.com
-
-After doing this, you may fix the identity used for this commit with:
-
-    git commit --amend --reset-author
-
- 32 files changed, 1708 insertions(+)
- create mode 100644 .DS_Store
- create mode 100644 .Rproj.user/8203DED3/console06/B7FAB079
- create mode 100644 .Rproj.user/8203DED3/console06/B7FAB079.env
- create mode 100644 .Rproj.user/8203DED3/console06/INDEX001
- create mode 100644 .Rproj.user/8203DED3/pcs/debug-breakpoints.pper
- create mode 100644 .Rproj.user/8203DED3/pcs/files-pane.pper
- create mode 100644 .Rproj.user/8203DED3/pcs/source-pane.pper
- create mode 100644 .Rproj.user/8203DED3/pcs/source-window.pper
- create mode 100644 .Rproj.user/8203DED3/pcs/windowlayoutstate.pper
- create mode 100644 .Rproj.user/8203DED3/pcs/workbench-pane.pper
- create mode 100644 .Rproj.user/8203DED3/rmd-outputs
- create mode 100644 .Rproj.user/8203DED3/saved_source_markers
- create mode 100644 .Rproj.user/8203DED3/sources/prop/38966E6B
- create mode 100644 .Rproj.user/8203DED3/sources/prop/412B3707
- create mode 100644 .Rproj.user/8203DED3/sources/prop/57218FAD
- create mode 100644 .Rproj.user/8203DED3/sources/prop/667B8594
- create mode 100644 .Rproj.user/8203DED3/sources/prop/9F19DFB2
- create mode 100644 .Rproj.user/8203DED3/sources/prop/CEA517F
- create mode 100644 .Rproj.user/8203DED3/sources/prop/DF22FB9A
- create mode 100644 .Rproj.user/8203DED3/sources/prop/INDEX
- create mode 100644 .Rproj.user/8203DED3/sources/s-C4D99626/lock_file
- create mode 100644 .Rproj.user/shared/notebooks/patch-chunk-names
- create mode 100644 .Rproj.user/shared/notebooks/paths
- create mode 100644 .gitignore
- create mode 100644 Data_2310/.DS_Store
- create mode 100644 Output/.DS_Store
- create mode 100644 path_study.R
- create mode 100644 path_study.Rproj
- create mode 100644 path_study_viz_1.R
- create mode 100644 path_study_viz_2.R
- create mode 100644 path_study_viz_3.R
- create mode 100644 path_study_viz_4.R
-]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git push 
-fatal: No configured push destination.
-Either specify the URL from the command-line or configure a remote repository using
-
-    git remote add <name> <url>
-
-and then push using the remote name
-
-    git push <name>
-
-]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git init
-Reinitialized existing Git repository in /Users/vergara-spagnola/Desktop/A3SR/APSTA-2310/path_study/.git/
-]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git remote add https://github.com/ wspagnola/path_study.git
-usage: git remote add [<options>] <name> <url>
-
-    -f, --fetch           fetch the remote branches
-    --tags                import all tags and associated objects when fetching
-                          or do not fetch any tag at all (--no-tags)
-    -t, --track <branch>  branch(es) to track
-    -m, --master <branch>
-                          master branch
-    --mirror[=<push|fetch>]
-                          set up remote as a mirror to push to or fetch from
-
-]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git remote add master https://gith ub.com/wspagnola/path_study.git
-]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git remote -v
-master	https://github.com/wspagnola/path_study.git (fetch)
-master	https://github.com/wspagnola/path_study.git (push)
-]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git push
-fatal: No configured push destination.
-Either specify the URL from the command-line or configure a remote repository using
-
-    git remote add <name> <url>
-
-and then push using the remote name
-
-    git push <name>
-
-]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ ig[K[Kgit push master branch
-error: src refspec branch does not match any.
-error: failed to push some refs to 'https://github.com/wspagnola/path_study.git'
-]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git remote -v
-master	https://github.com/wspagnola/path_study.git (fetch)
-master	https://github.com/wspagnola/path_study.git (push)
-]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ ig[K[Kgit add .
-]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git commit -m 'first f[Kcommit'
-[master dbed7f5] first commit
- Committer: Vergara-Spagnola <vergara-spagnola@Vergara-Spagnolas-MacBook-Pro.local>
-Your name and email address were configured automatically based
-on your username and hostname. Please check that they are accurate.
-You can suppress this message by setting them explicitly:
-
-    git config --global user.name "Your Name"
-    git config --global user.email you@example.com
-
-After doing this, you may fix the identity used for this commit with:
-
-    git commit --amend --reset-author
-
- 1 file changed, 92 insertions(+)
-]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ gith p[K[K[K push master b[K[K[K[K[K[K[Kaster
-fatal: The current branch master has no upstream branch.
-To push the current branch and set the remote as upstream, use
-
-    git push --set-upstream master master
-
-]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git push master master
-To https://github.com/wspagnola/path_study.git
- ! [rejected]        master -> master (fetch first)
-error: failed to push some refs to 'https://github.com/wspagnola/path_study.git'
-hint: Updates were rejected because the remote contains work that you do
-hint: not have locally. This is usually caused by another repository pushing
-hint: to the same ref. You may want to first integrate the remote changes
-hint: (e.g., 'git pull ...') before pushing again.
-hint: See the 'Note about fast-forwards' in 'git push --help' for details.
-]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ gir rm[K[K[K[Kt rm read.[K[K[K[K[KREADME.md
-fatal: pathspec 'README.md' did not match any files
-]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ ls
-Data_2310		path_study.Rproj	path_study_viz_3.R
-Output			path_study_viz_1.R	path_study_viz_4.R
-path_study.R		path_study_viz_2.R	race.jpeg
-]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git remote -v
-master	https://github.com/wspagnola/path_study.git (fetch)
-master	https://github.com/wspagnola/path_study.git (push)
-]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git remote -v
-master	https://github.com/wspagnola/path_study.git (fetch)
-master	https://github.com/wspagnola/path_study.git (push)
-]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git add .
-]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git commit -m 'first f[Kcommit'
-[master 70d0e54] first commit
- Committer: Vergara-Spagnola <vergara-spagnola@Vergara-Spagnolas-MacBook-Pro.local>
-Your name and email address were configured automatically based
-on your username and hostname. Please check that they are accurate.
-You can suppress this message by setting them explicitly:
-
-    git config --global user.name "Your Name"
-    git config --global user.email you@example.com
-
-After doing this, you may fix the identity used for this commit with:
-
-    git commit --amend --reset-author
-
- 1 file changed, 44 insertions(+), 1 deletion(-)
-]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git push
-fatal: No configured push destination.
-Either specify the URL from the command-line or configure a remote repository using
-
-    git remote add <name> <url>
-
-and then push using the remote name
-
-    git push <name>
-
-]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ re[K[Kgit remote add https://github.com/ wspagnola/path_study.git
-usage: git remote add [<options>] <name> <url>
-
-    -f, --fetch           fetch the remote branches
-    --tags                import all tags and associated objects when fetching
-                          or do not fetch any tag at all (--no-tags)
-    -t, --track <branch>  branch(es) to track
-    -m, --master <branch>
-                          master branch
-    --mirror[=<push|fetch>]
-                          set up remote as a mirror to push to or fetch from
-
-]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git remov[Kte -v
-master	https://github.com/wspagnola/path_study.git (fetch)
-master	https://github.com/wspagnola/path_study.git (push)
-]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git remote[K[K[K[K[K[Kinit
-Reinitialized existing Git repository in /Users/vergara-spagnola/Desktop/A3SR/APSTA-2310/path_study/.git/
-]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git remote 0v[K[K-v
-master	https://github.com/wspagnola/path_study.git (fetch)
-master	https://github.com/wspagnola/path_study.git (push)
-]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git remote add origin [K[Kn https://gith ub.com/wspagnola/path_study.git
-]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git remote -v
-master	https://github.com/wspagnola/path_study.git (fetch)
-master	https://github.com/wspagnola/path_study.git (push)
-origin	https://github.com/wspagnola/path_study.git (fetch)
-origin	https://github.com/wspagnola/path_study.git (push)
-]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$  git remote rm master
-]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git remote -v
-origin	https://github.com/wspagnola/path_study.git (fetch)
-origin	https://github.com/wspagnola/path_study.git (push)
-]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git add .
-]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git commit -m 'first commit'
-[master d2e4b7a] first commit
- Committer: Vergara-Spagnola <vergara-spagnola@Vergara-Spagnolas-MacBook-Pro.local>
-Your name and email address were configured automatically based
-on your username and hostname. Please check that they are accurate.
-You can suppress this message by setting them explicitly:
-
-    git config --global user.name "Your Name"
-    git config --global user.email you@example.com
-
-After doing this, you may fix the identity used for this commit with:
-
-    git commit --amend --reset-author
-
- 1 file changed, 56 insertions(+)
-]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git push origin master
-Counting objects: 60, done.
-Delta compression using up to 4 threads.
-Compressing objects:   1% (1/53)   Compressing objects:   3% (2/53)   Compressing objects:   5% (3/53)   Compressing objects:   7% (4/53)   Compressing objects:   9% (5/53)   Compressing objects:  11% (6/53)   Compressing objects:  13% (7/53)   Compressing objects:  15% (8/53)   Compressing objects:  16% (9/53)   Compressing objects:  18% (10/53)   Compressing objects:  20% (11/53)   Compressing objects:  22% (12/53)   Compressing objects:  24% (13/53)   Compressing objects:  26% (14/53)   Compressing objects:  28% (15/53)   Compressing objects:  30% (16/53)   Compressing objects:  32% (17/53)   Compressing objects:  33% (18/53)   Compressing objects:  35% (19/53)   Compressing objects:  37% (20/53)   Compressing objects:  39% (21/53)   Compressing objects:  41% (22/53)   Compressing objects:  43% (23/53)   Compressing objects:  45% (24/53)   Compressing objects:  47% (25/53)   Compressing objects:  49% (26/53)   Compressing objects:  50% (27/53)   Compressing objects:  52% (28/53)   Compressing objects:  54% (29/53)   Compressing objects:  56% (30/53)   Compressing objects:  58% (31/53)   Compressing objects:  60% (32/53)   Compressing objects:  62% (33/53)   Compressing objects:  64% (34/53)   Compressing objects:  66% (35/53)   Compressing objects:  67% (36/53)   Compressing objects:  69% (37/53)   Compressing objects:  71% (38/53)   Compressing objects:  73% (39/53)   Compressing objects:  75% (40/53)   Compressing objects:  77% (41/53)   Compressing objects:  79% (42/53)   Compressing objects:  81% (43/53)   Compressing objects:  83% (44/53)   Compressing objects:  84% (45/53)   Compressing objects:  86% (46/53)   Compressing objects:  88% (47/53)   Compressing objects:  90% (48/53)   Compressing objects:  92% (49/53)   Compressing objects:  94% (50/53)   Compressing objects:  96% (51/53)   Compressing objects:  98% (52/53)   Compressing objects: 100% (53/53)   Compressing objects: 100% (53/53), done.
-Writing objects:   1% (1/60)   Writing objects:   3% (2/60)   Writing objects:   5% (3/60)   Writing objects:   6% (4/60)   Writing objects:   8% (5/60)   Writing objects:  11% (7/60)   Writing objects:  13% (8/60)   Writing objects:  15% (9/60)   Writing objects:  16% (10/60)   Writing objects:  18% (11/60)   Writing objects:  20% (12/60)   Writing objects:  21% (13/60)   Writing objects:  23% (14/60)   Writing objects:  25% (15/60)   Writing objects:  26% (16/60)   Writing objects:  28% (17/60)   Writing objects:  30% (18/60)   Writing objects:  31% (19/60)   Writing objects:  33% (20/60)   Writing objects:  35% (21/60)   Writing objects:  36% (22/60)   Writing objects:  38% (23/60)   Writing objects:  40% (24/60)   Writing objects:  41% (25/60)   Writing objects:  43% (26/60)   Writing objects:  45% (27/60)   Writing objects:  46% (28/60)   Writing objects:  48% (29/60)   Writing objects:  50% (30/60)   Writing objects:  51% (31/60)   Writing objects:  53% (32/60)   Writing objects:  55% (33/60)   Writing objects:  56% (34/60)   Writing objects:  58% (35/60)   Writing objects:  60% (36/60)   Writing objects:  61% (37/60)   Writing objects:  63% (38/60)   Writing objects:  65% (39/60)   Writing objects:  66% (40/60)   Writing objects:  68% (41/60)   Writing objects:  70% (42/60)   Writing objects:  71% (43/60)   Writing objects:  73% (44/60)   Writing objects:  75% (45/60)   Writing objects:  76% (46/60)   Writing objects:  78% (47/60)   Writing objects:  80% (48/60)   Writing objects:  81% (49/60)   Writing objects:  83% (50/60)   Writing objects:  85% (51/60)   Writing objects:  86% (52/60)   Writing objects:  88% (53/60)   Writing objects:  90% (54/60)   Writing objects:  91% (55/60)   Writing objects:  93% (56/60)   Writing objects:  95% (57/60)   Writing objects:  96% (58/60)   Writing objects:  98% (59/60)   Writing objects: 100% (60/60)   Writing objects: 100% (60/60), 19.81 KiB | 184.00 KiB/s, done.
-Total 60 (delta 12), reused 0 (delta 0)
-remote: Resolving deltas:   0% (0/12)   [Kremote: Resolving deltas:   8% (1/12)   [Kremote: Resolving deltas:  33% (4/12)   [Kremote: Resolving deltas:  41% (5/12)   [Kremote: Resolving deltas:  66% (8/12)   [Kremote: Resolving deltas:  91% (11/12)   [Kremote: Resolving deltas: 100% (12/12)   [Kremote: Resolving deltas: 100% (12/12), done.[K
-To https://github.com/wspagnola/path_study.git
- * [new branch]      master -> master
-]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git status
-On branch master
-Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git checkout -- <file>..." to discard changes in working directory)
-
-	[31mmodified:   .Rproj.user/8203DED3/console06/B7FAB079[m
-
-no changes added to commit (use "git add" and/or "git commit -a")
-]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git push
-fatal: The current branch master has no upstream branch.
-To push the current branch and set the remote as upstream, use
-
-    git push --set-upstream origin master
-
-]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git add .
-]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git commit -m '2[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[Kgit puh[Ks[K[K[K[K[K[K[Kgit add .
-
-]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git status
-On branch master
-Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git checkout -- <file>..." to discard changes in working directory)
-
-	[31mmodified:   .Rproj.user/8203DED3/console06/B7FAB079[m
-
-no changes added to commit (use "git add" and/or "git commit -a")
-]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git add .Rproj.user/8203DED3/conso le06/B7FAB079]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git status
-On branch master
-Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git checkout -- <file>..." to discard changes in working directory)
-
-	[31mmodified:   .Rproj.user/8203DED3/console06/B7FAB079[m
-
-no changes added to commit (use "git add" and/or "git commit -a")
-]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ g[Kvim .gitignore.git
-[?2004h]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ lst [K[K -a
-.			.gitignore		path_study_viz_1.R
-..			Data_2310		path_study_viz_2.R
-.DS_Store		Output			path_study_viz_3.R
-.Rproj.user		path_study.R		path_study_viz_4.R
-.git			path_study.Rproj	race.jpeg
-]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ vimt .gitignore
-bash: vimt: command not found
-]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ vim .gitignore
-[?2004h]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ ls -a
-.			.gitignore		path_study_viz_1.R
-..			Data_2310		path_study_viz_2.R
-.DS_Store		Output			path_study_viz_3.R
-.Rproj.user		path_study.R		path_study_viz_4.R
-.git			path_study.Rproj	race.jpeg
-]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ rm .git
-rm: .git: is a directory
-]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git remote rm .Rproj.user
-fatal: No such remote: .Rproj.user
-]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git aa[Kdd .
