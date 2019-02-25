@@ -266,4 +266,33 @@ Changes not staged for commit:
 	[31mmodified:   .Rproj.user/8203DED3/console06/B7FAB079[m
 
 no changes added to commit (use "git add" and/or "git commit -a")
-]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git add .Rproj.user/8203DED3/conso le06/B7FAB079
+]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git add .Rproj.user/8203DED3/conso le06/B7FAB079]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git status
+On branch master
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
+
+	[31mmodified:   .Rproj.user/8203DED3/console06/B7FAB079[m
+
+no changes added to commit (use "git add" and/or "git commit -a")
+]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ g[Kvim .gitignore.git
+[?2004h]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ lst [K[K -a
+.			.gitignore		path_study_viz_1.R
+..			Data_2310		path_study_viz_2.R
+.DS_Store		Output			path_study_viz_3.R
+.Rproj.user		path_study.R		path_study_viz_4.R
+.git			path_study.Rproj	race.jpeg
+]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ vimt .gitignore
+bash: vimt: command not found
+]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ vim .gitignore
+[?2004h]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ ls -a
+.			.gitignore		path_study_viz_1.R
+..			Data_2310		path_study_viz_2.R
+.DS_Store		Output			path_study_viz_3.R
+.Rproj.user		path_study.R		path_study_viz_4.R
+.git			path_study.Rproj	race.jpeg
+]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ rm .git
+rm: .git: is a directory
+]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git remote rm .Rproj.user
+fatal: No such remote: .Rproj.user
+]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git aa[Kdd .
