@@ -159,3 +159,59 @@ master	https://github.com/wspagnola/path_study.git (push)
 master	https://github.com/wspagnola/path_study.git (fetch)
 master	https://github.com/wspagnola/path_study.git (push)
 ]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git add .
+]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git commit -m 'first f[Kcommit'
+[master 70d0e54] first commit
+ Committer: Vergara-Spagnola <vergara-spagnola@Vergara-Spagnolas-MacBook-Pro.local>
+Your name and email address were configured automatically based
+on your username and hostname. Please check that they are accurate.
+You can suppress this message by setting them explicitly:
+
+    git config --global user.name "Your Name"
+    git config --global user.email you@example.com
+
+After doing this, you may fix the identity used for this commit with:
+
+    git commit --amend --reset-author
+
+ 1 file changed, 44 insertions(+), 1 deletion(-)
+]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git push
+fatal: No configured push destination.
+Either specify the URL from the command-line or configure a remote repository using
+
+    git remote add <name> <url>
+
+and then push using the remote name
+
+    git push <name>
+
+]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ re[K[Kgit remote add https://github.com/ wspagnola/path_study.git
+usage: git remote add [<options>] <name> <url>
+
+    -f, --fetch           fetch the remote branches
+    --tags                import all tags and associated objects when fetching
+                          or do not fetch any tag at all (--no-tags)
+    -t, --track <branch>  branch(es) to track
+    -m, --master <branch>
+                          master branch
+    --mirror[=<push|fetch>]
+                          set up remote as a mirror to push to or fetch from
+
+]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git remov[Kte -v
+master	https://github.com/wspagnola/path_study.git (fetch)
+master	https://github.com/wspagnola/path_study.git (push)
+]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git remote[K[K[K[K[K[Kinit
+Reinitialized existing Git repository in /Users/vergara-spagnola/Desktop/A3SR/APSTA-2310/path_study/.git/
+]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git remote 0v[K[K-v
+master	https://github.com/wspagnola/path_study.git (fetch)
+master	https://github.com/wspagnola/path_study.git (push)
+]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git remote add origin [K[Kn https://gith ub.com/wspagnola/path_study.git
+]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git remote -v
+master	https://github.com/wspagnola/path_study.git (fetch)
+master	https://github.com/wspagnola/path_study.git (push)
+origin	https://github.com/wspagnola/path_study.git (fetch)
+origin	https://github.com/wspagnola/path_study.git (push)
+]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$  git remote rm master
+]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git remote -v
+origin	https://github.com/wspagnola/path_study.git (fetch)
+origin	https://github.com/wspagnola/path_study.git (push)
+]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git add .
