@@ -116,3 +116,46 @@ error: failed to push some refs to 'https://github.com/wspagnola/path_study.git'
 master	https://github.com/wspagnola/path_study.git (fetch)
 master	https://github.com/wspagnola/path_study.git (push)
 ]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ ig[K[Kgit add .
+]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git commit -m 'first f[Kcommit'
+[master dbed7f5] first commit
+ Committer: Vergara-Spagnola <vergara-spagnola@Vergara-Spagnolas-MacBook-Pro.local>
+Your name and email address were configured automatically based
+on your username and hostname. Please check that they are accurate.
+You can suppress this message by setting them explicitly:
+
+    git config --global user.name "Your Name"
+    git config --global user.email you@example.com
+
+After doing this, you may fix the identity used for this commit with:
+
+    git commit --amend --reset-author
+
+ 1 file changed, 92 insertions(+)
+]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ gith p[K[K[K push master b[K[K[K[K[K[K[Kaster
+fatal: The current branch master has no upstream branch.
+To push the current branch and set the remote as upstream, use
+
+    git push --set-upstream master master
+
+]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git push master master
+To https://github.com/wspagnola/path_study.git
+ ! [rejected]        master -> master (fetch first)
+error: failed to push some refs to 'https://github.com/wspagnola/path_study.git'
+hint: Updates were rejected because the remote contains work that you do
+hint: not have locally. This is usually caused by another repository pushing
+hint: to the same ref. You may want to first integrate the remote changes
+hint: (e.g., 'git pull ...') before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ gir rm[K[K[K[Kt rm read.[K[K[K[K[KREADME.md
+fatal: pathspec 'README.md' did not match any files
+]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ ls
+Data_2310		path_study.Rproj	path_study_viz_3.R
+Output			path_study_viz_1.R	path_study_viz_4.R
+path_study.R		path_study_viz_2.R	race.jpeg
+]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git remote -v
+master	https://github.com/wspagnola/path_study.git (fetch)
+master	https://github.com/wspagnola/path_study.git (push)
+]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git remote -v
+master	https://github.com/wspagnola/path_study.git (fetch)
+master	https://github.com/wspagnola/path_study.git (push)
+]0;~/Desktop/A3SR/APSTA-2310/path_studyVergara-Spagnolas-MacBook-Pro:path_study vergara-spagnola$ git add .
