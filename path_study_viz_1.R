@@ -83,7 +83,7 @@ adult_panel %>%
 ggsave('Figures/Panel_2_Age_Barplot.png', width = 8)
 
 
-#### RACE BARPLOT (PANEL)  (####
+#### RACE BARPLOT (PANEL) ####
 adult_panel %>% 
   prep_panel_data(w1 = 'race_w1', w2 = 'race_w2', label = 'Race') %>% 
   ggplot(aes(x = Race, y = n, fill = Race)) +
@@ -143,7 +143,7 @@ adult_panel %>%
   geom_col(color = 'black', 
            width = 0.4,
            position = position_dodge()) +
-  ggtitle("Income Distribution (Waves 1 and 2)") +
+  ggtitle("Income Distribution Across Waves 1 and 2") +
   scale_x_discrete(labels = c("Less than $25,000", "$25,000 to $49,999",
                               "$50,000 to $99,999", "More than $100,000")) +
   scale_y_continuous(breaks = seq(0, 14000, 2000),
@@ -173,7 +173,7 @@ adult_panel %>%
     scale_fill_discrete(labels = c('Wave 1', 'Wave 2') ) +
     xlab(NULL) +
     my_theme_panel
-ggsave('Figures/Panel_2_Sexual_Orientation_Barplot.png')
+ggsave('Figures/Panel_2_Sexual_Orientation_Barplot.png', width = 6)
 
 
 #### SMOKING STATUS BARPLOT (PANEL) ####
