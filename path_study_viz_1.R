@@ -175,7 +175,6 @@ adult_panel %>%
     my_theme_panel
 ggsave('Figures/Panel_2_Sexual_Orientation_Barplot.png', width = 6)
 
-
 #### SMOKING STATUS BARPLOT (PANEL) ####
 adult_panel %>% 
   prep_panel_data(w1 = 'smoking_status_w1', 
@@ -197,10 +196,63 @@ adult_panel %>%
   my_theme_panel
 ggsave('Figures/Panel_2_Smoking_Status_Barplot.png', width = 6)
 
-unique(adult_panel$smoking_status_w1)
-unique(adult_panel$smoking_status_w2)
-levels(adult_panel$smoking_status_w2)
-#### SMOKING STATUS BARPLOT (W1) ####
+#### PSYCHOLOGICAL DISTRESS BARPLOT (PANEL) ####
+adult_panel %>% 
+  prep_panel_data(w1 = 'psychdist_w1', 
+                  w2 = 'psychdist_w2', 
+                  label = 'Psych_Dist') %>% 
+  ggplot(aes(x = Wave, y = n, fill = as.factor(Psych_Dist))) +
+  geom_col(color = 'black', 
+           width = 0.4,
+           position = position_dodge()) +
+  scale_x_discrete(labels = c('Wave 1', 
+                              'Wave 2')) +
+  scale_y_continuous(expand = c(0, 0),
+                     breaks=seq(0,24000,2000), 
+                     limits = c(0, 24000)) +
+  scale_fill_discrete(labels = c('Not Distressed', 'Distressed') ) +
+  ggtitle("Psychological Distress* Across Waves 1 & 2") +
+  xlab('*Felt Sad and/or Anxious in Past Month') +
+  my_theme_panel +
+  theme(axis.title.x = element_text(face = 'italic',size = 6))
+ggsave('Figures/Panel_2_Psychological_Distress_Barplot.png')
+
+#### POVERTY BARPLOT (W1) ####
+adult_w1 %>% 
+  drop_na(poverty_w1) %>% 
+  group_by(poverty_w1) %>% 
+  count() %>% 
+  ggplot(aes(x = poverty_w1, y = n, fill = poverty_w1)) +
+  geom_col(color = 'black', width = .3) +
+  ggtitle("Poverty Status (Wave 1)") +
+  scale_x_discrete(labels = c('Below Poverty Level',
+                              'Above Poverty Level')) +
+  scale_y_continuous(breaks = seq(0, 20000, 2000),
+                     limits = c(0,20000),
+                     expand = c(0, 0)) +
+  xlab(NULL) +
+  my_theme_wave
+ggsave('Figures/W1_Poverty_Barplot.png', width = 4)
+
+#### REGION BARPLOT (W1)  #####
+adult_w1 %>% 
+  drop_na(region_w1) %>% 
+  group_by(region_w1) %>% 
+  count() %>% 
+  ggplot(aes(x = region_w1, y = n, fill = region_w1)) +
+  geom_col(color = 'black', width = .75) +
+  ggtitle("Census Region (Wave 1)") +
+  scale_x_discrete(labels = c('North', 'Midwest', 'South', 'West')) +
+  scale_y_continuous(breaks = seq(0, 14000, 2000),
+                     limits = c(0, 14000),
+                     expand = c(0, 0)) +
+  xlab(NULL) +
+  my_theme_wave
+ggsave('Figures/W1_Region_Barplot.png')
+
+#### Wave 1 Barplots ####
+
+# SMOKING STATUS BARPLOT (W1) 
 smoking_status_table  %>%  
   drop_na(smoking_status) %>% 
   ggplot(aes(x = smoking_status, y = n, fill= smoking_status)) +
@@ -213,7 +265,7 @@ smoking_status_table  %>%
   xlab(NULL) +
   ggtitle('Smoking Status')
 
-#### GENDER BARPLOT (W1) ####
+# GENDER BARPLOT (W1)
 adult_w1 %>% 
   group_by(gender_w1) %>% 
   count() %>%  
@@ -229,10 +281,10 @@ adult_w1 %>%
     xlab(NULL) +
     my_theme_wave
 
-#### AGE BARPLOT (W1) ####
+# AGE BARPLOT (W1)
 adult_w1 %>% 
-  drop_na(age) %>% 
-  ggplot(aes(x = age, fill = age)) +
+  drop_na(age_w1) %>% 
+  ggplot(aes(x = age_w1, fill = age_w1)) +
   geom_bar(color = 'black') +
   ggtitle('Age (Wave 1)') + 
   scale_x_discrete(labels = c('18 to 34',
@@ -242,36 +294,36 @@ adult_w1 %>%
                      limits = c(0, 16000),
                      expand = c(0, 0)) +
   xlab(NULL) +
-  my_theme
+  my_theme_wave
 
-#### RACE BARPLOT (W1) ####
+# RACE BARPLOT (W1) 
 adult_w1 %>% 
   drop_na(race) %>% 
-  ggplot(aes(x = race, fill = race )) +
+  ggplot(aes(x = race_W1, fill = race_w1)) +
   geom_bar(color = 'black') +
   ggtitle("Race of Respondents (Wave 1)") +
   scale_y_continuous(breaks = seq(0, 24000, 2000),
                      limits = c(0, 24000),
                      expand = c(0, 0)) +
   xlab(NULL) +
-  my_theme
+  my_theme_wave
 
-#### HISPANIC BARPLOT (W1) ####
+# HISPANIC BARPLOT (W1) 
 adult_w1 %>% 
-  drop_na(hispanic) %>% 
-  ggplot(aes(x = hispanic, fill = hispanic )) +
+  drop_na(hispanic_w1) %>% 
+  ggplot(aes(x = hispanic_w1, fill = hispanic_w1)) +
   geom_bar(color = 'black') +
   ggtitle("Hispanic (Wave 1)") +
   scale_y_continuous(breaks = seq(0, 28000, 2000),
                      limits = c(0, 28000),
                      expand = c(0, 0)) +
   xlab(NULL) +
-  my_theme
+  my_theme_wave
 
-#### EDUCATION BARPLOT (W1) ####
+# EDUCATION BARPLOT (W1) 
 adult_w1 %>% 
-  drop_na(education) %>% 
-  ggplot(aes(x = education, fill = education )) +
+  drop_na(education_w1) %>% 
+  ggplot(aes(x = education_w1, fill = education_w1)) +
   geom_bar(color = 'black') +
   ggtitle("Education (Wave 1)") +
   scale_x_discrete(labels = c("Less than High School", "High School", 
@@ -280,12 +332,12 @@ adult_w1 %>%
                      limits = c(0, 12000),
                      expand = c(0, 0)) +
   xlab(NULL) +
-  my_theme
+  my_theme_wave
 
-#### INCOME BARPLOT (W1) ####
+# INCOME BARPLOT (W1) 
 adult_w1 %>% 
-  drop_na(income) %>% 
-  ggplot(aes(x = income, fill = income)) +
+  drop_na(income_w1) %>% 
+  ggplot(aes(x = income_w1, fill = income_w1)) +
   geom_bar(color = 'black') +
   ggtitle("Income (Wave 1)") +
   scale_x_discrete(labels = c("Less than $25,000", "$25,000 to $49,999",
@@ -294,12 +346,12 @@ adult_w1 %>%
                      limits = c(0, 14000),
                      expand = c(0, 0)) +
   xlab(NULL) +
-  my_theme
+  my_theme_wave
 
-#### SEXUAL ORIENTATION BARPLOT (W1) ####
+# SEXUAL ORIENTATION BARPLOT (W1) 
 adult_w1 %>% 
-  drop_na(sexual_orientation) %>% 
-  ggplot(aes(x = sexual_orientation, fill = sexual_orientation)) +
+  drop_na(sexual_orientation_w1) %>% 
+  ggplot(aes(x = sexual_orientation_w1, fill = sexual_orientation_w1)) +
   geom_bar(color = 'black ') +
   ggtitle("Sexual Orientation (Wave 1)") +
   scale_x_discrete(labels = c("Lesbian, Gay, Bisexual or Something Else",
@@ -308,39 +360,11 @@ adult_w1 %>%
                      limits = c(0,30000),
                      expand = c(0, 0)) +
   xlab(NULL) +
-  my_theme
+  my_theme_wave
 
-#### POVERTY BARPLOT (W1) ####
-adult_w1 %>% 
-  drop_na(poverty) %>% 
-  ggplot(aes(x = poverty, fill = poverty)) +
-  geom_bar(color = 'black') +
-  ggtitle("Poverty Status (Wave 1)") +
-  scale_x_discrete(labels = c('Below Poverty Level',
-                              'Above Poverty Level')) +
-  scale_y_continuous(breaks = seq(0, 20000, 2000),
-                     limits = c(0,20000),
-                     expand = c(0, 0)) +
-  xlab(NULL) +
-  my_theme
+#### WAVE 2 Barplots  #####
 
-#### REGION BARPLOT (W1)  #####
-adult_w1 %>% 
-  drop_na(region) %>% 
-  ggplot(aes(x = region, fill = region)) +
-  geom_bar(color = 'black') +
-  ggtitle("Census Region (Wave 1)") +
-  scale_x_discrete(labels = c('North', 'Midwest', 'South', 'West')) +
-  scale_y_continuous(breaks = seq(0, 14000, 2000),
-                     limits = c(0, 14000),
-                     expand = c(0, 0)) +
-  xlab(NULL) +
-  my_theme
-
-
-
-
-#### SMOKING STATUS BARPLOT (W2)  #####
+#Smoking Status Barplot (W2)
 adult_w2  %>%  
   drop_na(smoking_status_w2) %>% 
   ggplot(aes(x = smoking_status_w2, fill = smoking_status_w2)) +
@@ -354,7 +378,7 @@ adult_w2  %>%
   ggtitle('Smoking Status (Wave 2)')
 
 
-#### GENDER BARPLOT (W2)  #####
+#GENDER BARPLOT (W2) 
 adult_w2 %>% 
   drop_na(gender) %>% 
   ggplot(aes(x = gender, fill = gender)) +
@@ -368,7 +392,7 @@ adult_w2 %>%
   xlab(NULL) +
   my_theme
 
-#### AGE BARPLOT (W2) ####
+#AGE BARPLOT (W2) 
 adult_w2 %>% 
   drop_na(age) %>% 
   ggplot(aes(x = age, fill = age)) +
@@ -383,7 +407,7 @@ adult_w2 %>%
   xlab(NULL) +
   my_theme
 
-#### RACE BARPLOT (W2) ####
+# RACE BARPLOT (W2)
 adult_w2 %>% 
   drop_na(race) %>% 
   ggplot(aes(x = race, fill = race )) +
@@ -396,7 +420,7 @@ adult_w2 %>%
   my_theme
 
 
-#### HISPANIC BARPLOT (W2) ####
+# HISPANIC BARPLOT (W2)
 adult_w2 %>% 
   drop_na(hispanic) %>% 
   ggplot(aes(x = hispanic, fill = hispanic )) +
@@ -408,7 +432,7 @@ adult_w2 %>%
   xlab(NULL) +
   my_theme
 
-#### EDUCATION BARPLOT (W2) ####
+# EDUCATION BARPLOT (W2)
 adult_w2 %>% 
   drop_na(education) %>% 
   ggplot(aes(x = education, fill = education )) +
@@ -424,7 +448,7 @@ adult_w2 %>%
 
 
 
-#### INCOME BARPLOT (W2) ####
+# INCOME BARPLOT (W2)
 adult_w2 %>% 
   drop_na(income) %>% 
   ggplot(aes(x = income, fill = income)) +
@@ -439,7 +463,7 @@ adult_w2 %>%
   my_theme
 
 
-#### SEXUAL ORIENTATION BARPLOT (W2) ####
+# SEXUAL ORIENTATION BARPLOT (W2) 
 adult_w2 %>% 
   drop_na(sexual_orientation) %>% 
   ggplot(aes(x = sexual_orientation, fill = sexual_orientation)) +

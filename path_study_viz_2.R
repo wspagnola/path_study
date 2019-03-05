@@ -71,14 +71,30 @@ smokers_w1 %>%
 #Note 'smoking_status_w1' omits experimental smokers both current and former
 #Hence, I had to recreate 'CURRENT EXPERIMENTAL SMOKER' here 
 
+
+adult_w1$R01_AC1009
+adult_w1 %>% 
+  mutate(days_quit_cigs_w1 = case_when(
+    as.numeric(R01_AC1009_UN)==1 & R01_AC1009_NN>=0 ~ R01_AC1009_NN,
+    as.numeric(R01_AC1009_UN)==2 & R01_AC1009_NN>=0 ~ R01_AC1009_NN * 30.4375,
+    as.numeric(R01_AC1009_UN)==3 & R01_AC1009_NN>=0 ~  R01_AC1009_NN * 365.25), 
+    days_quit_cigs_cat_w1 = case_when(
+      days_quit_cigs_w1 >= 2 &  days_quit_cigs_w1 <= 7 ~ '2 to 7 Days',
+      days_quit_cigs_w1 >= 8 &  days_quit_cigs_w1 < 30 ~ '8 to 30 Days',
+      days_quit_cigs_w1 >= 31 &  days_quit_cigs_w1 <= 91 ~ '31 to 91 days',
+      days_quit_cigs_w1 > 91 &  days_quit_cigs_w1 <= 365 ~ '91 to 364 days',
+      days_quit_cigs_w1 == 365 ~ '1 year',
+      days_quit_cigs_w1 > 365   ~ 'More than 1 year'),
+    days_quit_cigs_cat_w1 = factor(days_quit_cigs_cat_w1,
+                                   levels = c('2 to 7 Days', 
+                                              '8 to 30 Days',  
+                                              '31 to 91 days',
+                                              '91 to 364 day',  
+                                              'More than 1 year'))) %>% 
+#Note: Mean of days_quit_cigs_w1 Matches Codebook (pg. 1342) 
+
+
 #### QUIT RATE (W1) (ALL RESPONDENTS) ####
-
-#R01_AC1009_NN: How long since you completely quit smoking cigarettes - Number
-#R01_AC1009_UN: How long since you completely quit smoking cigarettes - Unit
-
-summary(adult_panel$R01_AC1009_NN)
-summary(adult_panel$R01_AC1009_UN)
-summary(smokers_w1$R01_AC1009_UN)
 adult_w1 %>% 
   mutate(quit_rate_w1 = case_when(
         R01_AC1009_UN == '(1) 1 = Days' &  R01_AC1009_NN >= 2 & R01_AC1009_NN <= 7 ~ 
@@ -101,7 +117,7 @@ adult_w1 %>%
   count
 # NOTE: Excel table does not include month data for quit length less than 1 year
 # NOTE: One-year category does not match Excel Table
-
+adult_w1
   
 
 #Calculate Max Quite Length Calculated in Unit of Months
@@ -119,7 +135,7 @@ adult_w1 %>%
   pull(R01_AC1009_NN) %>% 
   max
 
-
+adult_w2$R02_AN0105_04
 #### WAVE 2 ####
 
 table(smokers_w1$race_w1, smokers_w1$race_w2)
@@ -137,11 +153,15 @@ smokers_w1 %>%
 
 
 
+
 #### Other Quit Variables ####
 
 #R01_AN0256: Stopped smoking / using [tobacco products / specific product] more than 3
 ##times for one day or longer because you were trying to quit, in the past 12 months
 
+#R02_AN0120: In past 12 months, stopped smoking/using [tobacco products / specific product]
+#for one day or longer because you were trying to quit
+adult_w1$R01_AN0120 %>%  table
 
 #R01_AN0130_NN: Length of time you stopped smoking / using [tobacco products / specific
 #product] because you were trying to quit, in the past 12 months - Number

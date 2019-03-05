@@ -77,6 +77,13 @@ adult_w1 <- adult_w1 %>%
                 race_w1=='(3) 3 = Other' & hispanic_w1== '(2) 2 = Not Hispanic' ~ 'Other')
 )
 
+
+# Psychological Variable: R01_AX0161 (Sad) or R01_AX0163 (Anxious) in past month
+adult_w1 <- adult_w1 %>% 
+              mutate(psychdist_w1 = if_else( 
+                  as.numeric(R01_AX0161) == 1 | as.numeric(R01_AX0163) == 1, 1, 0)
+)
+
 #### WAVE 2: Clean ####
 
 #Load Data and Rename Variables (W2)
@@ -133,6 +140,12 @@ adult_w2 <- adult_w2 %>%
                 race_w2 =='(2) 2 = Black alone' & hispanic_w2 == '(2) 2 = Not Hispanic' ~ 'NH Black', 
                 hispanic_w2 =='(1) 1 = Hispanic' ~ 'Hispanic',
                 race_w2=='(3) 3 = Other' & hispanic_w2== '(2) 2 = Not Hispanic' ~ 'Other')
+)
+
+# Psychological Variable: R02_AX0161 (Sad) or R02_AX0163 (Anxious) in past month
+adult_w2 <- adult_w2 %>% 
+  mutate(psychdist_w2 = if_else( 
+    as.numeric(R02_AX0161) == 1 | as.numeric(R02_AX0163) == 1, 1, 0)
 )
 
 #### WAVE 3: Clean ####
@@ -195,6 +208,12 @@ adult_w3 <- adult_w3 %>%
                    race_w3=='(2) 2 = Black alone' & hispanic_w3 =='(2) 2 = Not Hispanic' ~ 'NH Black', 
                    hispanic_w3=='(1) 1 = Hispanic' ~ 'Hispanic',
                    race_w3=='(3) 3 = Other' & hispanic_w3== '(2) 2 = Not Hispanic' ~ 'Other')
+)
+
+# Psychological Variable: R03_AX0161 (Sad) or R03_AX0163 (Anxious) in past month
+adult_w3 <- adult_w3 %>% 
+  mutate(psychdist_w3 = if_else( 
+    as.numeric(R03_AX0161) == 1 | as.numeric(R03_AX0163) == 1, 1, 0)
 )
 
 #### MERGE WAVES ####
@@ -486,6 +505,11 @@ DS-3202: Codebook for Wave 3: Youth / Parent - Single-Wave Weights
 #Collapse Income Variable: Combine <10k and <25k
 #Collapse Cigarette Variables: Everyday/someday to Yes; No day to no
 #Collapse 7 age categories into 3 
+
+
+#R01_AC1009_NN: How long since you completely quit smoking cigarettes - Number
+#R01_AC1009_UN: How long since you completely quit smoking cigarettes - Unit
+
 
 #### WAVE 1: PSYCHOLOGICAL DISTRESS ####
 
