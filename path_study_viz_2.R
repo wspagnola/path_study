@@ -3,8 +3,8 @@
 
 #Excel Sheet Name: 9.20.18 Descriptives
 
-#NOTE: Is n weighted?  Many variables do not match
-#NOTE: Wave 2 info does not match  
+#NOTE: THIS ONE IS WAY OFF!
+
 
 #Filter Smokers 
 smokers_w1 <- adult_panel %>%  

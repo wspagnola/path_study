@@ -1,29 +1,14 @@
 #Transitions
-
 library(vcd)
-
 
 #STATUS at WAVE2 for WAVE1 CURRENT Established Cigarette Smokers
 adult_panel %>%
     mutate(current_est_smoker_w1 = 
-                    if_else(smoking_status_w1== 'est_smoker', 'Yes', 'No'),
-           current_est_smoker_w1 = factor(current_est_smoker_w1, 
-                                            levels = c('Yes', 'No'))) %>% 
+             if_else(current_est_smoker_w1== 1, 'Yes', 'No'),
+          current_est_smoker_w1 = factor(current_est_smoker_w1, 
+                                 levels = c('Yes', 'No'))) %>% 
     select(current_est_smoker_w1, smoking_status_w2) %>% 
     table
-
-#Mosaic Plot
-adult_panel %>%
-  mutate(current_est_smoker_w1 = 
-           if_else(smoking_status_w1== 'est_smoker', 'Yes', 'No'),
-         current_est_smoker_w1 = factor(current_est_smoker_w1, 
-                                        levels = c('Yes', 'No'))) %>% 
-  select(current_est_smoker_w1, smoking_status_w2) %>% 
-  table  %>%  
-  mosaic()
-
-
-    
 
 #STATUS at WAVE2 for WAVE1 FORMER Established Cigarette Smokers
 adult_panel %>%
@@ -34,7 +19,6 @@ adult_panel %>%
   select(former_est_smoker_w1, smoking_status_w2) %>% 
   table
 
-
 #STATUS at Wave 2 for  Wave 1 NEVER Smokers
 adult_panel %>%
   mutate(never_smoker_w1 = 
@@ -44,14 +28,6 @@ adult_panel %>%
   select(never_smoker_w1, smoking_status_w2) %>% 
   table
 
-#Mosaic Plot
-adult_panel %>%
-  mutate(never_smoker_w1 = 
-           if_else(smoking_status_w1== 'never_smoker', 'Yes', 'No'),
-         never_smoker_w1 = factor(never_smoker_w1, 
-                                  levels = c('Yes', 'No'))) %>% 
-  select(never_smoker_w1, smoking_status_w2) %>% 
-  mosaicplot
 
 
 
@@ -136,3 +112,24 @@ group_by(smoking_status_w1, smoking_status_w2) %>%
   ggplot(aes(x=smoking_status_w1, y = n, fill = smoking_status_w2)) +
   geom_col(position = position_fill())
     
+
+#### Mosaic Plots ####
+#Mosaic Plot
+adult_panel %>%
+  mutate(current_est_smoker_w1 = 
+           if_else(smoking_status_w1== 'est_smoker', 'Yes', 'No'),
+         current_est_smoker_w1 = factor(current_est_smoker_w1, 
+                                        levels = c('Yes', 'No'))) %>% 
+  select(current_est_smoker_w1, smoking_status_w2) %>% 
+  table  %>%  
+  mosaic()
+
+
+#Mosaic Plot
+adult_panel %>%
+  mutate(never_smoker_w1 = 
+           if_else(smoking_status_w1== 'never_smoker', 'Yes', 'No'),
+         never_smoker_w1 = factor(never_smoker_w1, 
+                                  levels = c('Yes', 'No'))) %>% 
+  select(never_smoker_w1, smoking_status_w2) %>% 
+  mosaicplot
