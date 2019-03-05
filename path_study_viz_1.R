@@ -195,7 +195,7 @@ adult_panel %>%
   ggtitle("Smoking Status Across Waves") +
   xlab(NULL) +
   my_theme_panel
-ggsave('Figures/Panel_2_Smoking_Status_Barplot.png')
+ggsave('Figures/Panel_2_Smoking_Status_Barplot.png', width = 6)
 
 unique(adult_panel$smoking_status_w1)
 unique(adult_panel$smoking_status_w2)
