@@ -3,9 +3,9 @@ require(stringr)
 #### Load in Data ####
 
 #Load Adult Waves 1, 2, 3
-load('Data_2310/36498-1001-Data.rda')
-load('Data_2310/36498-2001-Data.rda')
-load('Data_2310/36498-3001-Data.rda')
+load('Input/36498-1001-Data.rda')
+load('Input/36498-2001-Data.rda')
+load('Input/36498-3001-Data.rda')
 
 #### WAVE 1: Clean ####
 
@@ -48,9 +48,9 @@ adult_w1 <- adult_w1 %>%
                             'Yes'= c("(1) 1 = Every day",  
                                     "(2) 2 = Some days" ),
                             'No' = "(3) 3 = Not at all"),
-                       cigarette_use_ever_w1 = recode_factor(cigarette_use_ever_w1,
-                                              'Yes' = '(1) 1 = Yes',
-                                              'No' = '(2) 2 = No')
+                       cigarette_use_ever_w1 = recode(cigarette_use_ever_w1,
+                                              '(1) 1 = Yes' = 'Yes' ,
+                                               '(2) 2 = No' = 'No')
 )
 
 #Create Smoking Status Factor Variable and Binary Variables 
@@ -211,6 +211,14 @@ adult_panel <- adult_w1 %>%
 #### REMOVE ORIGINAL DATASETS ####
 remove(list = c('da36498.1001', 'da36498.2001', 'da36498.3001'))
 
+#### WRITE to CSVs ####
+# write.csv(adult_w1, file = 'Output/adult_w1.csv' )
+# write.csv(adult_w2, file = 'Output/adult_w2.csv' )
+# write.csv(adult_w3, file = 'Output/adult_w3.csv' )
+#write.csv(adult_panel, file = 'Output/adult_panel.csv' )
+
+#remove(list = c('adult_w1', 'adult_w2', 'adult_w3', 'adult_panel'))
+
 
 #### NOTES ####
 
@@ -224,9 +232,9 @@ remove(list = c('da36498.1001', 'da36498.2001', 'da36498.3001'))
 
 
 #NOTE: 32 PEOPLE had NA as gender
-adult_w1 %>% 
-  group_by(gender_w1) %>% 
-  count
+# adult_w1 %>% 
+#   group_by(gender_w1) %>% 
+#   count
 
 #NOTE: Multiple measures for age in survey daya 
 ### R01R_A_AGE: DERIVED - Age (in years) when interviewed

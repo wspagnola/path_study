@@ -1,20 +1,13 @@
 #These are Visualizations of Wave 1 and Wave 2
-
-
-
 #Data corresponds to 'Descriptive' Sheet of Excel File
 
-
 library(ggplot2)
-
 
 #Hex Codes for Default ggplot colors
 gg_blue <- '#619CFF'
 gg_red <- '#F8766D'
 
-
 #Function
-
 prep_panel_data <- function(data, w1, w2, label){
   require(tidyr)
   require(dplyr)
@@ -32,16 +25,11 @@ prep_panel_data <- function(data, w1, w2, label){
 }
 
 
-smoking_status_table <- read.csv('Output/smoking_status_table')
-
-#### DEFINE THEME ####
-
+#### DEFINE THEMES ####
 my_theme_panel <- theme_bw() +
   theme(panel.grid.major.x = element_blank(),
         plot.title = element_text(hjust = 0.5),
         legend.title = element_blank()) 
-
-
 
 my_theme_wave <-  theme_bw() +
   theme(legend.position = 'none',
@@ -69,6 +57,7 @@ adult_panel %>%
   my_theme_panel +
   ggtitle('Gender Composition') +
   xlab(NULL) 
+ggsave('Figures/Panel_2_Gender_Barplot.png')
   
 
 #### AGE BARPLOT (PANEL)  (####
@@ -89,8 +78,9 @@ adult_panel %>%
   scale_y_continuous(breaks = seq(0, 16000, 2000),
                      limits = c(0, 16000),
                      expand = c(0, 0)) +
-  xlab('')+
-  my_theme
+  xlab('') +
+  my_theme_wave
+ggsave('Figures/Panel_2_Age_Barplot.png', width = 8)
 
 
 #### RACE BARPLOT (PANEL)  (####
@@ -106,8 +96,9 @@ adult_panel %>%
                    limits = c(0, 24000),
                    expand = c(0, 0)) +
   xlab(NULL) +
-  my_theme
- 
+  my_theme_wave
+ggsave('Figures/Panel_2_Race_Barplot.png')
+
 #### HISPANIC BARPLOT (PANEL) ####
 adult_panel %>% 
   prep_panel_data(w1 = 'hispanic_w1', w2 = 'hispanic_w2', label = 'Hispanic') %>% 
@@ -121,6 +112,7 @@ adult_panel %>%
   scale_fill_discrete(labels = c('Wave 1', 'Wave 2') ) +
   xlab(NULL) +
   my_theme_panel
+ggsave('Figures/Panel_2_Hispanic_Barplot.png')
 
 #### EDUCATION BARPLOT (PANEL) ####
 adult_panel %>% 
@@ -140,6 +132,7 @@ adult_panel %>%
   scale_fill_discrete(labels = c('Wave 1', 'Wave 2') ) +
   xlab(NULL) +
   my_theme_panel
+ggsave('Figures/Panel_2_Education_Barplot.png', width = 8)
 
 #### INCOME BARPLOT (PANEL) ####
 adult_panel %>% 
@@ -159,6 +152,8 @@ adult_panel %>%
   scale_fill_discrete(labels = c('Wave 1', 'Wave 2') ) +
   xlab(NULL) +
   my_theme_panel
+ggsave('Figures/Panel_2_Income_Barplot.png', width = 8)
+
 
 #### SEXUAL ORIENTATION BARPLOT (PANEL) ####
 adult_panel %>% 
@@ -178,7 +173,8 @@ adult_panel %>%
     scale_fill_discrete(labels = c('Wave 1', 'Wave 2') ) +
     xlab(NULL) +
     my_theme_panel
-  
+ggsave('Figures/Panel_2_Sexual_Orientation_Barplot.png')
+
 
 #### SMOKING STATUS BARPLOT (PANEL) ####
 adult_panel %>% 
@@ -199,8 +195,11 @@ adult_panel %>%
   ggtitle("Smoking Status Across Waves") +
   xlab(NULL) +
   my_theme_panel
+ggsave('Figures/Panel_2_Smoking_Status_Barplot.png')
 
-
+unique(adult_panel$smoking_status_w1)
+unique(adult_panel$smoking_status_w2)
+levels(adult_panel$smoking_status_w2)
 #### SMOKING STATUS BARPLOT (W1) ####
 smoking_status_table  %>%  
   drop_na(smoking_status) %>% 
@@ -256,9 +255,6 @@ adult_w1 %>%
                      expand = c(0, 0)) +
   xlab(NULL) +
   my_theme
-
-
-
 
 #### HISPANIC BARPLOT (W1) ####
 adult_w1 %>% 
