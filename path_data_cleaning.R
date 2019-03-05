@@ -60,9 +60,15 @@ adult_w1 <- adult_w1 %>%
                                as.numeric(cigarette_num_life_w1) == 6 ~ 'current_est_smoker',
                         cigarette_current_use_w1 == 'No' & 
                                as.numeric(cigarette_num_life_w1) == 6 ~ 'former_est_smoker',
-                        cigarette_use_ever_w1 == 'No' ~ 'never_smoker'),
+                        #cigarette_current_use_w1 == 'Yes' & 
+                              # as.numeric(cigarette_num_life_w1) < 6 ~ 'current_exp_smoker',
+                        as.numeric(R01R_A_CUR_ESTD_CIGS) == 2 & 
+                                cigarette_use_ever_w1 == 'Yes' ~ 'current_exp_smoker',
+                        cigarette_use_ever_w1 == 'No' &
+                                R01R_A_CUR_ESTD_CIGS == '(2) 2 = No' ~ 'never_smoker'),
                      current_est_smoker_w1 = if_else(smoking_status_w1 == 'current_est_smoker', 1, 0),
                      former_est_smoker_w1 = if_else(smoking_status_w1 == 'former_est_smoker', 1, 0),
+                     current_exp_smoker_w1 = if_else(smoking_status_w1 == 'current_exp_smoker', 1, 0),
                      never_smoker_w1 = if_else(smoking_status_w1 == 'never_smoker', 1, 0)
 )
 
@@ -127,10 +133,15 @@ adult_w2 <- adult_w2 %>%
 adult_w2 <- adult_w2 %>% 
               mutate(current_est_smoker_w2 = if_else(R02R_A_CUR_ESTD_CIGS == '(1) 1 = Yes', 1, 0),
                      former_est_smoker_w2 = if_else(R02R_A_FMR_ESTD_CIGS_REV == '(1) 1 = Yes', 1, 0),
+                    # current_exp_smoker_w2 = if_else(R02R_A_CUR_EXPR_CIGS == '(1) 1 = Yes' | R02R_A_CUR_EXPR_CIGS_REV =='(1) 1 = Yes' , 1, 0), 
+                    current_exp_smoker_w2 = if_else(
+                                                as.numeric(R02R_A_CUR_ESTD_CIGS) == 2 & 
+                                                R02R_A_EVR_CIGS == '(1) 1 = Yes', 1, 0),
                      never_smoker_w2 = if_else(R02R_A_EVR_CIGS == '(2) 2 = No', 1, 0),
                      smoking_status_w2 = case_when(
                             current_est_smoker_w2 == 1 ~ 'current_est_smoker',
                             former_est_smoker_w2 == 1 ~ 'former_est_smoker',
+                            current_exp_smoker_w2 == 1 ~ 'current_exp_smoker',
                             never_smoker_w2 == 1 ~ 'never_smoker')) 
 
 #Race/Ethnicity Variable: NH-White, NH-black, Hispanic, Other (W2)
@@ -191,7 +202,11 @@ adult_w3 <- adult_w3 %>%
 #Create binary variables for smoking status; then combine into single factor variable (w3)
 adult_w3 <- adult_w3 %>% 
               mutate(current_est_smoker_w3 = if_else(R03R_A_CUR_ESTD_CIGS == '(1) 1 = Yes', 1, 0),
-                     current_exp_smoker_w3 = if_else(R03R_A_CUR_EXPR_CIGS  == '(1) 1 = Yes', 1, 0),
+                              #current_exp_smoker_w3 = if_else(R03R_A_CUR_EXPR_CIGS  == '(1) 1 = Yes', 1, 0),
+                     current_exp_smoker_w3 = if_else(as.numeric(R03R_A_CUR_ESTD_CIGS) == 2 & 
+                                                     (as.numeric(R03R_A_FMR_ESTD_CIGS_REV) == 2 |
+                                                        is.na(R03R_A_FMR_ESTD_CIGS_REV) )&
+                                                     as.numeric(R03R_A_EVR_CIGS) == 1, 1, 0),
                      former_est_smoker_w3 = if_else(R03R_A_FMR_ESTD_CIGS_REV == '(1) 1 = Yes', 1, 0),
                      never_smoker_w3 = if_else(R03R_A_EVR_CIGS == '(2) 2 = No', 1, 0),
                      smoking_status_w3 = case_when(
