@@ -159,6 +159,8 @@ adult_w2 <- adult_w2 %>%
     as.numeric(R02_AX0161) == 1 | as.numeric(R02_AX0163) == 1, 1, 0)
 )
 
+
+
 #### WAVE 3: Clean ####
 
 #Rename Varaibles
@@ -241,6 +243,54 @@ adult_w3$PERSONID <- as.character(adult_w3$PERSONID )
 adult_panel <- adult_w1 %>%  
   full_join(y = adult_w2, by = c('PERSONID')) %>% 
   full_join(y= adult_w3, by = c('PERSONID'))
+
+
+#### Generate Quit Variables (W2 & W3) ####
+
+#Quit: Yes=stopped smoking, No=stayed smoking,
+#Quit Category: Yes=stopped smoking, No=stayed smoking, Else: Stayed Non Smokers
+
+# WAVE 2: Quit Stats for W1 Smokers at W2
+adult_panel <- adult_panel %>%
+  mutate(quit_w2  = case_when(
+    cigarette_current_use_w1=='Yes' & 
+      cigarette_current_use_w2=='Yes' ~ 'No',
+    cigarette_current_use_w1=='Yes' & 
+      (as.numeric(R02_AC1002_12M)==2 | 
+         cigarette_current_use_w2=='No') ~ 'Yes'),
+    quit_cat_w2  = case_when(
+      cigarette_current_use_w1=='Yes' & 
+        cigarette_current_use_w2=='Yes' ~ 'No',
+      cigarette_current_use_w1=='Yes' & 
+        (as.numeric(R02_AC1002_12M)==2 | 
+           cigarette_current_use_w2=='No') ~ 'Yes',
+      cigarette_current_use_w1=='No' & 
+        (as.numeric(R02_AC1002_12M)==2 | 
+           cigarette_current_use_w2=='No') ~ 'Stayed Non-Smoker')
+)
+
+# WAVE 3: Quit Stats for W1 Current Smokers at W3
+adult_panel <- adult_panel %>% 
+                  mutate(
+                      quit_w3  = case_when(
+                            cigarette_current_use_w1=='Yes' & 
+                                cigarette_current_use_w3=='Yes' ~ 'No',
+                            cigarette_current_use_w1=='Yes' & 
+                                (as.numeric(R03_AC1002_12M)==2 | 
+                                  cigarette_current_use_w3=='No') ~ 'Yes'),
+                      quit_cat_w3  = case_when(
+                            cigarette_current_use_w1=='Yes' & 
+                                  cigarette_current_use_w3=='Yes' ~ 'No',
+                           cigarette_current_use_w1=='Yes' & 
+                                  (as.numeric(R03_AC1002_12M)==2 | 
+                                     cigarette_current_use_w3=='No') ~ 'Yes',
+                           cigarette_current_use_w1=='No' & 
+                                   (as.numeric(R03_AC1002_12M)==2 | 
+                                      cigarette_current_use_w3=='No') ~ 'Stayed Non-Smoker')
+) %>% group_by(quit_w3) %>% count
+                      
+
+
 
 #### REMOVE ORIGINAL DATASETS ####
 remove(list = c('da36498.1001', 'da36498.2001', 'da36498.3001'))
@@ -552,3 +602,11 @@ DS-3202: Codebook for Wave 3: Youth / Parent - Single-Wave Weights
 #-99911 = Missing due to an instrument skip pattern for one or more component
 #-97777 = Missing due to data removed per respondent request 0 0.0 %
 
+
+#### ASK SPECIFICATIONS ####
+
+
+#ASK Specification: R02_AC1009_UN &   R02_AC1009_NN
+#How long since last smoked a cigarette - Unit & Number
+##IF R02_AC1003 = 3 OR (R02_AC1002_12M = 2 AND (R01R_A_EVER_USER_CIGS = 1 OR R01_YC1002 = 1) 
+####AND R01_FORMER_USER_CIGS != 1 AND R01_EXPERIMENTAL_FORMER_CIGS !=1

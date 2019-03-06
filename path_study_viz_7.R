@@ -209,7 +209,7 @@ adult_panel %>%
 ggsave('Figures/Panel_3_Smoking_Status_Barplot.png', width = 12)
 
 
-#### Current Smoking Frequencey ####
+#### Current Smoking Frequency Barplot (Panel 3) ####
 adult_panel %>% 
   prep_panel_3_data(x = c('cigarette_current_freq_w1', 
                           'cigarette_current_freq_w2', 
@@ -228,4 +228,72 @@ adult_panel %>%
   ggtitle('Smoking Frequency Across Waves 1 to 3') +
   xlab(NULL) 
 ggsave('Figures/Panel_3_Smoking_Frequency_Barplot.png', width = 8)
+
+
+#### Abstinence Length Barplot (Panel 3) ####
+
+#Waves 2 Abstinence Length
+adult_panel %>% 
+  mutate(days_quit_cigs_w2 = case_when(
+            as.numeric(R02_AC1009_UN)==1 & R02_AC1009_NN>=0 ~ R02_AC1009_NN,
+            as.numeric(R02_AC1009_UN)==2 & R02_AC1009_NN>=0 ~ R02_AC1009_NN * 30.4375,
+            as.numeric(R02_AC1009_UN)==3 & R02_AC1009_NN>=0 ~  R02_AC1009_NN * 365.25), 
+        abst_w2 = case_when(
+              days_quit_cigs_w2 == 1 ~ 'One Day',
+              days_quit_cigs_w2 >= 2 &  days_quit_cigs_w2 <= 6 ~ 'Two to Six Days',
+              days_quit_cigs_w2 >= 7 &  days_quit_cigs_w2 < 30 ~ 'More than 7 Days',
+              days_quit_cigs_w2 >= 30 &  days_quit_cigs_w2 <= 90 ~ 'One Month',
+              days_quit_cigs_w2 > 90 &  days_quit_cigs_w2 <= 180 ~ 'Three Months',
+              days_quit_cigs_w2 > 180 &  days_quit_cigs_w2 < 365 ~ 'Six Months',
+              days_quit_cigs_w2 >= 365 ~ 'One Year'),
+         abst_w2 = factor(abst_w2, levels = c('One Day', 'Two to Six Days',  
+                                              'More than 7 Days', 'One Month',  
+                                              'Three Months', 'Six Months','One Year'))) %>% 
+      group_by(abst_w2) %>% 
+      count
+   
+#I am only getting 477 Smokers who have quit for more than a year 
+adult_panel %>%  filter(R02_AC1009_NN >= 365 & as.numeric(R02_AC1009_UN) ==1) %>%  nrow
+adult_panel %>%  filter(R02_AC1009_NN >= 12 & as.numeric(R02_AC1009_UN) ==2) %>%  nrow
+
+#Waves 3 Abstinence Length
+adult_panel %>% 
+  mutate(days_quit_cigs_w3 = case_when(
+    as.numeric(R03_AC1009_UN)==1 & R03_AC1009_NN>=0 ~ R03_AC1009_NN,
+    as.numeric(R03_AC1009_UN)==2 & R03_AC1009_NN>=0 ~ R03_AC1009_NN * 30.4375,
+    as.numeric(R03_AC1009_UN)==3 & R03_AC1009_NN>=0 ~  R03_AC1009_NN * 365.25), 
+    abs_w3 = case_when(
+      days_quit_cigs_w3 == 1 ~ 'One Day',
+      days_quit_cigs_w3 >= 2 &  days_quit_cigs_w3 <= 6 ~ 'Two to Six Days',
+      days_quit_cigs_w3 >= 7 &  days_quit_cigs_w3 < 30 ~ 'More than 7 Days',
+      days_quit_cigs_w3 >= 30 &  days_quit_cigs_w3 <= 90 ~ 'One Month',
+      days_quit_cigs_w3 > 90 &  days_quit_cigs_w3 <= 180 ~ 'Three Months',
+      days_quit_cigs_w3 > 180 &  days_quit_cigs_w3 < 365 ~ 'Six Months',
+      days_quit_cigs_w3 >= 365 ~ 'One Year'),
+    abs_w3 = factor(abs_w3, levels = c('One Day', 'Two to Six Days',  
+                                         'More than 7 Days', 'One Month',  
+                                         'Three Months', 'Six Months','One Year'))) %>% 
+  group_by(abs_w3) %>% 
+  count
+
+
+# Quit Rate (W2)
+adult_panel %>% 
+  group_by(quit_w2) %>% 
+  count
+
+# Quit Rate Categories (W2)
+adult_panel %>% 
+  group_by(quit_cat_w2) %>% 
+  count
+
+# Quit Rate (w3)
+adult_panel %>% 
+  group_by(quit_w3) %>% 
+  count
+
+# Quit Rate Categories (w3)
+adult_panel %>% 
+  group_by(quit_cat_w3) %>% 
+  count
 
