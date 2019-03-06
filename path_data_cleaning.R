@@ -170,7 +170,8 @@ adult_w3 <- da36498.3001 %>%
                              hispanic_w3 = R03R_A_HISP,
                              sexual_orientation_w3 = R03R_A_SEXORIENT2,
                              cigarette_current_freq_w3 = R03_AC1003,
-                             cigarette_num_life_w3 = R03_AC1005)
+                             cigarette_num_life_w3 = R03_AC1005
+)
 
 #Collapse Education, Income, Age, and Cigarette Use Variables 
 adult_w3 <- adult_w3 %>%  
@@ -285,13 +286,13 @@ adult_panel <- adult_panel %>%
                                   (as.numeric(R03_AC1002_12M)==2 | 
                                      cigarette_current_use_w3=='No') ~ 'Yes',
                            cigarette_current_use_w1=='No' & 
-                                   (as.numeric(R03_AC1002_12M)==2 | 
-                                      cigarette_current_use_w3=='No') ~ 'Stayed Non-Smoker')
-) %>% group_by(quit_w3) %>% count
+                                  (as.numeric(R03_AC1002_12M)==2 | 
+                                  cigarette_current_use_w3=='No') ~ 'Stayed Non-Smoker'),
+                      quit_cat_w3  = factor(quit_cat_w3,
+                                            levels = c('Yes', 'No', 'Stayed Non-Smoker'))
+) 
+  
                       
-
-
-
 #### REMOVE ORIGINAL DATASETS ####
 remove(list = c('da36498.1001', 'da36498.2001', 'da36498.3001'))
 

@@ -8,6 +8,18 @@ require(tidyverse)
 gg_blue <- '#619CFF'
 gg_red <- '#F8766D'
 
+#Theme For Single Wave Plots
+theme_wave_quit <-  theme_bw() +
+  theme(legend.position = 'none',
+        panel.grid.major.x = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        axis.title.x = element_text(face = 'italic', 
+                                    size = 8, 
+                                    vjust = 0.2,
+                                    hjust = 0)
+)
+
+
 
 prep_panel_3_data <- function(data, x, label){
   
@@ -277,23 +289,55 @@ adult_panel %>%
   count
 
 
-# Quit Rate (W2)
+####Quit Rate (W2)  ####
 adult_panel %>% 
   group_by(quit_w2) %>% 
-  count
+  count %>% 
+  drop_na(quit_w2) %>% 
+  ggplot(aes(x = quit_w2, y = n, fill = quit_w2)) +
+    geom_col(color = 'black',  width = 0.5) + 
+    ggtitle('Quit Status of Wave 1 Smokers at Wave 2') +
+    xlab('Quit') +
+    my_theme_wave
+ggsave('Figures/W2_Quit_Rate_Barplot.png')
 
 # Quit Rate Categories (W2)
 adult_panel %>% 
   group_by(quit_cat_w2) %>% 
-  count
+  count %>% 
+  drop_na(quit_cat_w2) %>% 
+  ggplot(aes(x = quit_cat_w2, y = n, fill = quit_cat_w2)) +
+    geom_col(color = 'black') +
+  scale_x_discrete(labels = c('Yes*', 'No*', 'No Change**')) +
+  ggtitle('Wave 2: Quit Categories for Wave 1 Smokers and Non-Smokers') +
+  xlab('*Quit Status for Wave 1 Smokers at Wave 2. 
+       \n**Wave 1 Non-Smokers who were still non-smokers at Wave 2') +
+  theme_wave_quit 
+ggsave('Figures/W2_Quit_Categories_Barplot.png', width = 8)
 
 # Quit Rate (w3)
 adult_panel %>% 
   group_by(quit_w3) %>% 
-  count
+  count %>% 
+  drop_na(quit_w3) %>% 
+  ggplot(aes(x = quit_w3, y = n, fill = quit_w3)) +
+    geom_col(color = 'black', width = 0.5) + 
+    ggtitle('Quit Status of Wave 1 Smokers at Wave 3') +
+    xlab('Quit') +
+    my_theme_wave +
+ggsave('Figures/W3_Quit_Rate_Barplot.png')
 
 # Quit Rate Categories (w3)
 adult_panel %>% 
   group_by(quit_cat_w3) %>% 
-  count
+  count %>% 
+  drop_na(quit_cat_w3) %>% 
+  ggplot(aes(x = quit_cat_w3, y = n, fill = quit_cat_w3)) +
+    geom_col(color = 'black') +
+    scale_x_discrete(labels = c('Yes*', 'No*', 'No Change**')) +
+    ggtitle('Wave 3: Quit Categories for Wave 1 Smokers and Non-Smokers') +
+    xlab('*Quit Status for Wave 1 Smokers at Wave 3. 
+          \n**Wave 1 Non-Smokers who were still non-smokers at Wave 3') +
+    theme_wave_quit 
+ggsave('Figures/W3_Quit_Categories_Barplot.png', width = 8)
 
