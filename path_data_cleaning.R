@@ -45,26 +45,26 @@ adult_w1 <- adult_w1 %>%
                             'btwn_50k_100k' = "(4) 4 = $50,000 to $99,999",
                             'more_than_100k' =  "(5) 5 = $100,000 or more"),
                        cigarette_current_use_w1 = fct_collapse(cigarette_current_freq_w1, 
-                            'Yes'= c("(1) 1 = Every day",  
+                            1 = c("(1) 1 = Every day",  
                                     "(2) 2 = Some days" ),
-                            'No' = "(3) 3 = Not at all"),
+                            0 = "(3) 3 = Not at all"),
                        cigarette_use_ever_w1 = recode(cigarette_use_ever_w1,
-                                              '(1) 1 = Yes' = 'Yes' ,
-                                               '(2) 2 = No' = 'No')
+                                              '(1) 1 = Yes' = 1,
+                                               '(2) 2 = No' = 0)
 )
 
 #Create Smoking Status Factor Variable and Binary Variables 
 adult_w1 <- adult_w1 %>% 
               mutate(smoking_status_w1 = case_when(
-                        cigarette_current_use_w1 == 'Yes' & 
+                        cigarette_current_use_w1 == 1 & 
                                as.numeric(cigarette_num_life_w1) == 6 ~ 'current_est_smoker',
-                        cigarette_current_use_w1 == 'No' & 
+                        cigarette_current_use_w1 == 0 & 
                                as.numeric(cigarette_num_life_w1) == 6 ~ 'former_est_smoker',
                         #cigarette_current_use_w1 == 'Yes' & 
                               # as.numeric(cigarette_num_life_w1) < 6 ~ 'current_exp_smoker',
                         as.numeric(R01R_A_CUR_ESTD_CIGS) == 2 & 
-                                cigarette_use_ever_w1 == 'Yes' ~ 'current_exp_smoker',
-                        cigarette_use_ever_w1 == 'No' &
+                                cigarette_use_ever_w1 == 1 ~ 'current_exp_smoker',
+                        cigarette_use_ever_w1 == 0 &
                                 R01R_A_CUR_ESTD_CIGS == '(2) 2 = No' ~ 'never_smoker'),
                      current_est_smoker_w1 = if_else(smoking_status_w1 == 'current_est_smoker', 1, 0),
                      former_est_smoker_w1 = if_else(smoking_status_w1 == 'former_est_smoker', 1, 0),
@@ -99,7 +99,9 @@ adult_w2 <- da36498.2001 %>%
                        hispanic_w2 = R02R_A_HISP,
                        sexual_orientation_w2 = R02R_A_SEXORIENT2,
                        cigarette_current_freq_w2 = R02_AC1003,
-                       cigarette_num_life_w2 = R02_AC1005) 
+                       cigarette_num_life_w2 = R02_AC1005,
+                       smoked_past12M_w2 = R02_AC1002_12M
+) 
 
 #Collapse Age, Education, and Income Factors (W2)
 adult_w2 <- adult_w2 %>%  
@@ -125,9 +127,19 @@ adult_w2 <- adult_w2 %>%
                                   'btwn_50k_100k' = "(4) 4 = $50,000 to $99,999",
                                   'more_than_100k' =  "(5) 5 = $100,000 or more"),
                        cigarette_current_use_w2 = fct_collapse(cigarette_current_freq_w2, 
-                                 'Yes'= c("(1) 1 = Every day",  
+                                 1 = c("(1) 1 = Every day",  
                                           "(2) 2 = Some days" ),
-                                 'No' = "(3) 3 = Not at all")) 
+                                  0 = "(3) 3 = Not at all")) 
+
+# Use dummy coding (0/1) for (No/Yes)
+adult_w2 <- adult_w2 %>%  
+  mutate(
+    smoked_past12M_w2 = recode(smoked_past12M_w2,
+                               '(1) 1 = Yes' = 1,
+                               '(2) 2 = No' = 0)
+) 
+
+
 
 #Smoking Status: Generate Dummy Variables then Group by factor (W2)
 adult_w2 <- adult_w2 %>% 
@@ -170,7 +182,8 @@ adult_w3 <- da36498.3001 %>%
                              hispanic_w3 = R03R_A_HISP,
                              sexual_orientation_w3 = R03R_A_SEXORIENT2,
                              cigarette_current_freq_w3 = R03_AC1003,
-                             cigarette_num_life_w3 = R03_AC1005
+                             cigarette_num_life_w3 = R03_AC1005,
+                             smoked_past12M_w3 = R03_AC1002_12M
 )
 
 #Collapse Education, Income, Age, and Cigarette Use Variables 
@@ -197,10 +210,21 @@ adult_w3 <- adult_w3 %>%
                             'older_than_65' = c('(6) 6 = 65 to 74 years old',
                                                 '(7) 7 = 75 years old or older')),
                         cigarette_current_use_w3 = fct_collapse(cigarette_current_freq_w3, 
-                             'Yes'= c("(1) 1 = Every day",  
+                             1 = c("(1) 1 = Every day",  
                                       "(2) 2 = Some days" ),
-                             'No' = "(3) 3 = Not at all")
+                             0 = "(3) 3 = Not at all")
 )
+
+# Use dummy coding (0/1) for (No/Yes)
+adult_w3 <- adult_w3 %>%  
+    mutate(
+      smoked_past12M_w3 = recode(smoked_past12M_w3,
+                                 '(1) 1 = Yes' = 1,
+                                 '(2) 2 = No' = 0)
+) 
+                             
+        
+
 
 #Create binary variables for smoking status; then combine into single factor variable (w3)
 adult_w3 <- adult_w3 %>% 
@@ -254,40 +278,40 @@ adult_panel <- adult_w1 %>%
 # WAVE 2: Quit Stats for W1 Smokers at W2
 adult_panel <- adult_panel %>%
   mutate(quit_w2  = case_when(
-    cigarette_current_use_w1=='Yes' & 
-      cigarette_current_use_w2=='Yes' ~ 'No',
-    cigarette_current_use_w1=='Yes' & 
-      (as.numeric(R02_AC1002_12M)==2 | 
-         cigarette_current_use_w2=='No') ~ 'Yes'),
+    cigarette_current_use_w1== 1 & 
+      cigarette_current_use_w2== 1 ~ 'No',
+    cigarette_current_use_w1== 1 & 
+      (as.numeric(smoked_past12M_w2)==2 | 
+         cigarette_current_use_w2== 0) ~ 'Yes'),
     quit_cat_w2  = case_when(
-      cigarette_current_use_w1=='Yes' & 
-        cigarette_current_use_w2=='Yes' ~ 'No',
-      cigarette_current_use_w1=='Yes' & 
-        (as.numeric(R02_AC1002_12M)==2 | 
-           cigarette_current_use_w2=='No') ~ 'Yes',
-      cigarette_current_use_w1=='No' & 
-        (as.numeric(R02_AC1002_12M)==2 | 
-           cigarette_current_use_w2=='No') ~ 'Stayed Non-Smoker')
+      cigarette_current_use_w1==1 & 
+        cigarette_current_use_w2==1 ~ 'No',
+      cigarette_current_use_w1==1 & 
+        (as.numeric(smoked_past12M_w2)==2 | 
+           cigarette_current_use_w2==0) ~ 'Yes',
+      cigarette_current_use_w1==0 & 
+        (as.numeric(smoked_past12M_w2)==2 | 
+           cigarette_current_use_w2==0) ~ 'Stayed Non-Smoker')
 )
 
 # WAVE 3: Quit Stats for W1 Current Smokers at W3
 adult_panel <- adult_panel %>% 
                   mutate(
                       quit_w3  = case_when(
-                            cigarette_current_use_w1=='Yes' & 
-                                cigarette_current_use_w3=='Yes' ~ 'No',
-                            cigarette_current_use_w1=='Yes' & 
-                                (as.numeric(R03_AC1002_12M)==2 | 
-                                  cigarette_current_use_w3=='No') ~ 'Yes'),
+                            cigarette_current_use_w1==1 & 
+                                cigarette_current_use_w3==1 ~  'No',
+                            cigarette_current_use_w1==1 & 
+                                (as.numeric(smoked_past12M_w3)==2 | 
+                                  cigarette_current_use_w3== 0) ~ 'Yes'),
                       quit_cat_w3  = case_when(
-                            cigarette_current_use_w1=='Yes' & 
-                                  cigarette_current_use_w3=='Yes' ~ 'No',
-                           cigarette_current_use_w1=='Yes' & 
-                                  (as.numeric(R03_AC1002_12M)==2 | 
-                                     cigarette_current_use_w3=='No') ~ 'Yes',
-                           cigarette_current_use_w1=='No' & 
-                                  (as.numeric(R03_AC1002_12M)==2 | 
-                                  cigarette_current_use_w3=='No') ~ 'Stayed Non-Smoker'),
+                            cigarette_current_use_w1==1 & 
+                                  cigarette_current_use_w3==1 ~ 'No',
+                           cigarette_current_use_w1==1 & 
+                                  (as.numeric(smoked_past12M_w3)==2 | 
+                                     cigarette_current_use_w3==0) ~ 'Yes',
+                           cigarette_current_use_w1==0 & 
+                                  (as.numeric(smoked_past12M_w3)==2 | 
+                                  cigarette_current_use_w3==0) ~ 'Stayed Non-Smoker'),
                       quit_cat_w3  = factor(quit_cat_w3,
                                             levels = c('Yes', 'No', 'Stayed Non-Smoker'))
 ) 
@@ -403,36 +427,36 @@ DS-3202: Codebook for Wave 3: Youth / Parent - Single-Wave Weights
 
 #R03R_A_NEW_CIGS: DERIVED - Wave 3 Adult Never to Ever Cigarette Smoker
 #Long Description: Wave 3 Adult respondents who started cigarette smoking between Wave 2 and Wave 3.
-#IF (R02R_A_EVR_CIGS=2 OR R02R_Y_EVR_CIGS=2) AND (R03_AC1004=1 OR R03_AC1002_12M=1)
+#IF (R02R_A_EVR_CIGS=2 OR R02R_Y_EVR_CIGS=2) AND (R03_AC1004=1 OR smoked_past12M_w3=1)
 #THEN R03R_A_NEW_CIGS=1;
-#ELSE IF R02R_A_EVR_CIGS=1 OR R02R_Y_EVR_CIGS=1 OR (R03_AC1002_12M=2 AND WAVE2_INTERVIEW ! = 9) 
+#ELSE IF R02R_A_EVR_CIGS=1 OR R02R_Y_EVR_CIGS=1 OR (smoked_past12M_w3=2 AND WAVE2_INTERVIEW ! = 9) 
 #THEN R03R_A_NEW_CIGS=2; 
-#ELSE IF (R03_AC1004=-9 AND R03_AC1002_12M=-1) OR R03_AC1002_12M=-9 
+#ELSE IF (R03_AC1004=-9 AND smoked_past12M_w3=-1) OR smoked_past12M_w3=-9 
 #THEN R03R_A_NEW_CIGS = -99999; 
-#ELSE IF R03_AC1002_12M=-8 
+#ELSE IF smoked_past12M_w3=-8 
 #THENR03R_A_NEW_CIGS = -99988; 
-#ELSE IF R03_AC1002_12M=-7 
+#ELSE IF smoked_past12M_w3=-7 
 #THEN R03R_A_NEW_CIGS = -99977; 
 #ELSE IFR02R_A_EVR_CIGS in (-99999,-99988,-99977,-99966,-99911) OR 
 #R02R_Y_EVR_CIGS in (-99999,-99988,-99977,-99966,-99911) OR WAVE2_INTERVIEW=9 
 #THEN R03R_A_NEW_CIGS = -99966;
-#ELSE IF R03_AC1002_12M=-1 
+#ELSE IF smoked_past12M_w3=-1 
 #THEN R03R_A_NEW_CIGS = -99911;
 
 
 #R03R_A_EVR_CIGS: DERIVED - Wave 3 Adult Ever Cigarette Smoker
 #Long Description: Wave 3 Adult respondents who have ever smoked a cigarette.
 #IF (R01R_A_NVR_CIGS=2 OR R01R_Y_EVR_CIGS=1 OR R02R_A_EVR_CIGS= 1 OR 
-### R02R_Y_EVR_CIGS = 1 OR R03_AC1004 = 1 OR R03_AC1002_12M=1) , 
+### R02R_Y_EVR_CIGS = 1 OR R03_AC1004 = 1 OR smoked_past12M_w3=1) , 
 #THEN R03R_A_EVR_CIGS = 1;
 #ELSE IF (((R02R_A_EVR_CIGS=2 OR R02R_Y_EVR_CIGS =2) AND WAVE2_INTERVIEW ! = 9) 
-###AND (R01R_A_NVR_CIGS=1 OR R01R_Y_EVR_CIGS=2) AND R03_AC1002_12M=2), 
+###AND (R01R_A_NVR_CIGS=1 OR R01R_Y_EVR_CIGS=2) AND smoked_past12M_w3=2), 
 #THEN R03R_A_EVR_CIGS = 2;
-#ELSE IF (R03_AC1004=-9 AND R03_AC1002_12M=-1) OR R03_AC1002_12M=-9, 
+#ELSE IF (R03_AC1004=-9 AND smoked_past12M_w3=-1) OR smoked_past12M_w3=-9, 
 ###THENR03R_A_EVR_CIGS = -99999; 
-#ELSE IF R03_AC1002_12M=-8, 
+#ELSE IF smoked_past12M_w3=-8, 
 #THEN R03R_A_EVR_CIGS = -99988;
-#ELSE IF R03_AC1002_12M=-7, 
+#ELSE IF smoked_past12M_w3=-7, 
 #THEN R03R_A_EVR_CIGS = -99977; 
 #ELSE IF R02R_A_EVR_CIGS in (-99999,-99988,-99977,-99966, -99911) 
 ####OR R02R_Y_EVR_CIGS in (-99999,-99988,-99977,-99966, -99911)
@@ -440,7 +464,7 @@ DS-3202: Codebook for Wave 3: Youth / Parent - Single-Wave Weights
 ####OR R01R_Y_EVR_CIGS in (-99999,-99988,-99977,-99955,-99911) 
 ####OR WAVE2_INTERVIEW =9, 
 #THEN R03R_A_EVR_CIGS = -99966;
-#ELSE IF R03_AC1002_12M=-1, 
+#ELSE IF smoked_past12M_w3=-1, 
 #THEN R03R_A_EVR_CIGS = -99911;
 
 
@@ -449,17 +473,17 @@ DS-3202: Codebook for Wave 3: Youth / Parent - Single-Wave Weights
 #in their lifetime, and currently smoke every day or some days.
 #IF (R03R_A_THRSHLD_CIGS=2 AND R03_AC1003 in (1,2)), 
 #THEN R03R_A_CUR_EXPR_CIGS=1;
-#ELSE IF R03R_A_THRSHLD_CIGS=1 OR R03_AC1003 = 3 OR R03_AC1002_12M = 2, 
+#ELSE IF R03R_A_THRSHLD_CIGS=1 OR R03_AC1003 = 3 OR smoked_past12M_w3 = 2, 
 #THENR03R_A_CUR_EXPR_CIGS=2; 
-#ELSE IF R03R_A_THRSHLD_CIGS =-99999 OR R03_AC1003 = -9 OR R03_AC1002_12M = -9, 
+#ELSE IF R03R_A_THRSHLD_CIGS =-99999 OR R03_AC1003 = -9 OR smoked_past12M_w3 = -9, 
 #THEN R03R_A_CUR_EXPR_CIGS=-99999; 
-#ELSE IF R03R_A_THRSHLD_CIGS =-99988 OR R03_AC1003 = -8 OR R03_AC1002_12M = -8, 
+#ELSE IF R03R_A_THRSHLD_CIGS =-99988 OR R03_AC1003 = -8 OR smoked_past12M_w3 = -8, 
 #THEN R03R_A_CUR_EXPR_CIGS=-99988; 
-#ELSE IFR03R_A_THRSHLD_CIGS =-99977 OR R03_AC1003 = -7 OR R03_AC1002_12M = -7, 
+#ELSE IFR03R_A_THRSHLD_CIGS =-99977 OR R03_AC1003 = -7 OR smoked_past12M_w3 = -7, 
 #THENR03R_A_CUR_EXPR_CIGS=-99977; 
 #ELSE IF R03R_A_THRSHLD_CIGS =-99966, 
 #THENR03R_A_CUR_EXPR_CIGS=-99966; 
-#ELSE IF R03R_A_THRSHLD_CIGS =-99911 OR R03_AC1003 = -1 OR R03_AC1002_12M = -1, 
+#ELSE IF R03R_A_THRSHLD_CIGS =-99911 OR R03_AC1003 = -1 OR smoked_past12M_w3 = -1, 
 #THEN R03R_A_CUR_EXPR_CIGS=-99911;
 
 
@@ -534,7 +558,7 @@ DS-3202: Codebook for Wave 3: Youth / Parent - Single-Wave Weights
 #R01_AC1003: Now smoke cigarettes
 #R01_AC1005: Number of cigarettes smoked in your entire life
 
-#R03_AC1002_12M: In past 12 months, smoked a cigarette, even one or two puffs
+#smoked_past12M_w3: In past 12 months, smoked a cigarette, even one or two puffs
 
 
 #R02R_A_AGE: DERIVED - Wave 2 Adult Age (in years) when interviewed
