@@ -1,7 +1,33 @@
-
+#Need Marginal Frequencies to check this
 
 #No Change = Former or Current Smoker to Former or CurrentSmoker 
 #Cessation = Former or Current Smoker to Not Smoking in Past Year
+relevel_factor <- function(x) factor(x, levels = c('Never', 'Current', 'Former'))
+
+adult_panel$nev
+adult_panel <- adult_panel %>% 
+  mutate(
+  smoking_status_cur_w1 = case_when(
+      as.numeric(R01R_A_NVR_CIGS) == 1 ~ 'Never',
+      as.numeric(R01R_A_CUR_ESTD_CIGS) == 1 |  as.numeric(R01R_A_CUR_EXPR_CIGS) == 1 ~ 'Current',
+      as.numeric(R01R_A_FMR_ESTD_CIGS) == 1 |  as.numeric(R01R_A_FMR_EXPR_CIGS) == 1 ~ 'Former'),
+  smoking_status_cur_w2 = case_when(
+      as.numeric(R02R_A_EVR_CIGS) == 2 ~ 'Never',
+      as.numeric(R02R_A_CUR_ESTD_CIGS) == 1 |  as.numeric(R02R_A_CUR_EXPR_CIGS) == 1 ~ 'Current',
+      current_non_est_smoker_w2==1 & as.numeric(R02R_A_CUR_EXPR_CIGS) == 2 | 
+              former_est_smoker_w2==1 ~ 'Former'),
+  smoking_status_cur_w3 = case_when(
+    as.numeric(R03R_A_EVR_CIGS) == 2 ~ 'Never',
+    as.numeric(R03R_A_CUR_ESTD_CIGS) == 1 |  as.numeric(R03R_A_CUR_EXPR_CIGS)==1 ~ 'Current',
+    as.numeric(R03R_A_FMR_ESTD_CIGS_REV)==1 | as.numeric(R03R_A_FMR_EXPR_CIGS_REV)==1 ~ 'Former')
+)  
+
+
+adult_panel <- adult_panel %>% 
+    mutate_if(grepl('smoking_status_cur', names(adult_panel)), 
+              relevel_factor)
+
+table(adult_panel$smoking_status_cur_w1, adult_panel$smoking_status_cur_w2)
 
 
 #Smoking Trajectory From Wave 1 to Wave 2  
