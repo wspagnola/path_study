@@ -167,6 +167,26 @@ adult_w2 <- adult_w2 %>%
                                                 'former' = c('former_est_smoker', 'former_exp_smoker'))
 ) 
 
+#Create Quit Variable in DAY units; Create Categorical Variable for abstinence by days quit
+adult_w2 <- adult_w2 %>%  
+  mutate(days_quit_cigs_w2 = case_when(
+                      as.numeric(R02_AC1009_UN)==1 & R02_AC1009_NN>=0 ~ R02_AC1009_NN,
+                      as.numeric(R02_AC1009_UN)==2 & R02_AC1009_NN>=0 ~ R02_AC1009_NN * 30.4375,
+                      as.numeric(R02_AC1009_UN)==3 & R02_AC1009_NN>=0 ~  R02_AC1009_NN * 365.25),
+        abs_w2 = case_when(
+                      days_quit_cigs_w2 == 1 ~ 'One Day',
+                      days_quit_cigs_w2 >= 2 &  days_quit_cigs_w2 <= 6 ~ 'Two to Six Days',
+                      days_quit_cigs_w2 >= 7 &  days_quit_cigs_w2 < 30 ~ 'More than 7 Days',
+                      days_quit_cigs_w2 >= 30 &  days_quit_cigs_w2 <= 90 ~ 'One Month',
+                      days_quit_cigs_w2 > 90 &  days_quit_cigs_w2 <= 180 ~ 'Three Months',
+                      days_quit_cigs_w2 > 180 &  days_quit_cigs_w2 < 365 ~ 'Six Months',
+                      days_quit_cigs_w2 >= 365 ~ 'One Year'),
+                      abs_w2 = factor(abs_w2, levels = c('One Day', 'Two to Six Days',  
+                                                         'More than 7 Days', 'One Month',  
+                                                         'Three Months', 'Six Months','One Year'))
+)  
+
+
 #Race/Ethnicity Variable: NH-White, NH-black, Hispanic, Other (W2)
 adult_w2 <- adult_w2 %>% 
               mutate(race_ethnicity_w2 = case_when(
@@ -253,6 +273,25 @@ adult_w3 <- adult_w3 %>%
                      smoking_status_w3 = fct_collapse(smoking_status_full_w3,
                                           'current' = c('current_est_smoker', 'current_exp_smoker'),
                                           'former' = c('former_est_smoker', 'former_exp_smoker'))
+)
+
+#Create Quit Variable in DAY units; Create Categorical Variable for abstinence by days quit
+adult_w3 <- adult_w3 %>%
+  mutate(days_quit_cigs_w3 = case_when(
+                      as.numeric(R03_AC1009_UN)==1 & R03_AC1009_NN>=0 ~ R03_AC1009_NN,
+                      as.numeric(R03_AC1009_UN)==2 & R03_AC1009_NN>=0 ~ R03_AC1009_NN * 30.4375,
+                      as.numeric(R03_AC1009_UN)==3 & R03_AC1009_NN>=0 ~  R03_AC1009_NN * 365.25),
+    abs_w3 = case_when(
+      days_quit_cigs_w3 == 1 ~ 'One Day',
+                      days_quit_cigs_w3 >= 2 &  days_quit_cigs_w3 <= 6 ~ 'Two to Six Days',
+                      days_quit_cigs_w3 >= 7 &  days_quit_cigs_w3 < 30 ~ 'More than 7 Days',
+                      days_quit_cigs_w3 >= 30 &  days_quit_cigs_w3 <= 90 ~ 'One Month',
+                      days_quit_cigs_w3 > 90 &  days_quit_cigs_w3 <= 180 ~ 'Three Months',
+                      days_quit_cigs_w3 > 180 &  days_quit_cigs_w3 < 365 ~ 'Six Months',
+                      days_quit_cigs_w3 >= 365 ~ 'One Year'),
+    abs_w3 = factor(abs_w3, levels = c('One Day', 'Two to Six Days',  
+                                       'More than 7 Days', 'One Month',  
+                                       'Three Months', 'Six Months','One Year'))
 )
 
 #Race/Ethnicity Variable: NH-White, NH-black, Hispanic, Other (W2)

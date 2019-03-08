@@ -8,10 +8,15 @@
 #lifetime cigarette number or current use questions they are labelled as NA because it can't
 #be determined which group they belong to
 
+
+##### SUBSET SMOKING GROUPS ####
+w1_smokers <- adult_panel %>% filter(current_est_smoker_w1 ==1 | current_non_est_smoker_w1 ==1) 
+w1_cur_est_smokers <- adult_panel %>%  filter(current_est_smoker_w1 ==1)
+w1_cur_non_est_smokers <- adult_panel %>%  filter(current_non_est_smoker_w1 ==1)
+w2_cur_est_smokers <- adult_panel %>%  filter(current_est_smoker_w2 ==1)
+
 #### WAVE 1: Smokers ####
-w1_smokers <- adult_panel %>% 
-                  filter(current_est_smoker_w1 ==1 | current_non_est_smoker_w1 ==1) 
- 
+
 ##Current Smoking Frequency by Lifetime Cigarette Use at Wave 2
 w1_smokers %>% select(smoking_status_w2) %>% table
 
@@ -24,7 +29,6 @@ w1_smokers %>%  select(smoking_status_w3) %>% table
 #Current Smoking Frequency by Lifetime Cigarette Use at Wave 3
 w1_smokers %>%  select(cigarette_current_freq_w3) %>% table
 
-rm(w1_smokers)  
 
 #### WAVE 2: Smokers ####
 w2_smokers <- adult_panel %>% 
@@ -40,7 +44,6 @@ rm(w2_smokers)
 
 
 #### WAVE 1: CURRENT ESTABLISHED SMOKERS ####
-w1_cur_est_smokers <- adult_panel %>%  filter(current_est_smoker_w1 ==1)
 
 ##Current Smoking Frequency by Lifetime Cigarette Use at Wave 2
 w1_cur_est_smokers %>% select(smoking_status_w2) %>% table
@@ -66,7 +69,6 @@ w2_cur_est_smokers %>%  select(cigarette_current_freq_w3) %>% table
 
 
 #### WAVE 1: CURRENT NON-ESTABLISHED SMOKERS ####
-w1_cur_non_est_smokers <- adult_panel %>%  filter(current_non_est_smoker_w1 ==1)
 
 ##Current Smoking Frequency by Lifetime Cigarette Use at Wave 2
 w1_cur_non_est_smokers %>% select(smoking_status_w2) %>% table
@@ -89,3 +91,28 @@ w2_cur_non_est_smokers %>%  select(smoking_status_w3) %>% table
 #Current Smoking Frequency by Lifetime Cigarette Use at Wave 3
 w2_cur_non_est_smokers %>%  select(cigarette_current_freq_w3) %>% table
 
+
+#### WAVE 1 SMOKERS : QUIT RATE ####
+
+#Quit Rate at Wave 2
+w1_cur_est_smokers %>% 
+  group_by(abs_w2) %>% 
+  count()
+
+#Quit Rate at Wave 3
+w1_cur_est_smokers %>% 
+  group_by(abs_w3) %>% 
+  count()
+#### WAVE 2 CURRENT ESTABLISHED SMOKERS: Quit Rate ####
+
+#Quit Rate at Wave 3
+w2_cur_est_smokers %>% 
+  group_by(abs_w3) %>% 
+  count()
+
+
+#### REMOVE OBJECTS ####
+
+rm(w1_smokers)  
+rm(w1_cur_est_smokers)
+rm(w1_cur_non_est_smokers)
