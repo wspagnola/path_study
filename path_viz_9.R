@@ -155,51 +155,15 @@ w2_cur_est_smokers %>%
   group_by(quit_p30d_w1_w3) %>% 
   count
 
-#### Create Tables to Understand 30-Day Data Patterns ####
 
-quit_past_30_days_table_w1_w2 <- adult_panel %>%  
-  filter(current_est_smoker_w1 == 1) %>% 
-  group_by(cigarette_current_use_w2, smoked_past30D_w2, smoked_past12M_w2) %>% 
-  count
-#write.csv(file = 'quit_past_30_days_table_w1_w2.csv', x =quit_past_30_days_table_w1_w2)
-
-
-quit_past_30_days_table_w1_w3 <- adult_panel %>%  
-  filter(current_est_smoker_w1 == 1) %>% 
-  group_by(cigarette_current_use_w3, smoked_past30D_w3, smoked_past12M_w3) %>% 
-  count
-#write.csv(file = 'quit_past_30_days_table_w1_w3.csv', x =quit_past_30_days_table_w1_w3)
-
-
-quit_past_30_days_table_w1_w3 <- adult_panel %>%  
-  filter(current_est_smoker_w1 == 1) %>% 
-  group_by(cigarette_current_use_w3, smoked_past30D_w3, smoked_past12M_w3) %>% 
-  count
-#write.csv(file = 'quit_past_30_days_table_w1_w3.csv', x =quit_past_30_days_table_w1_w3)
-
-
-quit_past_30_days_table_w1_w3 <- adult_panel %>%  
-  filter(current_est_smoker_w1 == 1) %>% 
-  group_by(cigarette_current_use_w3, smoked_past30D_w3, smoked_past12M_w3) %>% 
-  count
-#write.csv(file = 'quit_past_30_days_table_w1_w3.csv', x =quit_past_30_days_table_w1_w3)
-
-
-
-#	***Past 30 day cig use at Wave 2***
-# gen p30cigsmoke_w2=.
-# replace p30cigsmoke_w2=0 if ( R02_AC1023_NN==0) & ( R02_AC1023_UN==1 & R02_AC1023_UN==2)
-# replace p30cigsmoke_w2=0 if ( R02_AC1023_NN==0) & ( R02_AC1023_UN==1 | R02_AC1023_UN==2)
-# replace p30cigsmoke_w2=1 if ( R02_AC1023_NN>=1) & ( R02_AC1023_UN==1 | R02_AC1023_UN==2)
-# tab p30cigsmoke_w2
-
+#### NOTE: Discrepancy ####
 
 adult_panel %>%  
   group_by(smoked_past30D_w2, cigarette_current_use_w2) %>%  
   count
 
 ##NOTE: Why do some people who stated they did not smoke in the past 30 days,
-#respond that they have currently smoke some days or everyday ?
+#respond that they have currently smoked some days or everyday ?
 
 
 

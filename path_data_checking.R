@@ -40,4 +40,23 @@ check_smoking_types_w3<- adult_w3 %>%
 
 
 
+#### Create Tables to Understand 30-Day Data Patterns ####
 
+quit_past_30_days_table_w1_w2 <- adult_panel %>%  
+  filter(current_est_smoker_w1 == 1) %>% 
+  group_by(cigarette_current_use_w2, smoked_past30D_w2, smoked_past12M_w2) %>% 
+  count
+#write.csv(file = 'quit_past_30_days_table_w1_w2.csv', x =quit_past_30_days_table_w1_w2)
+
+quit_past_30_days_table_w1_w3 <- adult_panel %>%  
+  filter(current_est_smoker_w1 == 1) %>% 
+  group_by(cigarette_current_use_w3, smoked_past30D_w3, smoked_past12M_w3) %>% 
+  count
+#write.csv(file = 'quit_past_30_days_table_w1_w3.csv', x =quit_past_30_days_table_w1_w3)
+
+
+quit_past_30_days_table_w2_w3 <- adult_panel %>%  
+  filter(current_est_smoker_w2 == 1) %>% 
+  group_by(cigarette_current_use_w3, smoked_past30D_w3, smoked_past12M_w3) %>% 
+  count
+#write.csv(file = 'quit_past_30_days_table_w2_w3.csv', x =quit_past_30_days_table_w2_w3)

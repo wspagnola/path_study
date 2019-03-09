@@ -455,7 +455,6 @@ DS-3202: Codebook for Wave 3: Youth / Parent - Single-Wave Weights
 #ELSE IF R02R_A_EVR_CIGS= -99911 OR R02_AC1002_12M= -1 OR R02_AC1005= -1 OR R02_AC1003= -1,
 #THEN R02R_A_CUR_ESTD_CIGS = -99911;
 
-
 #WAVE 2 EVER SMOKERS (NEVER SMOKERS = 'NO')
 #R02R_A_EVR_CIGS: DERIVED - Wave 2 Adult Ever Cigarette Smoker
 #Long Description: Wave 2 Adult respondents who have ever smoked a cigarette.
@@ -474,7 +473,6 @@ DS-3202: Codebook for Wave 3: Youth / Parent - Single-Wave Weights
 #ELSE IF R01R_A_NVR_CIGS in (-99999,-99988,-99977,-99955,-99911), 
 #####OR R01R_Y_EVR_CIGS in (-99999,-99988,-99977,-99955,-99911), 
 #THEN R02R_A_EVR_CIGS = -99966; ELSE IF
-
 
 #R03R_A_NEW_CIGS: DERIVED - Wave 3 Adult Never to Ever Cigarette Smoker
 #Long Description: Wave 3 Adult respondents who started cigarette smoking between Wave 2 and Wave 3.
@@ -620,12 +618,11 @@ DS-3202: Codebook for Wave 3: Youth / Parent - Single-Wave Weights
 #DERIVED - Wave 3 Adult Number of Days Since Last Smoked a Cigarette
 
 
-#### WAVE 3: DERIVED INCOME VARIABLES ####
+# WAVE 3: DERIVED INCOME VARIABLES 
 
 #R03_AM0015: 
 #In past 30 days, because of shortage of money, 
 #were you unable to pay important bills on time
-
 
 #R03_AM0039:
 #In past 12 months, received assistance or income from 
