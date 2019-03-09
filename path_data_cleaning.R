@@ -578,6 +578,36 @@ DS-3202: Codebook for Wave 3: Youth / Parent - Single-Wave Weights
 #THEN R03R_A_FMR_EXPR_CIGS_REV=-99911;
 
 
+#R03R_A_P30D_CIGS: DERIVED - Wave 3 Adult Past 30 Day Cigarette Smoker
+#Wave 3 Adult respondents who have smoked a cigarette within the past 30 days.
+#Algorithm: 
+#IF R03R_A_EVR_CIGS=1 AND 
+###(R03_AC1004=1 OR R03_AC0100RY in (1,2,3,4) OR R03_AC0100MC in (1,2,3,4) OR 
+###(0<=R03_AC1009_NN<=30 AND R03_AC1009_UN=1) OR (R03_AC1009_NN in (1,0) AND
+###R03_AC1009_UN=2) OR R03_AC1022>0) 
+#THEN R03R_A_P30D_CIGS=1; 
+#ELSE IF R03R_A_EVR_CIGS=2 OR R03_AC1004=2 OR (R03_AC1009_NN>30 AND R03_AC1009_UN=1) 
+###OR (R03_AC1009_NN>1 AND R03_AC1009_UN=2) OR R03_AC1009_UN=3 OR R03_AC1022=0 
+#THEN R03R_A_P30D_CIGS=2; 
+#### MISSING
+#ELSE IF R03R_A_EVR_CIGS=-99999 OR R03_AC1004=-9 OR R03_AC0100RY=-9 OR R03_AC0100MC=-9 
+####OR R03_AC1009_NN=-9 OR R03_AC1022=-9
+#THEN R03R_A_P30D_CIGS=-99999; 
+#ELSE IF R03R_A_EVR_CIGS=-99988 OR R03_AC1004=-8 OR R03_AC0100RY=-8
+###OR R03_AC0100MC=-8 OR R03_AC1009_NN=-8 OR R03_AC1022=-8 
+#THEN R03R_A_P30D_CIGS=-99988; 
+#ELSE IF R03R_A_EVR_CIGS=-99977 OR R03_AC1004=-7 OR R03_AC0100RY=-7 
+####OR R03_AC0100MC=-7 OR R03_AC1009_NN=-7OR R03_AC1022=-7 
+#THEN R03R_A_P30D_CIGS=-99977; 
+#ELSE IF R03_AC1009_NN= -5 
+#THEN R03R_A_P30D_CIGS = -99955; 
+#ELSE IF R03R_A_EVR_CIGS=-99966 THEN R03R_A_P30D_CIGS=-99966; 
+#ELSE IF R03R_A_EVR_CIGS=-99911 OR R03_AC1004=-1 OR R03_AC0100RY=-1 OR R03_AC0100MC=-1 
+###OR R03_AC1009_NN=-1 OR R03_AC1022=-1
+#THEN R03R_A_P30D_CIGS=-99911;
+
+
+
 #### QUIT VARIABLES #####
 
 
@@ -632,6 +662,10 @@ DS-3202: Codebook for Wave 3: Youth / Parent - Single-Wave Weights
 #smoked_past12M_w3: In past 12 months, smoked a cigarette, even one or two puffs
 
 
+# //R02_AC1023_NN: In past 30 days, average number of cigarettes smoked per day on days smoked - Number
+# //R02_AC1023_UN: In past 30 days, average number of cigarettes smoked per day on days smoked - Unit
+
+
 #R02R_A_AGE: DERIVED - Wave 2 Adult Age (in years) when interviewed
 #NOTE: R02R_A_AGECAT7 in datset
 
@@ -676,22 +710,15 @@ DS-3202: Codebook for Wave 3: Youth / Parent - Single-Wave Weights
 #R01_AC1009_UN: How long since you completely quit smoking cigarettes - Unit
 
 
-#### WAVE 1: PSYCHOLOGICAL DISTRESS ####
-
+# PSYCHOLOGICAL DISTRESS 
 
 #R01_AX0161: Last time you had significant problems with: 
 #Feeling very trapped, lonely, sad,blue, depressed or hopeless about the future
 
-#R01_AX0162: Last time you had significant problems with: 
-#Sleep trouble - such as bad dreams, sleeping restlessly or falling asleep during the day
-
 #R01_AX0163: Last time you had significant problems with: 
 #Feeling very anxious, nervous, tense, scared, panicked or like something bad was going to happen
 
-#R01_AX0164: Last time you had significant problems with: 
-#Becoming very distressed and upset when something reminded you of the past
 
-#NOTE: Do not know how derived this
 
 #### MISSING VALUE CODES ####
 
