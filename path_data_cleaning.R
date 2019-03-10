@@ -706,6 +706,15 @@ DS-3202: Codebook for Wave 3: Youth / Parent - Single-Wave Weights
 #R01_AC1009_NN: How long since you completely quit smoking cigarettes - Number
 #R01_AC1009_UN: How long since you completely quit smoking cigarettes - Unit
 
+#R02_AN0120: In past 12 months, stopped smoking/using [tobacco products / specific product]
+#for one day or longer because you were trying to quit
+#R02_AC1010: Completely quit smoking cigarettes
+#R02_AC1134: Completely quit smoking cigarettes
+#R02_AC1132: Reason no answer for completely quit smoking cigarettes
+#R02_AN0105_01: 
+#[Tobacco products / Specific product] quitting effort:
+#Yes, I have tried to quit completely
+
 
 # PSYCHOLOGICAL DISTRESS 
 

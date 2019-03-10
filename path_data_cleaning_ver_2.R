@@ -1,14 +1,20 @@
 #This data cleaning script uses equivalent commands from Stata do file
-
-
 require(tidyverse)
-require(stringr)
-#### Load in Data ####
 
-#Load Adult Waves 1, 2, 3
-load('Input/36498-1001-Data.rda')
+recode_binary <- function(x) {
+  recode(x, '(1) 1 = Yes' = 1, '(2) 2 = No' = 0 )
+}
+
+
+recode_multi_choice <- function(x) {
+  recode(x, '(1) 1 = Marked' = 1, '(2) 2 = Not Marked' = 0 )
+}
 
 #### WAVE 1: Clean ####
+
+
+#Load Adult Waves 1
+load('Input/36498-1001-Data.rda')
 
 #Rename Varaiables (W1)
 adult_w1 <- da36498.1001 %>%  
@@ -53,7 +59,7 @@ adult_w1 <- adult_w1 %>%
          cigarette_use_ever_w1 = recode(cigarette_use_ever_w1,
                                         '(1) 1 = Yes' = 1,
                                         '(2) 2 = No' = 0)
-  )
+)
 
 #Create Smoking Status Factor Variable and Binary Variables 
 ## est_smoker = established smoker (current & former); smoked 100 cigs in lifetime
@@ -97,21 +103,20 @@ adult_w1 <- adult_w1 %>%
       hispanic_w1 == '(2) 2 = Not Hispanic' ~ 'NH Black', 
     hispanic_w1=='(1) 1 = Hispanic' ~ 'Hispanic',
     race_w1=='(3) 3 = Other' & hispanic_w1== '(2) 2 = Not Hispanic' ~ 'Other')
-  )
+)
 
 
 # Psychological Variable: R01_AX0161 (Sad) or R01_AX0163 (Anxious) in past month
 adult_w1 <- adult_w1 %>% 
   mutate(psychdist_w1 = if_else( 
     as.numeric(R01_AX0161) == 1 | as.numeric(R01_AX0163) == 1, 1, 0)
-  )
+)
 
 #### WAVE 2: Clean ####
 
-load('Input/36498-2001-Data.rda')
-
-
 #Load Data and Rename Variables (W2)
+
+load('Input/36498-2001-Data.rda')
 adult_w2 <- da36498.2001 %>% 
   rename(gender_w2 = R02R_A_SEX,
          race_w2 = R02R_A_RACECAT3,
@@ -120,7 +125,11 @@ adult_w2 <- da36498.2001 %>%
          cigarette_current_freq_w2 = R02_AC1003,
          cigarette_num_life_w2 = R02_AC1005,
          smoked_past12M_w2 = R02_AC1002_12M,
-         smoked_past30D_w2 = R02R_A_P30D_CIGS
+         smoked_past30D_w2 = R02R_A_P30D_CIGS,
+         attempt_quit_completely = R02_AN0105_01,
+         attempt_quit_reduce = R02_AN0105_02, 
+         attempt_reduce = R02_AN0105_03, 
+         attempt_none = R02_AN0105_04
 ) 
 
 #Collapse Age, Education, and Income Factors (W2)
@@ -208,6 +217,13 @@ adult_w2 <- adult_w2 %>%
                                        'Three Months', 'Six Months','One Year'))
 )  
 
+
+#Recode Quit Attempt Variables as binary 
+adult_w2 <- adult_w2 %>% 
+              mutate_if(.predicate = grepl('^attempt', names(adult_w2)), .funs = recode_multi_choice
+) 
+
+
 #Race/Ethnicity Variable: NH-White, NH-black, Hispanic, Other (W2)
 adult_w2 <- adult_w2 %>% 
   mutate(race_ethnicity_w2 = case_when(
@@ -237,7 +253,9 @@ adult_w3 <- da36498.3001 %>%
          cigarette_current_freq_w3 = R03_AC1003,
          cigarette_num_life_w3 = R03_AC1005,
          smoked_past12M_w3 = R03_AC1002_12M,
-         smoked_past30D_w3 = R03R_A_P30D_CIGS
+         smoked_past30D_w3 = R03R_A_P30D_CIGS,
+         attempt_quit = R03_AN0105,
+         attempt_quit_reduce = R03_AN0334
 )
 
 #Collapse Education, Income, Age, and Cigarette Use Variables 
@@ -311,6 +329,14 @@ adult_w3 <- adult_w3 %>%
                                        'More than 7 Days', 'One Month',  
                                        'Three Months', 'Six Months','One Year'))
 )
+
+
+#Recode Quit Attemp Variables as binary
+adult_w3 <- adult_w3 %>% 
+  mutate_if(.predicate = grepl('^attempt', names(adult_w3)), 
+            .funs = recode_binary
+) 
+
 
 #Race/Ethnicity Variable: NH-White, NH-black, Hispanic, Other (W2)
 adult_w3 <- adult_w3 %>% 
