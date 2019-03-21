@@ -103,19 +103,42 @@ svymean(~education_w1, survey_w1, na.rm =T) %>%  round(3) *100
 svymean(~income_w1, survey_w1, na.rm =T) %>%  round(3) *100
 svymean(~sexual_orientation_w1, survey_w1, na.rm =T)
 
-#Wave 2
-survey_w2 <- svrepdesign(data = adult_w2,
+#### Wave 2  ####
+
+adult_sub_w2 <- adult_panel %>% 
+  select(PERSONID, ends_with('w2'), starts_with('R02_A_PWGT'), starts_with('wave'),
+        smoking_status_w1) %>% 
+  filter(wave_2 == 1)
+
+
+cur_est_w1_at_w2 <- adult_panel %>% 
+  select(PERSONID, ends_with('w2'), starts_with('R02_A_PWGT'), starts_with('wave'),
+         smoking_status_w1) %>% 
+  filter(wave_2 == 1,  smoking_status_w1 == 'current_est_smoker') 
+
+colSums(is.na(adult_sub_w2))
+survey_w2 <- svrepdesign(data = adult_sub_w2 ,
                          weights = ~R02_A_PWGT,
-                         repweights = '._PWGT[1-100]',
+                         repweights = 'R02_A_PWGT[1-100]',
                          type = 'BRR',
                          rho = 0.3, 
                          mse = TRUE,
                          combined.weights = TRUE)
-svymean(~age_w2, survey_w2, na.rm =T)
-svymean(~gender_w2, survey_w2, na.rm =T)
+
+cur_est_survey_w2 <- svrepdesign(data = cur_est_w1_at_w2  ,
+                         weights = ~R02_A_PWGT,
+                         repweights = 'R02_A_PWGT[1-100]',
+                         type = 'BRR',
+                         rho = 0.3, 
+                         mse = TRUE,
+                         combined.weights = TRUE)
+
+
 svymean(~education_w2, survey_w2, na.rm =T)
-svymean(~income_w2, survey_w2, na.rm =T)
-svymean(~sexual_orientation_w2, survey_w2, na.rm =T)
+svymean(~smoking_status_w2, cur_est_survey_w2, na.rm =T)*100
+
+table(adult_sub_w2$education_w2)
+
 
 #### Wave 3 ####
 
@@ -129,18 +152,35 @@ adult_w3_merged <- adult_w3 %>%
                 left_join(single_waves_weights,  by = c('PERSONID'))
 adult_w3_merged_cc <- adult_w3_merged %>% 
                             filter(!is.na(R03_A_AWGT))
-
-adult_w3_merged <- adult_w3 %>% 
-                     left_join(single_waves_weights,by = c('PERSONID'))
-
+adult_w3_merged$R03_A_S
+adult_w3_merged %>% 
+  group_by(gender_w3) %>% 
+  count
+?mutate_if
+all_weights_idx <- 
+adult_w3_merged  <- adult_w3_merged %>% 
+                          mutate_if(.predicate = grepl(names(adult_w3_merged), pattern = 'A_AWG'), 
+                                    .funs = function(x) { ifelse(is.na(x), 1, x)}) %>% 
+                          select(R03_A_AWGT) 
 
 all_waves_weights_design <- svrepdesign(data =  adult_w3_merged_cc ,
-                         weights = ~R03_A_AWGT,
-                         repweights = 'AWGT[1-100]',
+                         weights = ~R03_A_AWGT*R03_A_SWGT,
+                         repweights = 'AWGT[1-100]|SWGT[1-100]',
                          type = 'BRR',
                          rho = 0.3, 
                          combined.weights = TRUE)
+svymean(~factor(gender_w3), all_waves_weights_design, na.rm = T)*2
 
+adult_w3_merged$R03_A_S
+single_waves_weights_design <- svrepdesign(data =  adult_w3_merged ,
+                                        weights = ~R03_A_SWGT,
+                                        repweights = 'SWGT[1-100]',
+                                        type = 'BRR',
+                                        rho = 0.3, 
+                                        combined.weights = TRUE)
+svymean(~gender_w3, single_waves_weights_design, na.rm = T)
+svy_mean 
+all_waves_weights_design
 survey_w3 <- svrepdesign(data = adult_w3_merged_cc, 
                                         weights = ~R03_A_SWGT + R03_A_AWGT,
                                         repweights = c('AWGT[1-100]|SWGT[1-100]'),

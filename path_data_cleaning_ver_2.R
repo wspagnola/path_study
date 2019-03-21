@@ -49,7 +49,8 @@ adult_w1 <- adult_w1 %>%
                                            "(1) 1 = Every day" = 1,  
                                            "(2) 2 = Some days" = 1,
                                            "(3) 3 = Not at all" = 0),
-         cigarette_use_ever_w1 = recode_binary(cigarette_use_ever_w1)
+         cigarette_use_ever_w1 = recode_binary(cigarette_use_ever_w1),
+         PERSONID = as.character(PERSONID)
 )
 
 #Create Smoking Status Factor Variable and Binary Variables 
@@ -116,6 +117,7 @@ adult_w1 <- adult_w1 %>%
     as.numeric(R01_AX0161) == 1 | as.numeric(R01_AX0163) == 1, 1, 0)
 )
 
+adult_w1$wave_1 <- 1
 #### WAVE 2: Clean ####
 
 #Load Data and Rename Variables (W2)
@@ -163,7 +165,8 @@ adult_w2 <- adult_w2 %>%
          cigarette_current_use_w2 = recode(cigarette_current_freq_w2, 
                                            "(1) 1 = Every day" = 1,  
                                            "(2) 2 = Some days" = 1,
-                                           "(3) 3 = Not at all" = 0)
+                                           "(3) 3 = Not at all" = 0),
+         PERSONID = as.character(PERSONID)
 ) 
 
 # Use dummy coding (0/1) for (No/Yes)
@@ -257,6 +260,7 @@ adult_w2 <- adult_w2 %>%
     as.numeric(R02_AX0161) == 1 | as.numeric(R02_AX0163) == 1, 1, 0)
 )
 
+adult_w2$wave_2 <- 1
 
 #### WAVE 3: Clean ####
 
@@ -302,7 +306,8 @@ adult_w3 <- adult_w3 %>%
          cigarette_current_use_w3 = recode(cigarette_current_freq_w3, 
                                            '(1) 1 = Every day' = 1,
                                            '(2) 2 = Some days' = 1,
-                                           '(3) 3 = Not at all' = 0)
+                                           '(3) 3 = Not at all' = 0),
+         PERSONID = as.character(PERSONID)
 )
 
 # Use dummy coding (0/1) for (No/Yes)
@@ -392,10 +397,12 @@ adult_w3 <- adult_w3 %>%
     as.numeric(R03_AX0161) == 1 | as.numeric(R03_AX0163) == 1, 1, 0)
 )
 
+
+adult_w3$wave_3 <- 1
 #### MERGE WAVES ####
-adult_w1$PERSONID <- as.character(adult_w1$PERSONID )
-adult_w2$PERSONID <- as.character(adult_w2$PERSONID )
-adult_w3$PERSONID <- as.character(adult_w3$PERSONID )
+# adult_w1$PERSONID <- as.character(adult_w1$PERSONID )
+# adult_w2$PERSONID <- as.character(adult_w2$PERSONID )
+# adult_w3$PERSONID <- as.character(adult_w3$PERSONID )
 
 
 #Note: Must by Full Join; Only use PERSONID for 'by' argument
@@ -469,3 +476,11 @@ adult_panel <- adult_panel %>%
 remove(list = c('da36498.1001', 'da36498.2001', 'da36498.3001'))
 
 
+#Recode NAs as Zero for obs. that was not included in a given wave
+adult_panel <- adult_panel %>% 
+                    mutate(wave_1 = ifelse(is.na(wave_1), 0, wave_1),
+                           wave_2 = ifelse(is.na(wave_2), 0, wave_2),
+                           wave_3 = ifelse(is.na(wave_3), 0, wave_3)
+) 
+
+adult_panel$wave_2 %>%  table
