@@ -161,6 +161,30 @@ adult_panel %>%
   my_theme_panel
 ggsave('Figures/Panel_2_Smoking_Status_Barplot.png', width = 6)
 
+
+#### FULL SMOKING STATUS BARPLOT  (PANEL) ####
+adult_panel %>% 
+  prep_panel_data(w1 = 'smoking_status_full_w1', 
+                  w2 = 'smoking_status_full_w2', 
+                  label = 'Smoking_Status') %>% 
+  ggplot(aes(x = Smoking_Status, y = n, fill = Wave)) +
+  geom_col(color = 'black', 
+           width = 0.4,
+           position = position_dodge()) +
+  scale_x_discrete(labels = c('Current Established Smokers', 
+                              'Former Established Smokers', 
+                              'Current Experimental Smokers',
+                              'Former Experimental Smokers', 
+                              'Never Smokers')) +
+  scale_y_continuous(expand = c(0, 0),
+                     breaks=seq(0,12000,2000), 
+                     limits = c(0, 12000)) +
+  scale_fill_discrete(labels = c('Wave 1', 'Wave 2') ) +
+  ggtitle("Smoking Status Across Waves") +
+  xlab(NULL) +
+  my_theme_panel
+
+
 #### PSYCHOLOGICAL DISTRESS BARPLOT (PANEL) ####
 adult_panel %>% 
   prep_panel_data(w1 = 'psychdist_w1', 

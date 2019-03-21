@@ -2,14 +2,15 @@
 source('source.R')
 
 
-STATA <- TRUE  #TRUE to match STAT file
+#STATA <- TRUE  #TRUE to match STAT file
+STATA <- FALSE  #TRUE to match STAT file
 
 #### WAVE 1: Clean ####
 
 #Load Adult Waves 1
 load('Input/36498-1001-Data.rda')
 
-#Rename Varaiables (W1)
+#Rename Variables (W1) and mutate PERSONID to character
 adult_w1 <- da36498.1001 %>%  
   rename(gender_w1 = R01R_A_SEX,
          race_w1 = R01R_A_RACECAT3,
@@ -18,8 +19,37 @@ adult_w1 <- da36498.1001 %>%
          poverty_w1 =R01R_POVCAT2,
          region_w1 = R01X_CB_REGION,
          cig_use_ever_w1 = R01_AC1002,
-         cigarette_current_freq_w1 = R01_AC1003,
-         cigarette_num_life_w1 = R01_AC1005
+         cig_current_freq_w1 = R01_AC1003,
+         cig_num_life_w1 = R01_AC1005) %>% 
+  mutate(
+        PERSONID = as.character(PERSONID)
+)
+
+#Race/Ethnicity Variable: NH-White, NH-black, Hispanic, Other (W1)
+adult_w1 <- adult_w1 %>% 
+  mutate(race_ethnicity_w1 = case_when(
+    race_w1=='(1) 1 = White alone'& 
+      hispanic_w1 == '(2) 2 = Not Hispanic'~ 'NH White',
+    race_w1=='(2) 2 = Black alone' &
+      hispanic_w1 == '(2) 2 = Not Hispanic' ~ 'NH Black', 
+    hispanic_w1=='(1) 1 = Hispanic' ~ 'Hispanic',
+    race_w1=='(3) 3 = Other' & hispanic_w1== '(2) 2 = Not Hispanic' ~ 'Other')
+)
+
+#Recode/Relevel Race, Sexual Orientation, Region, and Poverty Variables
+adult_w1 <- adult_w1 %>% 
+  mutate(
+    race_ethnicity_w1 = as.factor(race_ethnicity_w1),
+    race_ethnicity_w1 = relevel(race_ethnicity_w1, ref = 'NH White'),
+    sexual_orientation_w1 = recode(sexual_orientation_w1,
+                                   '(1) 1 = Lesbian, Gay, Bisexual, Something else' = 'LGBT',
+                                   '(2) 2 = Straight' = 'Straight'),
+    sexual_orientation_w1 = relevel(sexual_orientation_w1, ref = 'Straight'),
+    poverty_w1 = recode(poverty_w1,
+                        '(1) 1 = Below poverty level (< 100% of poverty guideline)' = 'Below_Poverty',
+                        '(2) 2 = At or above poverty level (>= 100% of poverty guideline)' = 'Above_Poverty'),
+    poverty_w1 = as.factor(poverty_w1),
+    poverty_w1 = relevel(poverty_w1, ref = 'Above_Poverty')
 )
 
 #Collapse variables: age, income, education, current cigarette use; Recode cigarette ever us
@@ -45,12 +75,11 @@ adult_w1 <- adult_w1 %>%
                                   'btwn_25_to_50k'= "(3) 3 = $25,000 to $49,999",
                                   'btwn_50k_100k' = "(4) 4 = $50,000 to $99,999",
                                   'more_than_100k' =  "(5) 5 = $100,000 or more"),
-         cigarette_current_use_w1 = recode(cigarette_current_freq_w1, 
+         cig_current_use_w1 = recode(cig_current_freq_w1, 
                                            "(1) 1 = Every day" = 1,  
                                            "(2) 2 = Some days" = 1,
                                            "(3) 3 = Not at all" = 0),
-        cig_use_ever_w1 = recode_binary(cig_use_ever_w1),
-         PERSONID = as.character(PERSONID)
+        cig_use_ever_w1 = recode_binary(cig_use_ever_w1)
 )
 
 #Create Smoking Status Factor Variable and Binary Variables 
@@ -62,7 +91,7 @@ adult_w1 <- adult_w1 %>%
 if(STATA){
   adult_w1 <- adult_w1 %>%  
     mutate(
-      est_smoker_w1 = if_else(as.numeric(cigarette_num_life_w1) == 6, 1, 0),
+      est_smoker_w1 = if_else(as.numeric(cig_num_life_w1) == 6, 1, 0),
       current_est_smoker_w1 = if_else(R01R_A_CUR_ESTD_CIGS == '(1) 1 = Yes', 1, 0),
       never_smoker_w1 = if_else(R01R_A_NVR_CIGS == '(1) 1 = Yes', 1, 0),
       former_est_smoker_w1 = if_else(R01R_A_FMR_ESTD_CIGS == '(1) 1 = Yes', 1, 0),
@@ -79,14 +108,14 @@ if(STATA){
 } else {
   adult_w1 <- adult_w1 %>%  
     mutate(
-      est_smoker_w1 = if_else(as.numeric(cigarette_num_life_w1) == 6, 1, 0),
+      est_smoker_w1 = if_else(as.numeric(cig_num_life_w1) == 6, 1, 0),
       smoking_status_full_w1 = case_when(
-        cigarette_current_use_w1 == 1 & est_smoker_w1 == 1 ~ 'current_est_smoker',
-        cigarette_current_use_w1 == 0 & est_smoker_w1 == 1 ~ 'former_est_smoker',
-        cigarette_current_use_w1 == 1 & est_smoker_w1 == 0 ~ 'current_exp_smoker',
-        cigarette_current_use_w1 == 0 & est_smoker_w1 == 0 &
-      cig_use_ever_w1 == 1 ~ 'former_exp_smoker',
-    cig_use_ever_w1 == 0 ~'never_smoker'), 
+            cig_current_use_w1 == 1 & est_smoker_w1 == 1 ~ 'current_est_smoker',
+            cig_current_use_w1 == 0 & est_smoker_w1 == 1 ~ 'former_est_smoker',
+            cig_current_use_w1 == 1 & est_smoker_w1 == 0 ~ 'current_exp_smoker',
+            cig_current_use_w1 == 0 & est_smoker_w1 == 0 &
+            cig_use_ever_w1 == 1 ~ 'former_exp_smoker',
+            cig_use_ever_w1 == 0 ~'never_smoker'), 
       smoking_status_w1 = fct_collapse(smoking_status_full_w1,
                                        'current' = c('current_est_smoker', 'current_exp_smoker'),
                                        'former' = c('former_est_smoker', 'former_exp_smoker')),
@@ -97,19 +126,6 @@ if(STATA){
       never_smoker_w1 = if_else(smoking_status_full_w1 == 'never_smoker', 1, 0)
     )
 }
-
-
-#Race/Ethnicity Variable: NH-White, NH-black, Hispanic, Other (W1)
-adult_w1 <- adult_w1 %>% 
-  mutate(race_ethnicity_w1 = case_when(
-    race_w1=='(1) 1 = White alone'& 
-      hispanic_w1 == '(2) 2 = Not Hispanic'~ 'NH White',
-    race_w1=='(2) 2 = Black alone' &
-      hispanic_w1 == '(2) 2 = Not Hispanic' ~ 'NH Black', 
-    hispanic_w1=='(1) 1 = Hispanic' ~ 'Hispanic',
-    race_w1=='(3) 3 = Other' & hispanic_w1== '(2) 2 = Not Hispanic' ~ 'Other')
-)
-
 
 # Psychological Variable: R01_AX0161 (Sad) or R01_AX0163 (Anxious) in past month
 adult_w1 <- adult_w1 %>% 
@@ -123,22 +139,43 @@ adult_w1$wave_1 <- 1
 #Load Data and Rename Variables (W2)
 load('Input/36498-2001-Data.rda')
 
-#Rename Variables
+#Rename Variables and mutate PERSONID to character
 adult_w2 <- da36498.2001 %>% 
   rename(gender_w2 = R02R_A_SEX,
          race_w2 = R02R_A_RACECAT3,
          hispanic_w2 = R02R_A_HISP,
          sexual_orientation_w2 = R02R_A_SEXORIENT2,
-         cigarette_current_freq_w2 = R02_AC1003,
-         cigarette_num_life_w2 = R02_AC1005,
+         cig_current_freq_w2 = R02_AC1003,
+         cig_num_life_w2 = R02_AC1005,
          smoked_past12M_w2 = R02_AC1002_12M,
          smoked_past30D_w2 = R02R_A_P30D_CIGS,
          attempt_quit_completely = R02_AN0105_01,
          attempt_quit_reduce = R02_AN0105_02, 
          attempt_reduce = R02_AN0105_03, 
          attempt_none = R02_AN0105_04,
-         cig_use_ever_w2 = R02R_A_EVR_CIGS
-) 
+         cig_use_ever_w2 = R02R_A_EVR_CIGS) %>% 
+  mutate(PERSONID = as.character(PERSONID)
+)
+
+#Race/Ethnicity Variable: NH-White, NH-black, Hispanic, Other (W2)
+adult_w2 <- adult_w2 %>% 
+  mutate(race_ethnicity_w2 = case_when(
+    race_w2 =='(1) 1 = White alone'&  hispanic_w2 == '(2) 2 = Not Hispanic'~ 'NH White',
+    race_w2 =='(2) 2 = Black alone' & hispanic_w2 == '(2) 2 = Not Hispanic' ~ 'NH Black', 
+    hispanic_w2 =='(1) 1 = Hispanic' ~ 'Hispanic',
+    race_w2=='(3) 3 = Other' & hispanic_w2== '(2) 2 = Not Hispanic' ~ 'Other')
+)
+
+#Recode/Relevel Race and Sexual Orientation Variables
+adult_w2 <- adult_w2 %>% 
+      mutate(
+          race_ethnicity_w2 = as.factor(race_ethnicity_w2),
+          race_ethnicity_w2 = relevel(race_ethnicity_w2, ref = 'NH White'),
+          sexual_orientation_w2 = recode(sexual_orientation_w2,
+                               '(1) 1 = Lesbian, Gay, Bisexual, Something else' = 'LGBT',
+                               '(2) 2 = Straight' = 'Straight'),
+          sexual_orientation_w2 = relevel(sexual_orientation_w2, ref = 'Straight')
+)
 
 #Collapse Age, Education, and Income Factors (W2)
 adult_w2 <- adult_w2 %>%  
@@ -163,11 +200,10 @@ adult_w2 <- adult_w2 %>%
                                   'btwn_25_to_50k'= "(3) 3 = $25,000 to $49,999",
                                   'btwn_50k_100k' = "(4) 4 = $50,000 to $99,999",
                                   'more_than_100k' =  "(5) 5 = $100,000 or more"),
-         cigarette_current_use_w2 = recode(cigarette_current_freq_w2, 
+         cig_current_use_w2 = recode(cig_current_freq_w2, 
                                            "(1) 1 = Every day" = 1,  
                                            "(2) 2 = Some days" = 1,
-                                           "(3) 3 = Not at all" = 0),
-         PERSONID = as.character(PERSONID)
+                                           "(3) 3 = Not at all" = 0)
 ) 
 
 # Use dummy coding (0/1) for (No/Yes)
@@ -180,13 +216,13 @@ adult_w2 <- adult_w2 %>%
 #Smoking Status: Generate Dummy Variables then Group by factor (W2)
 if (STATA){
   adult_w2 <- adult_w2 %>% 
-    mutate(est_smoker_w2 = if_else(cigarette_num_life_w2 == 6, 1, 0),
+    mutate(est_smoker_w2 = if_else(cig_num_life_w2 == 6, 1, 0),
            current_est_smoker_w2 = if_else(R02R_A_CUR_ESTD_CIGS == '(1) 1 = Yes', 1, 0),
            never_smoker_w2 = if_else(cig_use_ever_w2 == '(2) 2 = No', 1, 0),
            former_est_smoker_w2 = if_else(R02R_A_FMR_ESTD_CIGS_REV == '(1) 1 = Yes' |
                                             is.na(R02R_A_FMR_ESTD_CIGS_REV) &
                                             is.na(est_smoker_w2) &
-                                            is.na(cigarette_current_use_w2) &
+                                            is.na(cig_current_use_w2) &
                                             (is.na(R02R_A_CUR_ESTD_CIGS) |
                                                is.na(cig_use_ever_w2)), 1, 0),
            current_non_est_smoker_w2 = if_else(as.numeric(R02R_A_CUR_ESTD_CIGS) == 2 &
@@ -201,7 +237,7 @@ if (STATA){
     )
 } else {
   adult_w2 <- adult_w2 %>% 
-    mutate(est_smoker_w2 = if_else(cigarette_num_life_w2 == 6, 1, 0),
+    mutate(est_smoker_w2 = if_else(cig_num_life_w2 == 6, 1, 0),
            current_est_smoker_w2 = if_else(R02R_A_CUR_ESTD_CIGS == '(1) 1 = Yes', 1, 0),
            former_est_smoker_w2 = if_else(R02R_A_FMR_ESTD_CIGS_REV == '(1) 1 = Yes', 1, 0),
            current_exp_smoker_w2 = if_else(R02R_A_CUR_EXPR_CIGS  == '(1) 1 = Yes', 1, 0),
@@ -239,21 +275,10 @@ adult_w2 <- adult_w2 %>%
                                        'Three Months', 'Six Months','One Year'))
 )  
 
-
 #Recode Quit Attempt Variables as binary 
 adult_w2 <- adult_w2 %>% 
               mutate_if(.predicate = grepl('^attempt', names(adult_w2)), .funs = recode_multi_choice
 ) 
-
-
-#Race/Ethnicity Variable: NH-White, NH-black, Hispanic, Other (W2)
-adult_w2 <- adult_w2 %>% 
-  mutate(race_ethnicity_w2 = case_when(
-    race_w2 =='(1) 1 = White alone'&  hispanic_w2 == '(2) 2 = Not Hispanic'~ 'NH White',
-    race_w2 =='(2) 2 = Black alone' & hispanic_w2 == '(2) 2 = Not Hispanic' ~ 'NH Black', 
-    hispanic_w2 =='(1) 1 = Hispanic' ~ 'Hispanic',
-    race_w2=='(3) 3 = Other' & hispanic_w2== '(2) 2 = Not Hispanic' ~ 'Other')
-)
 
 # Psychological Variable: R02_AX0161 (Sad) or R02_AX0163 (Anxious) in past month
 adult_w2 <- adult_w2 %>% 
@@ -273,13 +298,34 @@ adult_w3 <- da36498.3001 %>%
          race_w3 = R03R_A_RACECAT3,
          hispanic_w3 = R03R_A_HISP,
          sexual_orientation_w3 = R03R_A_SEXORIENT2,
-         cigarette_current_freq_w3 = R03_AC1003,
-         cigarette_num_life_w3 = R03_AC1005,
+         cig_current_freq_w3 = R03_AC1003,
+         cig_num_life_w3 = R03_AC1005,
          smoked_past12M_w3 = R03_AC1002_12M,
          smoked_past30D_w3 = R03R_A_P30D_CIGS,
          attempt_quit = R03_AN0105,
          attempt_quit_reduce = R03_AN0334,
-         cig_use_ever_w3 = R03R_A_EVR_CIGS
+         cig_use_ever_w3 = R03R_A_EVR_CIGS) %>% 
+  mutate(PERSONID = as.character(PERSONID)
+)
+
+#Race/Ethnicity Variable: NH-White, NH-black, Hispanic, Other (W2)
+adult_w3 <- adult_w3 %>% 
+  mutate(race_ethnicity_w3 = case_when(
+    race_w3=='(1) 1 = White alone'& hispanic_w3 =='(2) 2 = Not Hispanic'~ 'NH White',
+    race_w3=='(2) 2 = Black alone' & hispanic_w3 =='(2) 2 = Not Hispanic' ~ 'NH Black', 
+    hispanic_w3=='(1) 1 = Hispanic' ~ 'Hispanic',
+    race_w3=='(3) 3 = Other' & hispanic_w3== '(2) 2 = Not Hispanic' ~ 'Other')
+)
+
+#Recode/Relevel Race, Sexual Orientation, Region, and Poverty Variables
+adult_w3 <- adult_w3 %>% 
+  mutate(
+    race_ethnicity_w3 = as.factor(race_ethnicity_w3),
+    race_ethnicity_w3 = relevel(race_ethnicity_w3, ref = 'NH White'),
+    sexual_orientation_w3 = recode(sexual_orientation_w3,
+                                   '(1) 1 = Lesbian, Gay, Bisexual, Something else' = 'LGBT',
+                                   '(2) 2 = Straight' = 'Straight'),
+    sexual_orientation_w3 = relevel(sexual_orientation_w3, ref = 'Straight')
 )
 
 #Collapse Education, Income, Age, and Cigarette Use Variables 
@@ -305,11 +351,10 @@ adult_w3 <- adult_w3 %>%
                                                    '(5) 5 = 55 to 64 years old'),
                                'older_than_65' = c('(6) 6 = 65 to 74 years old',
                                                    '(7) 7 = 75 years old or older')),
-         cigarette_current_use_w3 = recode(cigarette_current_freq_w3, 
+         cig_current_use_w3 = recode(cig_current_freq_w3, 
                                            '(1) 1 = Every day' = 1,
                                            '(2) 2 = Some days' = 1,
-                                           '(3) 3 = Not at all' = 0),
-         PERSONID = as.character(PERSONID)
+                                           '(3) 3 = Not at all' = 0)
 )
 
 # Use dummy coding (0/1) for (No/Yes)
@@ -321,7 +366,7 @@ adult_w3 <- adult_w3 %>%
 
 #Create binary variables for smoking status; then combine into single factor variable (w3)
 adult_w3 <- adult_w3 %>% 
-  mutate(est_smoker_w3 = if_else(cigarette_num_life_w3 == 6, 1, 0),
+  mutate(est_smoker_w3 = if_else(cig_num_life_w3 == 6, 1, 0),
          current_est_smoker_w3 = if_else(R03R_A_CUR_ESTD_CIGS == '(1) 1 = Yes', 1, 0),
          never_smoker_w3 = if_else(cig_use_ever_w3 == '(2) 2 = No', 1, 0),
          former_est_smoker_w3 = if_else(R03R_A_FMR_ESTD_CIGS_REV == '(1) 1 = Yes' , 1, 0),
@@ -357,7 +402,7 @@ if(STATA){
     )
 } else{
   adult_w3 <- adult_w3 %>% 
-    mutate(est_smoker_w3 = if_else(cigarette_num_life_w3 == 6, 1, 0),
+    mutate(est_smoker_w3 = if_else(cig_num_life_w3 == 6, 1, 0),
            current_est_smoker_w3 = if_else(R03R_A_CUR_ESTD_CIGS == '(1) 1 = Yes', 1, 0),
            former_est_smoker_w3 = if_else(R03R_A_FMR_ESTD_CIGS_REV == '(1) 1 = Yes', 1, 0),
            current_exp_smoker_w3 = if_else(R03R_A_CUR_EXPR_CIGS  == '(1) 1 = Yes', 1, 0),
@@ -383,16 +428,6 @@ adult_w3 <- adult_w3 %>%
             .funs = recode_binary
 ) 
 
-
-#Race/Ethnicity Variable: NH-White, NH-black, Hispanic, Other (W2)
-adult_w3 <- adult_w3 %>% 
-  mutate(race_ethnicity_w3 = case_when(
-    race_w3=='(1) 1 = White alone'& hispanic_w3 =='(2) 2 = Not Hispanic'~ 'NH White',
-    race_w3=='(2) 2 = Black alone' & hispanic_w3 =='(2) 2 = Not Hispanic' ~ 'NH Black', 
-    hispanic_w3=='(1) 1 = Hispanic' ~ 'Hispanic',
-    race_w3=='(3) 3 = Other' & hispanic_w3== '(2) 2 = Not Hispanic' ~ 'Other')
-)
-
 # Psychological Variable: R03_AX0161 (Sad) or R03_AX0163 (Anxious) in past month
 adult_w3 <- adult_w3 %>% 
   mutate(psychdist_w3 = if_else( 
@@ -402,10 +437,6 @@ adult_w3 <- adult_w3 %>%
 
 adult_w3$wave_3 <- 1
 #### MERGE WAVES ####
-# adult_w1$PERSONID <- as.character(adult_w1$PERSONID )
-# adult_w2$PERSONID <- as.character(adult_w2$PERSONID )
-# adult_w3$PERSONID <- as.character(adult_w3$PERSONID )
-
 
 #Note: Must by Full Join; Only use PERSONID for 'by' argument
 adult_panel <- adult_w1 %>%  
@@ -422,32 +453,32 @@ adult_panel <- adult_w1 %>%
 # WAVE 2: Quit Status at W2 for 'W1 Current Smokers'
 adult_panel <- adult_panel %>%
   mutate(quit_w1_w2  = case_when(
-    cigarette_current_use_w1== 1 & 
-      cigarette_current_use_w2== 1 ~ 'No',
-    cigarette_current_use_w1== 1 & 
+    cig_current_use_w1== 1 & 
+      cig_current_use_w2== 1 ~ 'No',
+    cig_current_use_w1== 1 & 
       (smoked_past12M_w2== 0 | 
-         cigarette_current_use_w2== 0) ~ 'Yes'),
+         cig_current_use_w2== 0) ~ 'Yes'),
     quit_cat_w1_w2  = case_when(
-      cigarette_current_use_w1==1 & 
-        cigarette_current_use_w2==1 ~ 'No',
-      cigarette_current_use_w1==1 & 
+      cig_current_use_w1==1 & 
+        cig_current_use_w2==1 ~ 'No',
+      cig_current_use_w1==1 & 
         (as.numeric(smoked_past12M_w2)==2 | 
-           cigarette_current_use_w2==0) ~ 'Yes',
-      cigarette_current_use_w1==0 & 
+           cig_current_use_w2==0) ~ 'Yes',
+      cig_current_use_w1==0 & 
         (as.numeric(smoked_past12M_w2)==2 | 
-           cigarette_current_use_w2==0) ~ 'Stayed Non-Smoker')
+           cig_current_use_w2==0) ~ 'Stayed Non-Smoker')
 )
 
 # WAVE 3: Quit Status  at W3 for 'W1 Current Smokers'
 adult_panel <- adult_panel %>% 
   mutate(
     quit_w1_w3  = case_when(
-      cigarette_current_use_w1==1 & cigarette_current_use_w3==1 ~  'No',
-      cigarette_current_use_w1==1 & (smoked_past12M_w3==0 | cigarette_current_use_w3== 0) ~ 'Yes'),
+      cig_current_use_w1==1 & cig_current_use_w3==1 ~  'No',
+      cig_current_use_w1==1 & (smoked_past12M_w3==0 | cig_current_use_w3== 0) ~ 'Yes'),
     quit_cat_w1_w3  = case_when(
-      cigarette_current_use_w1==1 & cigarette_current_use_w3==1 ~ 'No',
-      cigarette_current_use_w1==1 & (smoked_past12M_w3 == 1 | cigarette_current_use_w3==0) ~ 'Yes',
-      cigarette_current_use_w1==0 & (smoked_past12M_w3==1 | cigarette_current_use_w3==0) ~ 'Stayed Non-Smoker'),
+      cig_current_use_w1==1 & cig_current_use_w3==1 ~ 'No',
+      cig_current_use_w1==1 & (smoked_past12M_w3 == 1 | cig_current_use_w3==0) ~ 'Yes',
+      cig_current_use_w1==0 & (smoked_past12M_w3==1 | cig_current_use_w3==0) ~ 'Stayed Non-Smoker'),
     quit_cat_w1_w3  = factor(quit_cat_w1_w3, levels = c('Yes', 'No', 'Stayed Non-Smoker'))
 ) 
 
@@ -455,20 +486,20 @@ adult_panel <- adult_panel %>%
 adult_panel <- adult_panel %>% 
   mutate(
     quit_w2_w3  = case_when(
-      cigarette_current_use_w2==1 & cigarette_current_use_w3==1 ~  'No',
-      cigarette_current_use_w2==1 & (smoked_past12M_w3==0 | cigarette_current_use_w3== 0) ~ 'Yes'),
+      cig_current_use_w2==1 & cig_current_use_w3==1 ~  'No',
+      cig_current_use_w2==1 & (smoked_past12M_w3==0 | cig_current_use_w3== 0) ~ 'Yes'),
     quit_cat_w2_w3  = case_when(
-      cigarette_current_use_w2==1 & cigarette_current_use_w3==1 ~ 'No',
-      cigarette_current_use_w2==1 & (smoked_past12M_w3 == 1 | cigarette_current_use_w3==0) ~ 'Yes',
-      cigarette_current_use_w2==0 & (smoked_past12M_w3==1 | cigarette_current_use_w3==0) ~ 'Stayed Non-Smoker'),
+      cig_current_use_w2==1 & cig_current_use_w3==1 ~ 'No',
+      cig_current_use_w2==1 & (smoked_past12M_w3 == 1 | cig_current_use_w3==0) ~ 'Yes',
+      cig_current_use_w2==0 & (smoked_past12M_w3==1 | cig_current_use_w3==0) ~ 'Stayed Non-Smoker'),
     quit_cat_w2_w3  = factor(quit_cat_w2_w3, levels = c('Yes', 'No', 'Stayed Non-Smoker'))
 ) 
 
 # WAVE 3: P30D Quit Status at W3 for 'W2 Current Smokers' 
 adult_panel <- adult_panel %>% 
                   mutate( quit_p30d_w2_w3  = case_when(
-  cigarette_current_use_w2==1 & cigarette_current_use_w3==1 ~  'No',
-  cigarette_current_use_w2==1 & (smoked_past12M_w3==0 | cigarette_current_use_w3== 0) ~ 'Yes')
+  cig_current_use_w2==1 & cig_current_use_w3==1 ~  'No',
+  cig_current_use_w2==1 & (smoked_past12M_w3==0 | cig_current_use_w3== 0) ~ 'Yes')
 )
 
 # gen quitw2_2=1 if (smkstatus_w1==1) & (R02_AC1003==3 & p30cigsmoke_w2==0)

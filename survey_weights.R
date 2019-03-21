@@ -89,7 +89,7 @@ adult_survey %>%
 #Fay's adjustment = 0.3
 str(survey_w1)
 
-#Wave 1 
+#### Wave 1 ####
 survey_w1 <- svrepdesign(data = adult_w1,
             weights = ~R01_A_PWGT,
             repweights = 'R01_A_PWGT[1-100]',
@@ -109,7 +109,7 @@ adult_sub_w2 <- adult_panel %>%
   select(PERSONID, ends_with('w2'), starts_with('R02_A_PWGT'), starts_with('wave'),
         smoking_status_w1) %>% 
   filter(wave_2 == 1)
-
+adult_sub_w2 %>% names
 
 cur_est_w1_at_w2 <- adult_panel %>% 
   select(PERSONID, ends_with('w2'), starts_with('R02_A_PWGT'), starts_with('wave'),
@@ -118,28 +118,28 @@ cur_est_w1_at_w2 <- adult_panel %>%
 
 colSums(is.na(adult_sub_w2))
 survey_w2 <- svrepdesign(data = adult_sub_w2 ,
-                         weights = ~R02_A_PWGT,
-                         repweights = 'R02_A_PWGT[1-100]',
-                         type = 'BRR',
-                         rho = 0.3, 
-                         mse = TRUE,
-                         combined.weights = TRUE)
-
+                         weights = ~ R02_A_PWGT,
+                         repweights = 'R02_A_PWGT[1-9]+',
+                         type = 'Fay',
+                         rho = 0.3)
+options(survey.replicates.mse=TRUE)
 cur_est_survey_w2 <- svrepdesign(data = cur_est_w1_at_w2  ,
                          weights = ~R02_A_PWGT,
                          repweights = 'R02_A_PWGT[1-100]',
-                         type = 'BRR',
+                         type = 'Fay',
                          rho = 0.3, 
                          mse = TRUE,
                          combined.weights = TRUE)
-
+withReplicates(survey_w2, theta )
+svymean(~gender_w2, survey_w2, na.rm =T)
 
 svymean(~education_w2, survey_w2, na.rm =T)
 svymean(~smoking_status_w2, cur_est_survey_w2, na.rm =T)*100
 
 table(adult_sub_w2$education_w2)
-
-
+library(nnet)
+?svyglm
+?multinom()
 #### Wave 3 ####
 
 load("Input/36498-3101-Data.rda")
@@ -203,18 +203,6 @@ survey_w3 <- svrepdesign(data = all_waves_weights_w3,
 adult_w3$R03_A_SGWT
 svymean(x = ~ age_w1, design = survey_w1, na.rm =T)
 svymean(x = ~ race_w1, design = survey_w1, na.rm =T)
-
-adult_w3$
-survey_w1$variables$race_ethnicity_w1 %>%  table
-# S3 method for svyrep.design
-# svyglm(formula, design, subset=NULL,
-#        family=stats::gaussian(),start=NULL,
-#        rescale=NULL, ..., rho=NULL,
-#        return.replicates=FALSE, na.action,
-#        multicore=getOption("survey.multicore"))
-
-
-
 
 #### SMOKING TRANSITION TABLE ####
 table(adult_panel$smoking_status_w2)
