@@ -17,7 +17,7 @@ adult_w1 <- da36498.1001 %>%
          sexual_orientation_w1 = R01R_A_SEXORIENT2,
          poverty_w1 =R01R_POVCAT2,
          region_w1 = R01X_CB_REGION,
-         cigarette_use_ever_w1 = R01_AC1002,
+         cig_use_ever_w1 = R01_AC1002,
          cigarette_current_freq_w1 = R01_AC1003,
          cigarette_num_life_w1 = R01_AC1005
 )
@@ -49,7 +49,7 @@ adult_w1 <- adult_w1 %>%
                                            "(1) 1 = Every day" = 1,  
                                            "(2) 2 = Some days" = 1,
                                            "(3) 3 = Not at all" = 0),
-         cigarette_use_ever_w1 = recode_binary(cigarette_use_ever_w1),
+        cig_use_ever_w1 = recode_binary(cig_use_ever_w1),
          PERSONID = as.character(PERSONID)
 )
 
@@ -85,8 +85,8 @@ if(STATA){
         cigarette_current_use_w1 == 0 & est_smoker_w1 == 1 ~ 'former_est_smoker',
         cigarette_current_use_w1 == 1 & est_smoker_w1 == 0 ~ 'current_exp_smoker',
         cigarette_current_use_w1 == 0 & est_smoker_w1 == 0 &
-          cigarette_use_ever_w1 == 1 ~ 'former_exp_smoker',
-        cigarette_use_ever_w1 == 0 ~'never_smoker'), 
+      cig_use_ever_w1 == 1 ~ 'former_exp_smoker',
+    cig_use_ever_w1 == 0 ~'never_smoker'), 
       smoking_status_w1 = fct_collapse(smoking_status_full_w1,
                                        'current' = c('current_est_smoker', 'current_exp_smoker'),
                                        'former' = c('former_est_smoker', 'former_exp_smoker')),
@@ -136,7 +136,8 @@ adult_w2 <- da36498.2001 %>%
          attempt_quit_completely = R02_AN0105_01,
          attempt_quit_reduce = R02_AN0105_02, 
          attempt_reduce = R02_AN0105_03, 
-         attempt_none = R02_AN0105_04
+         attempt_none = R02_AN0105_04,
+         cig_use_ever_w2 = R02R_A_EVR_CIGS
 ) 
 
 #Collapse Age, Education, and Income Factors (W2)
@@ -181,17 +182,17 @@ if (STATA){
   adult_w2 <- adult_w2 %>% 
     mutate(est_smoker_w2 = if_else(cigarette_num_life_w2 == 6, 1, 0),
            current_est_smoker_w2 = if_else(R02R_A_CUR_ESTD_CIGS == '(1) 1 = Yes', 1, 0),
-           never_smoker_w2 = if_else(R02R_A_EVR_CIGS == '(2) 2 = No', 1, 0),
+           never_smoker_w2 = if_else(cig_use_ever_w2 == '(2) 2 = No', 1, 0),
            former_est_smoker_w2 = if_else(R02R_A_FMR_ESTD_CIGS_REV == '(1) 1 = Yes' |
                                             is.na(R02R_A_FMR_ESTD_CIGS_REV) &
                                             is.na(est_smoker_w2) &
                                             is.na(cigarette_current_use_w2) &
                                             (is.na(R02R_A_CUR_ESTD_CIGS) |
-                                               is.na(R02R_A_EVR_CIGS)), 1, 0),
+                                               is.na(cig_use_ever_w2)), 1, 0),
            current_non_est_smoker_w2 = if_else(as.numeric(R02R_A_CUR_ESTD_CIGS) == 2 &
                                                  (as.numeric(R02R_A_FMR_ESTD_CIGS_REV) == 2 |
                                                     is.na(R02R_A_FMR_ESTD_CIGS_REV)) &
-                                                 as.numeric(R02R_A_EVR_CIGS) ==1, 1, 0),
+                                                 as.numeric(cig_use_ever_w2) ==1, 1, 0),
            smoking_status_w2 = case_when(
              current_est_smoker_w2 == 1 ~ 'current_est_smoker',
              former_est_smoker_w2 == 1 ~ 'former_est_smoker',
@@ -205,7 +206,7 @@ if (STATA){
            former_est_smoker_w2 = if_else(R02R_A_FMR_ESTD_CIGS_REV == '(1) 1 = Yes', 1, 0),
            current_exp_smoker_w2 = if_else(R02R_A_CUR_EXPR_CIGS  == '(1) 1 = Yes', 1, 0),
            former_exp_smoker_w2 = if_else(R02R_A_FMR_EXPR_CIGS_REV == '(1) 1 = Yes', 1, 0),
-           never_smoker_w2 = if_else(R02R_A_EVR_CIGS == '(2) 2 = No', 1, 0),
+           never_smoker_w2 = if_else(cig_use_ever_w2 == '(2) 2 = No', 1, 0),
            smoking_status_full_w2 = case_when(
              current_est_smoker_w2 == 1 ~ 'current_est_smoker',
              former_est_smoker_w2 == 1 ~ 'former_est_smoker',
@@ -277,7 +278,8 @@ adult_w3 <- da36498.3001 %>%
          smoked_past12M_w3 = R03_AC1002_12M,
          smoked_past30D_w3 = R03R_A_P30D_CIGS,
          attempt_quit = R03_AN0105,
-         attempt_quit_reduce = R03_AN0334
+         attempt_quit_reduce = R03_AN0334,
+         cig_use_ever_w3 = R03R_A_EVR_CIGS
 )
 
 #Collapse Education, Income, Age, and Cigarette Use Variables 
@@ -321,12 +323,12 @@ adult_w3 <- adult_w3 %>%
 adult_w3 <- adult_w3 %>% 
   mutate(est_smoker_w3 = if_else(cigarette_num_life_w3 == 6, 1, 0),
          current_est_smoker_w3 = if_else(R03R_A_CUR_ESTD_CIGS == '(1) 1 = Yes', 1, 0),
-         never_smoker_w3 = if_else(R03R_A_EVR_CIGS == '(2) 2 = No', 1, 0),
+         never_smoker_w3 = if_else(cig_use_ever_w3 == '(2) 2 = No', 1, 0),
          former_est_smoker_w3 = if_else(R03R_A_FMR_ESTD_CIGS_REV == '(1) 1 = Yes' , 1, 0),
          current_non_est_smoker_w3 = if_else(as.numeric(R03R_A_CUR_ESTD_CIGS) == 2 &
                                                (as.numeric(R03R_A_FMR_ESTD_CIGS_REV) == 2 |
                                                   is.na(R03R_A_FMR_ESTD_CIGS_REV)) &
-                                               as.numeric(R03R_A_EVR_CIGS) ==1, 1, 0),
+                                               as.numeric(cig_use_ever_w3) ==1, 1, 0),
          smoking_status_w3 = case_when(
            current_est_smoker_w3 == 1 ~ 'current_est_smoker',
            former_est_smoker_w3 == 1 ~ 'former_est_smoker',
@@ -360,7 +362,7 @@ if(STATA){
            former_est_smoker_w3 = if_else(R03R_A_FMR_ESTD_CIGS_REV == '(1) 1 = Yes', 1, 0),
            current_exp_smoker_w3 = if_else(R03R_A_CUR_EXPR_CIGS  == '(1) 1 = Yes', 1, 0),
            former_exp_smoker_w3 = if_else(R03R_A_FMR_EXPR_CIGS_REV == '(1) 1 = Yes', 1, 0),
-           never_smoker_w3 = if_else(R03R_A_EVR_CIGS == '(2) 2 = No', 1, 0),
+           never_smoker_w3 = if_else(cig_use_ever_w3 == '(2) 2 = No', 1, 0),
            smoking_status_full_w3 = case_when(
              current_est_smoker_w3 == 1 ~ 'current_est_smoker',
              former_est_smoker_w3 == 1 ~ 'former_est_smoker',
@@ -483,4 +485,3 @@ adult_panel <- adult_panel %>%
                            wave_3 = ifelse(is.na(wave_3), 0, wave_3)
 ) 
 
-adult_panel$wave_2 %>%  table
