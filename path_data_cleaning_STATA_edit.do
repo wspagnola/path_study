@@ -1,83 +1,85 @@
-/*Mahathi Vojjala
-11/12/2018
+/*Bill's Edits
+03/21/2019
 PATH Waves 1-3
 Data Cleaning Do File*/
 
 
 *************COMBINED********************
 //Wave 1:
-	use "E:\PATH\PATH Datasets\Wave 1 Adult\DS1001\36498-1001-Data.dta"
-	run "E:\PATH\PATH Datasets\Wave 1 Adult\DS1001\36498-1001-Supplemental_syntax.do"
-	run "E:\PATH\Legacy_PATH_W1-recode.do"
+	use "/Users/whs278/Desktop/path_study/Input/36498-1001-Data.dta"
+	run "/Users/whs278/Desktop/path_study/36498-1001-Supplemental_syntax.do"
+	*run "E:\PATH\Legacy_PATH_W1-recode.do" NOT SURE WHAT THIS DOES
 		gen wave1=1
-		svyset [pw=r01_a_pwgt], brrweight(r01_a_pwgt1 - r01_a_pwgt100) mse vce(brr) fay(0.3)
-	save "E:\PATH\PATH Datasets\W1 Adult Recoded.dta"
+		svyset [pw=R01_A_PWGT], brrweight(R01_A_PWGT1 - R01_A_PWGT100) mse vce(brr) fay(0.3) //Bill edit
+		*svyset [pw=r01_a_pwgt], brrweight(r01_a_pwgt1 - r01_a_pwgt100) mse vce(brr) fay(0.3)
+		rename PERSONID personid //Bill edit
+	save "/Users/whs278/Desktop/path_study/Output/W1 Adult Recoded.dta"
 
 //Wave 2:
-	use "E:\PATH\PATH Datasets\Wave 2 Adult\DS2001\36498-2001-Data.dta"
-	run "E:\PATH\PATH Datasets\Wave 2 Adult\DS2001\36498-2001-Supplemental_syntax.do"
+	use "/Users/whs278/Desktop/path_study/Input/36498-2001-Data.dta"
+	run "/Users/whs278/Desktop/path_study/36498-2001-Supplemental_syntax.do"
 		gen wave2=1
 		rename PERSONID personid
 		svyset [pw=R02_A_PWGT], brrweight(R02_A_PWGT1 - R02_A_PWGT100) mse vce(brr) fay(0.3)
-	save "E:\PATH\PATH Datasets\W2 Adult Recoded.dta"
+	save "/Users/whs278/Desktop/path_study/Output/W2 Adult Recoded.dta"
 		
 //Create adult W1 and W2 combined dataset: 
-	use "E:\PATH\PATH Datasets\W1 Adult Recoded.dta"
-		merge 1:1 personid using "E:\PATH\PATH Datasets\W2 Adult Recoded.dta", nogen
+	use "/Users/whs278/Desktop/path_study/Output/W1 Adult Recoded.dta"
+		merge 1:1 personid using "/Users/whs278/Desktop/path_study/Output/W2 Adult Recoded.dta", nogen
 		cap drop duplicate
 		duplicates report personid
 		duplicates tag personid, gen(duplicate)
 		drop if duplicate==1
-	save "E:\PATH\PATH Datasets\W1 W2 Adult Recoded Merged.dta"
+	save "/Users/whs278/Desktop/path_study/Output/W1 W2 Adult Recoded Merged.dta"
 	
 //Wave 3:
 	//Recode adult questionnaire data
-		use "E:\PATH\PATH Datasets\Wave 3 Adult Questionnaire Data\DS3001\36498-3001-Data.dta"
-		run "E:\PATH\PATH Datasets\Wave 3 Adult Questionnaire Data\DS3001\36498-3001-Supplemental_syntax.do"
+		use "/Users/whs278/Desktop/path_study/Input/36498-3001-Data.dta"
+		run "/Users/whs278/Desktop/path_study/36498-3001-Supplemental_syntax.do"
 			gen wave3=1
 			rename PERSONID personid
-		save "E:\PATH\PATH Datasets\W3 Adult Questionnaire Recoded No Wgts.dta"
+		save "/Users/whs278/Desktop/path_study/Output/W3 Adult Questionnaire Recoded No Wgts.dta"
 
 	//Recode all-wave weights
-		use "E:\PATH\PATH Datasets\Wave 3 Adult All Waves Weights\DS3101\36498-3101-Data.dta"
+		use "/Users/whs278/Desktop/path_study/Input/36498-3101-Data.dta"
 			rename PERSONID personid
 			svyset [pw=R03_A_AWGT], brrweight(R03_A_AWGT1 - R03_A_AWGT100) mse vce(brr) fay(0.3)
-		save "E:\PATH\PATH Datasets\W3 Adult All Waves Weights.dta"	
+		save "/Users/whs278/Desktop/path_study/Output/W3 Adult All Waves Weights.dta"	
 			
 	//Recode single-wave weights
-		use "E:\PATH\PATH Datasets\Wave 3 Adult Single Wave\DS3102\36498-3102-Data.dta"
+		use "/Users/whs278/Desktop/path_study/Input/36498-3102-Data.dta"
 			rename PERSONID personid
 			svyset [pw=R03_A_SWGT], brrweight(R03_A_SWGT1 - R03_A_SWGT100) mse vce(brr) fay(0.3)
-		save "E:\PATH\PATH Datasets\W3 Adult Single Wave Weights.dta"
+		save "/Users/whs278/Desktop/path_study/Output/W3 Adult Single Wave Weights.dta"
 		
 	//Combine W3 questionnaire data with all-weights	
-		use "E:\PATH\PATH Datasets\W3 Adult Questionnaire Recoded No Wgts.dta"
-			merge 1:1 personid using "E:\PATH\PATH Datasets\W3 Adult All Waves Weights.dta", nogen
+		use "/Users/whs278/Desktop/path_study/Output/W3 Adult Questionnaire Recoded No Wgts.dta"
+			merge 1:1 personid using "/Users/whs278/Desktop/path_study/Output/W3 Adult All Waves Weights.dta", nogen
 			cap drop duplicate
 			duplicates report personid
 			duplicates tag personid, gen(duplicate)
 			drop if duplicate==1
-		save "E:\PATH\PATH Datasets\W3 Adult Recoded All Weights Merge with No Wghts.dta"
+		save "/Users/whs278/Desktop/path_study/Output/W3 Adult Recoded All Weights Merge with No Wghts.dta"
 		
 	//Combine W3 questionnaire data & all-weight with single-weights
-		use "E:\PATH\PATH Datasets\W3 Adult Recoded All Weights Merge with No Wghts.dta"
-			merge 1:1 personid using "E:\PATH\PATH Datasets\W3 Adult Single Wave Weights.dta", nogen
+		use "/Users/whs278/Desktop/path_study/Output/W3 Adult Recoded All Weights Merge with No Wghts.dta"
+			merge 1:1 personid using "/Users/whs278/Desktop/path_study/Output/W3 Adult Single Wave Weights.dta", nogen
 			cap drop duplicate
 			duplicates report personid
 			duplicates tag personid, gen(duplicate)
 			drop if duplicate==1
-		save "E:\PATH\PATH Datasets\W3 Adult Weighted.dta", replace
+		save "/Users/whs278/Desktop/path_study/Output/W3 Adult Weighted.dta", replace
 		
 //Create adult W1, W2, and W3 combined dataset:
 	clear
 	set maxvar 30000
-	use "E:\PATH\PATH Datasets\W1 W2 Adult Recoded Merged.dta"
-		merge 1:1 personid using "E:\PATH\PATH Datasets\W3 Adult Weighted.dta", nogen
+	use "/Users/whs278/Desktop/path_study/Output/W1 W2 Adult Recoded Merged.dta"
+		merge 1:1 personid using "/Users/whs278/Desktop/path_study/Output/W3 Adult Weighted.dta", nogen
 		cap drop duplicate
 		duplicates report personid
 		duplicates tag personid, gen(duplicate)
 		drop if duplicate==1
-	save "E:\PATH\PATH Datasets\W1 W2 W3 Adult Recoded Data.dta", replace
+	save "/Users/whs278/Desktop/path_study/Output/W1 W2 W3 Adult Recoded Data.dta", replace
 	
 ****DATA CLEANING****DATA CLEANING****DATA CLEANING****
 
