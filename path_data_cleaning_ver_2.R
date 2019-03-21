@@ -1,17 +1,10 @@
 #This data cleaning script uses equivalent commands from Stata do file
-require(tidyverse)
-
-recode_binary <- function(x) {
-  recode(x, '(1) 1 = Yes' = 1, '(2) 2 = No' = 0 )
-}
+source('source.R')
 
 
-recode_multi_choice <- function(x) {
-  recode(x, '(1) 1 = Marked' = 1, '(2) 2 = Not Marked' = 0 )
-}
+STATA <- TRUE  #TRUE to match STAT file
 
 #### WAVE 1: Clean ####
-
 
 #Load Adult Waves 1
 load('Input/36498-1001-Data.rda')
@@ -27,7 +20,7 @@ adult_w1 <- da36498.1001 %>%
          cigarette_use_ever_w1 = R01_AC1002,
          cigarette_current_freq_w1 = R01_AC1003,
          cigarette_num_life_w1 = R01_AC1005
-  )
+)
 
 #Collapse variables: age, income, education, current cigarette use; Recode cigarette ever us
 adult_w1 <- adult_w1 %>% 
@@ -56,43 +49,54 @@ adult_w1 <- adult_w1 %>%
                                            "(1) 1 = Every day" = 1,  
                                            "(2) 2 = Some days" = 1,
                                            "(3) 3 = Not at all" = 0),
-         cigarette_use_ever_w1 = recode(cigarette_use_ever_w1,
-                                        '(1) 1 = Yes' = 1,
-                                        '(2) 2 = No' = 0)
+         cigarette_use_ever_w1 = recode_binary(cigarette_use_ever_w1)
 )
 
 #Create Smoking Status Factor Variable and Binary Variables 
 ## est_smoker = established smoker (current & former); smoked 100 cigs in lifetime
 #Smoking Status Full has all categories cur/fmr est/exp smoker and non-smoers
 #Smoking Status collapsed smoking status full into current, former, never
-adult_w1 <- adult_w1 %>%  
-  mutate(
-    est_smoker_w1 = if_else(as.numeric(cigarette_num_life_w1) == 6, 1, 0),
-    current_est_smoker_w1 = if_else(R01R_A_CUR_ESTD_CIGS == '(1) 1 = Yes', 1, 0),
-    never_smoker_w1 = if_else(R01R_A_NVR_CIGS == '(1) 1 = Yes', 1, 0),
-    former_est_smoker_w1 = if_else(R01R_A_FMR_ESTD_CIGS == '(1) 1 = Yes', 1, 0),
-    current_non_est_smoker_w1 = if_else(as.numeric(R01R_A_CUR_ESTD_CIGS) == 2 &
-                                        (as.numeric(R01R_A_FMR_ESTD_CIGS) == 2 |
-                                            is.na(R01R_A_FMR_ESTD_CIGS)) &
-                                        as.numeric(R01R_A_NVR_CIGS) == 2, 1, 0),
-    smoking_status_w1 = case_when(
-                                current_est_smoker_w1== 1 ~ 'current_est_smoker',
-                                never_smoker_w1  == 1 ~ 'never_smoker',
-                                former_est_smoker_w1 == 1 ~ 'former_est_smoker_w1',
-                                current_non_est_smoker_w1 == 1 ~ ' current_non_est_smoker_w1')
-)
 
-### METHOD 1 
-# smoking_status_full_w1 = case_when(
-#   cigarette_current_use_w1 == 1 & est_smoker_w1 == 1 ~ 'current_est_smoker',
-#   cigarette_current_use_w1 == 0 & est_smoker_w1 == 1 ~ 'former_est_smoker',
-#   cigarette_current_use_w1 == 1 & est_smoker_w1 == 0 ~ 'current_exp_smoker',
-#   cigarette_current_use_w1 == 0 & est_smoker_w1 == 0 &
-#     cigarette_use_ever_w1 == 1 ~ 'former_exp_smoker',
-#   cigarette_use_ever_w1 == 0 ~'never_smoker'), 
-# smoking_status_w1 = fct_collapse(smoking_status_full_w1,
-#                                  'current' = c('current_est_smoker', 'current_exp_smoker'),
-#                                  'former' = c('former_est_smoker', 'former_exp_smoker'))
+
+if(STATA){
+  adult_w1 <- adult_w1 %>%  
+    mutate(
+      est_smoker_w1 = if_else(as.numeric(cigarette_num_life_w1) == 6, 1, 0),
+      current_est_smoker_w1 = if_else(R01R_A_CUR_ESTD_CIGS == '(1) 1 = Yes', 1, 0),
+      never_smoker_w1 = if_else(R01R_A_NVR_CIGS == '(1) 1 = Yes', 1, 0),
+      former_est_smoker_w1 = if_else(R01R_A_FMR_ESTD_CIGS == '(1) 1 = Yes', 1, 0),
+      current_non_est_smoker_w1 = if_else(as.numeric(R01R_A_CUR_ESTD_CIGS) == 2 &
+                                            (as.numeric(R01R_A_FMR_ESTD_CIGS) == 2 |
+                                               is.na(R01R_A_FMR_ESTD_CIGS)) &
+                                            as.numeric(R01R_A_NVR_CIGS) == 2, 1, 0),
+      smoking_status_w1 = case_when(
+        current_est_smoker_w1== 1 ~ 'current_est_smoker',
+        never_smoker_w1  == 1 ~ 'never_smoker',
+        former_est_smoker_w1 == 1 ~ 'former_est_smoker',
+        current_non_est_smoker_w1 == 1 ~ 'current_non_est_smoker')
+    )
+} else {
+  adult_w1 <- adult_w1 %>%  
+    mutate(
+      est_smoker_w1 = if_else(as.numeric(cigarette_num_life_w1) == 6, 1, 0),
+      smoking_status_full_w1 = case_when(
+        cigarette_current_use_w1 == 1 & est_smoker_w1 == 1 ~ 'current_est_smoker',
+        cigarette_current_use_w1 == 0 & est_smoker_w1 == 1 ~ 'former_est_smoker',
+        cigarette_current_use_w1 == 1 & est_smoker_w1 == 0 ~ 'current_exp_smoker',
+        cigarette_current_use_w1 == 0 & est_smoker_w1 == 0 &
+          cigarette_use_ever_w1 == 1 ~ 'former_exp_smoker',
+        cigarette_use_ever_w1 == 0 ~'never_smoker'), 
+      smoking_status_w1 = fct_collapse(smoking_status_full_w1,
+                                       'current' = c('current_est_smoker', 'current_exp_smoker'),
+                                       'former' = c('former_est_smoker', 'former_exp_smoker')),
+      current_est_smoker_w1 = if_else(smoking_status_full_w1 == 'current_est_smoker', 1, 0),
+      former_est_smoker_w1 = if_else(smoking_status_full_w1 == 'former_est_smoker', 1, 0),
+      current_exp_smoker_w1 = if_else(smoking_status_full_w1 == 'current_exp_smoker', 1, 0),
+      former_exp_smoker_w1 = if_else(smoking_status_full_w1 == 'former_exp_smoker', 1, 0),
+      never_smoker_w1 = if_else(smoking_status_full_w1 == 'never_smoker', 1, 0)
+    )
+}
+
 
 #Race/Ethnicity Variable: NH-White, NH-black, Hispanic, Other (W1)
 adult_w1 <- adult_w1 %>% 
@@ -115,8 +119,9 @@ adult_w1 <- adult_w1 %>%
 #### WAVE 2: Clean ####
 
 #Load Data and Rename Variables (W2)
-
 load('Input/36498-2001-Data.rda')
+
+#Rename Variables
 adult_w2 <- da36498.2001 %>% 
   rename(gender_w2 = R02R_A_SEX,
          race_w2 = R02R_A_RACECAT3,
@@ -164,38 +169,51 @@ adult_w2 <- adult_w2 %>%
 # Use dummy coding (0/1) for (No/Yes)
 adult_w2 <- adult_w2 %>%  
   mutate(
-    smoked_past12M_w2 = recode(smoked_past12M_w2, '(1) 1 = Yes' = 1, '(2) 2 = No' = 0),
-    smoked_past30D_w2 = recode(smoked_past30D_w2, '(1) 1 = Yes' = 1, '(2) 2 = No' = 0)
+    smoked_past12M_w2 = recode_binary(smoked_past12M_w2),
+    smoked_past30D_w2 = recode_binary(smoked_past30D_w2)
 ) 
 
 #Smoking Status: Generate Dummy Variables then Group by factor (W2)
-adult_w2 <- adult_w2 %>% 
-  mutate(est_smoker_w2 = if_else(cigarette_num_life_w2 == 6, 1, 0),
-         current_est_smoker_w2 = if_else(R02R_A_CUR_ESTD_CIGS == '(1) 1 = Yes', 1, 0),
-         never_smoker_w2 = if_else(R02R_A_EVR_CIGS == '(2) 2 = No', 1, 0),
-         former_est_smoker_w2 = if_else(R02R_A_FMR_ESTD_CIGS_REV == '(1) 1 = Yes' |
-                                        is.na(R02R_A_FMR_ESTD_CIGS_REV) &
-                                        is.na(est_smoker_w2) &
-                                        is.na(cigarette_current_use_w2) &
-                                        (is.na(R02R_A_CUR_ESTD_CIGS) |
-                                           is.na(R02R_A_EVR_CIGS)), 1, 0),
-         current_non_est_smoker_w2 = if_else(as.numeric(R02R_A_CUR_ESTD_CIGS) == 2 &
-                                             (as.numeric(R02R_A_FMR_ESTD_CIGS_REV) == 2 |
-                                                  is.na(R02R_A_FMR_ESTD_CIGS_REV)) &
-                                             as.numeric(R02R_A_EVR_CIGS) ==1, 1, 0),
-         smoking_status_w2 = case_when(
-            current_est_smoker_w2 == 1 ~ 'current_est_smoker',
-            former_est_smoker_w2 == 1 ~ 'former_est_smoker',
-            current_non_est_smoker_w2 == 1 ~ 'current_non_est_smoker_w2',
-            never_smoker_w2 == 1 ~ 'never_smoker')
-)
-
-#ANOTHER METHOD
-# current_est_smoker_w2 = if_else(R02R_A_CUR_ESTD_CIGS == '(1) 1 = Yes', 1, 0),
-# former_est_smoker_w2 = if_else(R02R_A_FMR_ESTD_CIGS_REV == '(1) 1 = Yes', 1, 0),
-# current_exp_smoker_w2 = if_else(R02R_A_CUR_EXPR_CIGS  == '(1) 1 = Yes', 1, 0),
-# former_exp_smoker_w2 = if_else(R02R_A_FMR_EXPR_CIGS_REV == '(1) 1 = Yes', 1, 0),
-# never_smoker_w2 = if_else(R02R_A_EVR_CIGS == '(2) 2 = No', 1, 0),
+if (STATA){
+  adult_w2 <- adult_w2 %>% 
+    mutate(est_smoker_w2 = if_else(cigarette_num_life_w2 == 6, 1, 0),
+           current_est_smoker_w2 = if_else(R02R_A_CUR_ESTD_CIGS == '(1) 1 = Yes', 1, 0),
+           never_smoker_w2 = if_else(R02R_A_EVR_CIGS == '(2) 2 = No', 1, 0),
+           former_est_smoker_w2 = if_else(R02R_A_FMR_ESTD_CIGS_REV == '(1) 1 = Yes' |
+                                            is.na(R02R_A_FMR_ESTD_CIGS_REV) &
+                                            is.na(est_smoker_w2) &
+                                            is.na(cigarette_current_use_w2) &
+                                            (is.na(R02R_A_CUR_ESTD_CIGS) |
+                                               is.na(R02R_A_EVR_CIGS)), 1, 0),
+           current_non_est_smoker_w2 = if_else(as.numeric(R02R_A_CUR_ESTD_CIGS) == 2 &
+                                                 (as.numeric(R02R_A_FMR_ESTD_CIGS_REV) == 2 |
+                                                    is.na(R02R_A_FMR_ESTD_CIGS_REV)) &
+                                                 as.numeric(R02R_A_EVR_CIGS) ==1, 1, 0),
+           smoking_status_w2 = case_when(
+             current_est_smoker_w2 == 1 ~ 'current_est_smoker',
+             former_est_smoker_w2 == 1 ~ 'former_est_smoker',
+             current_non_est_smoker_w2 == 1 ~ 'current_non_est_smoker',
+             never_smoker_w2 == 1 ~ 'never_smoker')
+    )
+} else {
+  adult_w2 <- adult_w2 %>% 
+    mutate(est_smoker_w2 = if_else(cigarette_num_life_w2 == 6, 1, 0),
+           current_est_smoker_w2 = if_else(R02R_A_CUR_ESTD_CIGS == '(1) 1 = Yes', 1, 0),
+           former_est_smoker_w2 = if_else(R02R_A_FMR_ESTD_CIGS_REV == '(1) 1 = Yes', 1, 0),
+           current_exp_smoker_w2 = if_else(R02R_A_CUR_EXPR_CIGS  == '(1) 1 = Yes', 1, 0),
+           former_exp_smoker_w2 = if_else(R02R_A_FMR_EXPR_CIGS_REV == '(1) 1 = Yes', 1, 0),
+           never_smoker_w2 = if_else(R02R_A_EVR_CIGS == '(2) 2 = No', 1, 0),
+           smoking_status_full_w2 = case_when(
+             current_est_smoker_w2 == 1 ~ 'current_est_smoker',
+             former_est_smoker_w2 == 1 ~ 'former_est_smoker',
+             current_exp_smoker_w2 == 1 ~ 'current_exp_smoker',
+             former_exp_smoker_w2 == 1 ~ 'former_exp_smoker',
+             never_smoker_w2 == 1 ~ 'never_smoker'),
+           smoking_status_w2 = fct_collapse(smoking_status_full_w2,
+                                            'current' = c('current_est_smoker', 'current_exp_smoker'),
+                                            'former' = c('former_est_smoker', 'former_exp_smoker'))
+    ) 
+}
 
 
 #Create Quit Variable in DAY units; Create Categorical Variable for abstinence by days quit
@@ -244,7 +262,7 @@ adult_w2 <- adult_w2 %>%
 
 load('Input/36498-3001-Data.rda')
 
-#Rename Varaibles
+#Rename Variables
 adult_w3 <- da36498.3001 %>%  
   rename(gender_w3 = R03R_A_SEX,
          race_w3 = R03R_A_RACECAT3,
@@ -290,8 +308,8 @@ adult_w3 <- adult_w3 %>%
 # Use dummy coding (0/1) for (No/Yes)
 adult_w3 <- adult_w3 %>%  
                 mutate(
-                    smoked_past12M_w3 = recode(smoked_past12M_w3, '(1) 1 = Yes' = 1, '(2) 2 = No' = 0),
-                    smoked_past30D_w3 = recode(smoked_past30D_w3, '(1) 1 = Yes' = 1, '(2) 2 = No' = 0)
+                    smoked_past12M_w3 = recode_binary(smoked_past12M_w3),
+                    smoked_past30D_w3 = recode_binary(smoked_past30D_w3)
 )
 
 #Create binary variables for smoking status; then combine into single factor variable (w3)
@@ -312,23 +330,44 @@ adult_w3 <- adult_w3 %>%
 )
 
 #Create Quit Variable in DAY units; Create Categorical Variable for abstinence by days quit
-adult_w3 <- adult_w3 %>%
-  mutate(days_quit_cigs_w3 = case_when(
-                        as.numeric(R03_AC1009_UN)==1 & R03_AC1009_NN>=0 ~ R03_AC1009_NN,
-                        as.numeric(R03_AC1009_UN)==2 & R03_AC1009_NN>=0 ~ R03_AC1009_NN * 30.4375,
-                        as.numeric(R03_AC1009_UN)==3 & R03_AC1009_NN>=0 ~  R03_AC1009_NN * 365.25),
-         abs_w3 = case_when(
-                        days_quit_cigs_w3 == 1 ~ 'One Day',
-                        days_quit_cigs_w3 >= 2 &  days_quit_cigs_w3 <= 6 ~ 'Two to Six Days',
-                        days_quit_cigs_w3 >= 7 &  days_quit_cigs_w3 < 30 ~ 'More than 7 Days',
-                        days_quit_cigs_w3 >= 30 &  days_quit_cigs_w3 <= 90 ~ 'One Month',
-                        days_quit_cigs_w3 > 90 &  days_quit_cigs_w3 <= 180 ~ 'Three Months',
-                        days_quit_cigs_w3 > 180 &  days_quit_cigs_w3 < 365 ~ 'Six Months',
-                        days_quit_cigs_w3 >= 365 ~ 'One Year'),
-          abs_w3 = factor(abs_w3, levels = c('One Day', 'Two to Six Days',  
-                                       'More than 7 Days', 'One Month',  
-                                       'Three Months', 'Six Months','One Year'))
-)
+if(STATA){
+  adult_w3 <- adult_w3 %>%
+    mutate(days_quit_cigs_w3 = case_when(
+      as.numeric(R03_AC1009_UN)==1 & R03_AC1009_NN>=0 ~ R03_AC1009_NN,
+      as.numeric(R03_AC1009_UN)==2 & R03_AC1009_NN>=0 ~ R03_AC1009_NN * 30.4375,
+      as.numeric(R03_AC1009_UN)==3 & R03_AC1009_NN>=0 ~  R03_AC1009_NN * 365.25),
+      abs_w3 = case_when(
+        days_quit_cigs_w3 == 1 ~ 'One Day',
+        days_quit_cigs_w3 >= 2 &  days_quit_cigs_w3 <= 6 ~ 'Two to Six Days',
+        days_quit_cigs_w3 >= 7 &  days_quit_cigs_w3 < 30 ~ 'More than 7 Days',
+        days_quit_cigs_w3 >= 30 &  days_quit_cigs_w3 <= 90 ~ 'One Month',
+        days_quit_cigs_w3 > 90 &  days_quit_cigs_w3 <= 180 ~ 'Three Months',
+        days_quit_cigs_w3 > 180 &  days_quit_cigs_w3 < 365 ~ 'Six Months',
+        days_quit_cigs_w3 >= 365 ~ 'One Year'),
+      abs_w3 = factor(abs_w3, levels = c('One Day', 'Two to Six Days',  
+                                         'More than 7 Days', 'One Month',  
+                                         'Three Months', 'Six Months','One Year'))
+    )
+} else{
+  adult_w3 <- adult_w3 %>% 
+    mutate(est_smoker_w3 = if_else(cigarette_num_life_w3 == 6, 1, 0),
+           current_est_smoker_w3 = if_else(R03R_A_CUR_ESTD_CIGS == '(1) 1 = Yes', 1, 0),
+           former_est_smoker_w3 = if_else(R03R_A_FMR_ESTD_CIGS_REV == '(1) 1 = Yes', 1, 0),
+           current_exp_smoker_w3 = if_else(R03R_A_CUR_EXPR_CIGS  == '(1) 1 = Yes', 1, 0),
+           former_exp_smoker_w3 = if_else(R03R_A_FMR_EXPR_CIGS_REV == '(1) 1 = Yes', 1, 0),
+           never_smoker_w3 = if_else(R03R_A_EVR_CIGS == '(2) 2 = No', 1, 0),
+           smoking_status_full_w3 = case_when(
+             current_est_smoker_w3 == 1 ~ 'current_est_smoker',
+             former_est_smoker_w3 == 1 ~ 'former_est_smoker',
+             current_exp_smoker_w3 == 1 ~ 'current_exp_smoker',
+             former_exp_smoker_w3 == 1 ~ 'former_exp_smoker',
+             never_smoker_w3 == 1 ~ 'never_smoker'),
+           smoking_status_w3 = fct_collapse(smoking_status_full_w3,
+                                            'current' = c('current_est_smoker', 'current_exp_smoker'),
+                                            'former' = c('former_est_smoker', 'former_exp_smoker'))
+    )
+}
+
 
 
 #Recode Quit Attemp Variables as binary
