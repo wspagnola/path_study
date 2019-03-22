@@ -1,68 +1,11 @@
-require(tidyverse)
 #Wave 1-3: Descriptives
 
 #Panel 3 Barplots
 #panel 3 = across waves 1, 2, 3
 
-#Hex Codes for Default ggplot colors
-gg_blue <- '#619CFF'
-gg_red <- '#F8766D'
-
-#Theme For Single Wave Plots
-theme_wave_quit <-  theme_bw() +
-  theme(legend.position = 'none',
-        panel.grid.major.x = element_blank(),
-        plot.title = element_text(hjust = 0.5),
-        axis.title.x = element_text(face = 'italic', 
-                                    size = 8, 
-                                    vjust = 0.2,
-                                    hjust = 0)
-)
-
-
-
-prep_panel_3_data <- function(data, x, label){
-  
-  #Data is the data.frame where vectors are located
-  #W1, W2, W3 are character objects representing the column names of the vectors
-  #Label is the Grand Vector; general the name of the variable without wave tag at end
-  
-  require(tidyr)
-  require(dplyr)
-  
-  #Store data from 3 Waves into separate vectors
-  wave_1 <- data[, x[1]]
-  wave_2 <- data[, x[2]]
-  wave_3 <- data[, x[3]]
-  
-  #Store three vectors into single data.frame
-  d <- data.frame(wave_1, wave_2, wave_3) 
-  
-  #Convert from wide to Long; Then Create a summary table of
-  d_table <- d %>%
-    gather(key = Wave, value = val) %>%
-    group_by(Wave, val) %>%
-    count()
-  
-  #Remove Missing Values
-  d_table <-  d_table %>% filter(!is.na(val))
-  
-  #Replace 'val'  with  Label Name 
-  names(d_table)[2] <- label
-  
-  return(d_table)
-}
-
-
-#### DEFINE THEMES ####
-my_theme_panel <- theme_bw() +
-  theme(panel.grid.major.x = element_blank(),
-        plot.title = element_text(hjust = 0.5),
-        legend.title = element_blank()) 
+source('source.R')
 
 panel_3_wave_labs <- c('Wave 1', 'Wave 2', 'Wave 3')
-
-
 
 #### Gender (Panel 3) ####
 adult_panel %>% 
@@ -198,25 +141,25 @@ adult_panel %>%
   xlab(NULL) 
 ggsave('Figures/Panel_3_Psychological_Distress_Barplot.png')
 
-
 #### Smoking Status  Barplot (Panel 3) ####
 adult_panel %>% 
-  prep_panel_3_data(x = c('smoking_status_w1', 
-                          'smoking_status_w2', 
-                          'smoking_status_w3'), 
+  prep_panel_3_data(x = c('smoking_status_full_w1', 
+                          'smoking_status_full_w2', 
+                          'smoking_status_full_w3'), 
                     label = 'Smoking_Status') %>% 
   ggplot(aes(x = Wave, y = n, fill = factor(Smoking_Status))) +
   geom_col(position = position_dodge(),  color = 'black', width = .5) +
   scale_fill_discrete(labels = c('Current Established Smokers',
-                                 'Current Non-Established Smokers',
+                                 'Current Experimental Smokers',
                                  'Former Established Smokers', 
+                                 'Current Non-Established Smokers',
                                  'Never Smokers')) +
   scale_x_discrete(labels = panel_3_wave_labs) +
   scale_y_continuous(breaks = seq(0, 12000, 2000),
                      limits = c(0, 12000),
                      expand = c(0, 0)) +
   my_theme_panel +
-  ggtitle('Smoking Status Across Waves 1 to 3') +
+  ggtitle('Smoking Status (5 Categories') +
   xlab(NULL) 
 ggsave('Figures/Panel_3_Smoking_Status_Barplot.png', width = 12)
 
@@ -310,4 +253,22 @@ adult_panel %>%
           \n**Wave 1 Non-Smokers who were still non-smokers at Wave 3') +
     theme_wave_quit 
 ggsave('Figures/W3_Quit_Categories_Barplot.png', width = 8)
+
+
+#### CREATE TABLES ####
+
+ tab <- adult_panel %>% 
+  prep_panel_3_data(x = c('smoking_status_full_w1', 
+                          'smoking_status_full_w2', 
+                          'smoking_status_full_w3'), 
+                    label = 'Smoking_Status') 
+tab  %>%  
+  split(f = tab$Wave) %>% 
+  bind_cols %>% 
+  select(-Wave, -Wave1, -Wave2, -Smoking_Status1, -Smoking_Status2) %>% 
+  rename('Wave_1' = n ,
+        'Wave_2' = n1,
+        'Wave_3' =  n2) %>% 
+  write.csv(file = 'Smoking_Status_Full_W123.csv')
+
 

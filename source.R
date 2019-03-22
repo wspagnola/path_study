@@ -34,6 +34,41 @@ prep_panel_data <- function(data, w1, w2, label){
 }
 
 
+
+prep_panel_3_data <- function(data, x, label){
+  
+  #Data is the data.frame where vectors are located
+  #W1, W2, W3 are character objects representing the column names of the vectors
+  #Label is the Grand Vector; general the name of the variable without wave tag at end
+  
+  require(tidyr)
+  require(dplyr)
+  
+  #Store data from 3 Waves into separate vectors
+  wave_1 <- data[, x[1]]
+  wave_2 <- data[, x[2]]
+  wave_3 <- data[, x[3]]
+  
+  #Store three vectors into single data.frame
+  d <- data.frame(wave_1, wave_2, wave_3) 
+  
+  #Convert from wide to Long; Then Create a summary table of
+  d_table <- d %>%
+    gather(key = Wave, value = val) %>%
+    group_by(Wave, val) %>%
+    count()
+  
+  #Remove Missing Values
+  d_table <-  d_table %>% filter(!is.na(val))
+  
+  #Replace 'val'  with  Label Name 
+  names(d_table)[2] <- label
+  
+  return(d_table)
+}
+
+
+
 #### THEMES ####
 
 #Theme for Multiple Waves
@@ -42,11 +77,23 @@ my_theme_panel <- theme_bw() +
         plot.title = element_text(hjust = 0.5),
         legend.title = element_blank()) 
 
-#Theme for Singl Waves
+#Theme for Single Waves
 my_theme_wave <-  theme_bw() +
   theme(legend.position = 'none',
         panel.grid.major.x = element_blank(),
-        plot.title = element_text(hjust = 0.5)) 
+        plot.title = element_text(hjust = 0.5)
+) 
+
+#Theme For Quite Plots
+theme_wave_quit <-  theme_bw() +
+  theme(legend.position = 'none',
+        panel.grid.major.x = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        axis.title.x = element_text(face = 'italic', 
+                                    size = 8, 
+                                    vjust = 0.2,
+                                    hjust = 0)
+)
 
 
 #Hex Codes for Default ggplot colors
