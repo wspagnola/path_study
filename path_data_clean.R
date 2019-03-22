@@ -75,7 +75,7 @@ adult_w1 <- adult_w1 %>%
                                   'btwn_25_to_50k'= "(3) 3 = $25,000 to $49,999",
                                   'btwn_50k_100k' = "(4) 4 = $50,000 to $99,999",
                                   'more_than_100k' =  "(5) 5 = $100,000 or more"),
-         cig_current_use_w1 = recode(cig_current_freq_w1, 
+         cig_use_now_w1 = recode(cig_current_freq_w1, 
                                            "(1) 1 = Every day" = 1,  
                                            "(2) 2 = Some days" = 1,
                                            "(3) 3 = Not at all" = 0),
@@ -110,10 +110,10 @@ if(STATA){
     mutate(
       est_smoker_w1 = if_else(as.numeric(cig_num_life_w1) == 6, 1, 0),
       smoking_status_full_w1 = case_when(
-            cig_current_use_w1 == 1 & est_smoker_w1 == 1 ~ 'current_est_smoker',
-            cig_current_use_w1 == 0 & est_smoker_w1 == 1 ~ 'former_est_smoker',
-            cig_current_use_w1 == 1 & est_smoker_w1 == 0 ~ 'current_exp_smoker',
-            cig_current_use_w1 == 0 & est_smoker_w1 == 0 &
+            cig_use_now_w1 == 1 & est_smoker_w1 == 1 ~ 'current_est_smoker',
+            cig_use_now_w1 == 0 & est_smoker_w1 == 1 ~ 'former_est_smoker',
+            cig_use_now_w1 == 1 & est_smoker_w1 == 0 ~ 'current_exp_smoker',
+            cig_use_now_w1 == 0 & est_smoker_w1 == 0 &
             cig_use_ever_w1 == 1 ~ 'former_exp_smoker',
             cig_use_ever_w1 == 0 ~'never_smoker'), 
       smoking_status_w1 = fct_collapse(smoking_status_full_w1,
@@ -200,7 +200,7 @@ adult_w2 <- adult_w2 %>%
                                   'btwn_25_to_50k'= "(3) 3 = $25,000 to $49,999",
                                   'btwn_50k_100k' = "(4) 4 = $50,000 to $99,999",
                                   'more_than_100k' =  "(5) 5 = $100,000 or more"),
-         cig_current_use_w2 = recode(cig_current_freq_w2, 
+         cig_use_now_w2 = recode(cig_current_freq_w2, 
                                            "(1) 1 = Every day" = 1,  
                                            "(2) 2 = Some days" = 1,
                                            "(3) 3 = Not at all" = 0)
@@ -222,7 +222,7 @@ if (STATA){
            former_est_smoker_w2 = if_else(R02R_A_FMR_ESTD_CIGS_REV == '(1) 1 = Yes' |
                                             is.na(R02R_A_FMR_ESTD_CIGS_REV) &
                                             is.na(est_smoker_w2) &
-                                            is.na(cig_current_use_w2) &
+                                            is.na(cig_use_now_w2) &
                                             (is.na(R02R_A_CUR_ESTD_CIGS) |
                                                is.na(cig_use_ever_w2)), 1, 0),
            current_non_est_smoker_w2 = if_else(as.numeric(R02R_A_CUR_ESTD_CIGS) == 2 &
@@ -351,7 +351,7 @@ adult_w3 <- adult_w3 %>%
                                                    '(5) 5 = 55 to 64 years old'),
                                'older_than_65' = c('(6) 6 = 65 to 74 years old',
                                                    '(7) 7 = 75 years old or older')),
-         cig_current_use_w3 = recode(cig_current_freq_w3, 
+         cig_use_now_w3 = recode(cig_current_freq_w3, 
                                            '(1) 1 = Every day' = 1,
                                            '(2) 2 = Some days' = 1,
                                            '(3) 3 = Not at all' = 0)
@@ -453,32 +453,32 @@ adult_panel <- adult_w1 %>%
 # WAVE 2: Quit Status at W2 for 'W1 Current Smokers'
 adult_panel <- adult_panel %>%
   mutate(quit_w1_w2  = case_when(
-    cig_current_use_w1== 1 & 
-      cig_current_use_w2== 1 ~ 'No',
-    cig_current_use_w1== 1 & 
+    cig_use_now_w1== 1 & 
+      cig_use_now_w2== 1 ~ 'No',
+    cig_use_now_w1== 1 & 
       (smoked_past12M_w2== 0 | 
-         cig_current_use_w2== 0) ~ 'Yes'),
+         cig_use_now_w2== 0) ~ 'Yes'),
     quit_cat_w1_w2  = case_when(
-      cig_current_use_w1==1 & 
-        cig_current_use_w2==1 ~ 'No',
-      cig_current_use_w1==1 & 
+      cig_use_now_w1==1 & 
+        cig_use_now_w2==1 ~ 'No',
+      cig_use_now_w1==1 & 
         (as.numeric(smoked_past12M_w2)==2 | 
-           cig_current_use_w2==0) ~ 'Yes',
-      cig_current_use_w1==0 & 
+           cig_use_now_w2==0) ~ 'Yes',
+      cig_use_now_w1==0 & 
         (as.numeric(smoked_past12M_w2)==2 | 
-           cig_current_use_w2==0) ~ 'Stayed Non-Smoker')
+           cig_use_now_w2==0) ~ 'Stayed Non-Smoker')
 )
 
 # WAVE 3: Quit Status  at W3 for 'W1 Current Smokers'
 adult_panel <- adult_panel %>% 
   mutate(
     quit_w1_w3  = case_when(
-      cig_current_use_w1==1 & cig_current_use_w3==1 ~  'No',
-      cig_current_use_w1==1 & (smoked_past12M_w3==0 | cig_current_use_w3== 0) ~ 'Yes'),
+      cig_use_now_w1==1 & cig_use_now_w3==1 ~  'No',
+      cig_use_now_w1==1 & (smoked_past12M_w3==0 | cig_use_now_w3== 0) ~ 'Yes'),
     quit_cat_w1_w3  = case_when(
-      cig_current_use_w1==1 & cig_current_use_w3==1 ~ 'No',
-      cig_current_use_w1==1 & (smoked_past12M_w3 == 1 | cig_current_use_w3==0) ~ 'Yes',
-      cig_current_use_w1==0 & (smoked_past12M_w3==1 | cig_current_use_w3==0) ~ 'Stayed Non-Smoker'),
+      cig_use_now_w1==1 & cig_use_now_w3==1 ~ 'No',
+      cig_use_now_w1==1 & (smoked_past12M_w3 == 1 | cig_use_now_w3==0) ~ 'Yes',
+      cig_use_now_w1==0 & (smoked_past12M_w3==1 | cig_use_now_w3==0) ~ 'Stayed Non-Smoker'),
     quit_cat_w1_w3  = factor(quit_cat_w1_w3, levels = c('Yes', 'No', 'Stayed Non-Smoker'))
 ) 
 
@@ -486,20 +486,20 @@ adult_panel <- adult_panel %>%
 adult_panel <- adult_panel %>% 
   mutate(
     quit_w2_w3  = case_when(
-      cig_current_use_w2==1 & cig_current_use_w3==1 ~  'No',
-      cig_current_use_w2==1 & (smoked_past12M_w3==0 | cig_current_use_w3== 0) ~ 'Yes'),
+      cig_use_now_w2==1 & cig_use_now_w3==1 ~  'No',
+      cig_use_now_w2==1 & (smoked_past12M_w3==0 | cig_use_now_w3== 0) ~ 'Yes'),
     quit_cat_w2_w3  = case_when(
-      cig_current_use_w2==1 & cig_current_use_w3==1 ~ 'No',
-      cig_current_use_w2==1 & (smoked_past12M_w3 == 1 | cig_current_use_w3==0) ~ 'Yes',
-      cig_current_use_w2==0 & (smoked_past12M_w3==1 | cig_current_use_w3==0) ~ 'Stayed Non-Smoker'),
+      cig_use_now_w2==1 & cig_use_now_w3==1 ~ 'No',
+      cig_use_now_w2==1 & (smoked_past12M_w3 == 1 | cig_use_now_w3==0) ~ 'Yes',
+      cig_use_now_w2==0 & (smoked_past12M_w3==1 | cig_use_now_w3==0) ~ 'Stayed Non-Smoker'),
     quit_cat_w2_w3  = factor(quit_cat_w2_w3, levels = c('Yes', 'No', 'Stayed Non-Smoker'))
 ) 
 
 # WAVE 3: P30D Quit Status at W3 for 'W2 Current Smokers' 
 adult_panel <- adult_panel %>% 
                   mutate( quit_p30d_w2_w3  = case_when(
-  cig_current_use_w2==1 & cig_current_use_w3==1 ~  'No',
-  cig_current_use_w2==1 & (smoked_past12M_w3==0 | cig_current_use_w3== 0) ~ 'Yes')
+  cig_use_now_w2==1 & cig_use_now_w3==1 ~  'No',
+  cig_use_now_w2==1 & (smoked_past12M_w3==0 | cig_use_now_w3== 0) ~ 'Yes')
 )
 
 # gen quitw2_2=1 if (smkstatus_w1==1) & (R02_AC1003==3 & p30cigsmoke_w2==0)

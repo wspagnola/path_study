@@ -262,13 +262,21 @@ ggsave('Figures/W3_Quit_Categories_Barplot.png', width = 8)
                           'smoking_status_full_w2', 
                           'smoking_status_full_w3'), 
                     label = 'Smoking_Status') 
-tab  %>%  
+tab_new <- tab  %>%  
   split(f = tab$Wave) %>% 
   bind_cols %>% 
   select(-Wave, -Wave1, -Wave2, -Smoking_Status1, -Smoking_Status2) %>% 
   rename('Wave_1' = n ,
         'Wave_2' = n1,
-        'Wave_3' =  n2) %>% 
-  write.csv(file = 'Smoking_Status_Full_W123.csv')
+        'Wave_3' =  n2) 
+#write.csv(x = tab_new, file = 'Smoking_Status_Full_W123.csv')
 
-
+#Former Smokers
+adult_w1 %>% 
+  mutate(former_smoker_w1 = if_else(cig_use_ever_w1 = 1 & cig_use_now_w1 = 0, 1, 0)
+         current_smoker_w1 = if_else(cig_use_now_w1 = 1, 0, 0)
+    
+  )
+  
+    
+  ))
