@@ -1,6 +1,8 @@
 require(tidyverse)
 require(ggplot2)
 require(survey)
+require(srvyr) #Can use dplyr function with survey objects
+require(nnet) #For multinomial logistic regression (unweighted)
 
 #### FUNCTIONS ####
 
