@@ -86,7 +86,7 @@ my_theme_wave <-  theme_bw() +
         plot.title = element_text(hjust = 0.5)
 ) 
 
-#Theme For Quite Plots
+#Theme For Quit Plots
 theme_wave_quit <-  theme_bw() +
   theme(legend.position = 'none',
         panel.grid.major.x = element_blank(),
@@ -97,6 +97,13 @@ theme_wave_quit <-  theme_bw() +
                                     hjust = 0)
 )
 
+
+#Theme For 'Mosaic' Transition Plots
+theme_wave_mosaic <-  theme_bw() +
+  theme(plot.title = element_text(size = 14),
+        plot.subtitle = element_text(size = 8, face = "italic"),
+        panel.grid.major.x = element_blank(),
+        plot.caption = element_text(size = 8, face = "italic", hjust = 0))
 
 #Hex Codes for Default ggplot colors
 gg_blue <- '#619CFF'
