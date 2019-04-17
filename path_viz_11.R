@@ -42,11 +42,12 @@ ns_status_w3 <- never_smokers_w1_status_w3 %>%
   mutate(status = case_when(initiation_w2==0 & initiation_w3==0 ~'abstinence',
                             initiation_w2==1 | initiation_w3==1 ~'initiated'),
          wave = 3) %>% 
-  select(-initiation_w2, -initiation_w3 ) %>% 
+  select(-initiation_w2, -initiation_w3) %>% 
   group_by(status, wave) %>% 
   summarize(n = sum(n)) %>% 
   ungroup
  
+
 
 
 #Table of W1 Never Smoker Transitions at W2 & W3
@@ -138,7 +139,7 @@ cur_smoker_mosaic_tab <- w1_current_smokers_at_w1 %>%
                             select(wave, status, n) 
 
 #Calculate N at each wave (May differ due to Item Non-Response)
-cur_smoker_mosaic_tab %>%  group_by(wave) %>%  summarize(n = sum(n))
+cur_smoker_mosaic_tab %>%  gsmoked_past12M_group_by(wave) %>%  summarize(n = sum(n))
 
 #Plot 'Mosaic/Filled Barplot' 
 cur_smoker_mosaic_tab %>% 
