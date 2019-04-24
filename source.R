@@ -109,3 +109,54 @@ theme_wave_mosaic <-  theme_bw() +
 gg_blue <- '#619CFF'
 gg_red <- '#F8766D'
 
+
+
+
+plot_sankey <- function( df, w1, w2, w3, sep = '_', useNA = T) {
+  require(tidyr)
+  require(dplyr)
+  
+  
+  
+  
+  #Inputs data frame and 1 grouping variable for each of the 3 waves
+  w1 <- enquo(w1)
+  w2 <- enquo(w2)
+  w3 <- enquo(w3)
+  
+  if(useNA == F){
+    df <- df %>% 
+      drop_na(!!w1, !!w2, !!w3)
+    
+  }
+  
+  #Create Data.frame of step 1 transitions(wave 1 to wave 2) 
+  step_1 <- df %>%
+    count(!!w1, !!w2 )%>%
+    rename(before = !!w1,
+           after = !!w2 ,
+           flow = n) %>%
+    ungroup %>% 
+    mutate(step_from = 'wave 1',
+           step_to = 'wave 2',
+           before =  paste('w1', before, sep = sep),
+           after = paste('w2', after, sep = sep))
+  
+  #Create Data.frame of step 1 transitions(wave 1 to wave 2)
+  step_2 <- df %>%
+    count(!!w2, !!w3) %>%
+    rename(before = !!w2,
+           after =!!w3,
+           flow = n) %>%
+    ungroup %>% 
+    mutate(step_from = 'wave 2',
+           step_to = 'wave 3',
+           before =  paste('w2', before, sep = sep),
+           after = paste('w3', after, sep = sep))
+  
+  #Bind rows of step 1 and step 2 data.frames
+  sankey_df <- rbind(step_1, step_2)
+  return( sankey_df)
+  
+  
+}
