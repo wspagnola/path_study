@@ -49,8 +49,20 @@ wave_1_adult_type_tab %>%
   scale_fill_discrete(name = 'Adult Type') +
   ggtitle('Attrition Across Waves') + 
   xlab('Waves')
-ggsave('Figures/attritions_across_waves.png')
+#ggsave('Figures/attritions_across_waves.png')
 ?ggsave
+adult_panel$
+adult_panel$smoking_status_full
+#### Look at Smoking Full Distribution 
+adult_panel %>% 
+  count(smoking_status_full_w1)
+
+
+adult_panel %>% 
+  count(smoking_status_full_w2)
+
+adult_panel %>% 
+  count(smoking_status_full_w3)
 
 
 #Logistic Regression 
