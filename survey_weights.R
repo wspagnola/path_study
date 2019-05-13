@@ -1,93 +1,10 @@
 source('source.R')
 options(survey.replicates.mse=TRUE)
 
-adult_wide <- adult_panel %>% 
-  select(PERSONID,contains('w2'), contains('w1')) 
-
-adult_wide %>% 
-  select(-smoked_past12M_w2, -current_est_smoker_w2,
-         -current_est_smoker_w2, -never_smoker_w2,
-         -former_est_smoker_w2, -current_non_est_smoker_w2,
-         -smoked_past30D_w2, -current_est_smoker_w1,
-         -current_est_smoker_w1, -never_smoker_w1,
-         -former_est_smoker_w1, -current_non_est_smoker_w1,
-         -abs_w2, -cigarette_use_ever_w1) %>% 
-
-  
-colA = paste("gender", 1:2, sep = "_w")
-colB = paste("hispanic", 1:2, sep = "_w")
-colC = paste("race", 1:2, sep = "_w")
-colD = paste("sexual_orientation", 1:2, sep = "_w")
-colE = paste("age", 1:2, sep = "_w")
-colF = paste("income", 1:2, sep = "_w")
-colG = paste('smoking_status', 1:2, sep = "_w")
-
-adult_wide %>% 
-  select(PERSONID, gender_w1, gender_w2, 
-         hispanic_w1, hispanic_w2, smoking_status_w1,
-         smoking_status_w2) %>% 
-       as.data.table %>% 
-      melt(measure.vars =  list(colA, colB, colG),
-        value.name = c("gender", "hispanic", 'smoking status')) %>% 
-      arrange(PERSONID) %>%  
-      head(n = 15)
-
-#Maybe add weights next
-adult_wide %>% 
-  gather(key = 'Wave', value = 'cigarette_current_freq', 
-                cigarette_current_freq_w1, cigarette_current_freq_w2) %>% 
-  mutate(Wave = ifelse(grepl(Wave, pattern ='w1'), '1', '2')) %>% 
-  head
-adult_wide <
-adult_w1_long <- adult_w1 %>%
-                  select(PERSONID, contains('w1'), contains('PWGT')) 
-
-adult_w2_long <- adult_w2 %>%
-                    select(PERSONID, contains('w2'), contains('PWGT')) 
-
-names(adult_w1_long) <- names(adult_w1_long) %>% 
-                           str_remove('_w1') %>% 
-                           str_remove('R01_')
-names(adult_w2_long) <- names(adult_w2_long) %>% 
-                              str_remove('_w2') %>% 
-                              str_remove('R02_')
-adult_w1_long$wave <- 1
-adult_w1_long$wave <- 2
-
-adult_w2_long$cigarette_use_ever <- NA
-
-adult_w1_long$smoked_past12M <- NA
-adult_w1_long$smoked_past30D <- NA
-adult_w1_long$days_quit_cigs<- NA
-adult_w1_long$days_quit_cigs<- NA
-
-x <- which(names(adult_w2_long) %in% names(adult_w1_long) == F)
-names(adult_w2_long)[x]
-rbind(adult_w1_long, adult_w2_long)
-  str_remove_all(names(adult_w1), pattern = '_w1')
-str_re
-svydesign(data = adult_w1, ids= ~1, strata = NULL)
-
-
-
-adult_w1$wave <- 1
-adult_w2$wave <- 2
-
-adult_survey <- adult_w1 %>% 
-                    left_join(adult_w2, by = 'PERSONID')
-
-adult_survey %>% 
-  select(PERSONID,age_w1, age_w2, gender_w1, gender_w2,
-         R01_A_PWGT, R02_A_PWGT) %>% 
-  gather(key = 'Wave', value = 'Age', age_w1,age_w2) %>% 
-  gather(key = 'Wave', value = 'Gender', gender_w1, gender_w2) %>% 
-  arrange(PERSONID) %>% 
-  head
-  gather()
 ## Create Survey Design with replication weights
 #Balanced Repated Replication method (BRR)
 #Fay's adjustment = 0.3
-str(survey_w1)
+
 
 #### Wave 1 ####
 survey_w1 <- svrepdesign(data = adult_w1,
@@ -103,152 +20,52 @@ svymean(~sexual_orientation_w1, survey_w1, na.rm =T)
 
 #### Wave 2  ####
 
+#Select Wave 2 variables  and Weights
 adult_sub_w2 <- adult_panel %>% 
-  select(PERSONID, ends_with('w2'), starts_with('R02_A_PWGT'), starts_with('wave'),
-        smoking_status_w1) %>% 
-  filter(wave_2 == 1)
-adult_sub_w2 %>% names
-
-cur_est_w1_at_w2 <- adult_panel %>% 
-  select(PERSONID, ends_with('w2'), starts_with('R02_A_PWGT'), starts_with('wave'),
-         smoking_status_w1) %>% 
-  filter(wave_2 == 1,  smoking_status_w1 == 'current_est_smoker') 
-
-colSums(is.na(adult_sub_w2))
-
-adult_sub_w2  %>%  nrow
-adult_panel %>%  
-  filter(wave_1 == 1 | wave_2 == 1) %>% 
-  mutate(pweight = if_else(wave_2 ==1, R02_A_PWGT, R01_A_PWGT),
-         missing_pweight = is.na(pweight))  %>% 
-  group_by(wave_1, wave_2,  missing_pweight) %>% 
-  count
-
-adult_panel %>% 
-  filter(wave_1 == 1 | wave_2 == 1) %>% 
-  mutate(missing_w1_weight = ifelse(is.na(R01_A_PWGT), 1, 0),
-         missing_w2_weight = ifelse(is.na(R02_A_PWGT), 1, 0)) %>% 
-  group_by(missing_w1_weight, missing_w2_weight) %>% 
-  count
-
-adult_panel$wave
-adult_merged_weights$pweight %>%  is.na %>%  sum
-
-adult_merge_weights$p_weight
-adult_panel %>% 
-  group_by(wave_1, wave_2, wave_3) %>% 
-  count
-
-adult_panel$R02_NEW_BASELINE_ADULT_LD %>%  table
-adult_panel$R02_CONTINUING_ADULT_LD %>%  table
-adult_panel$R03_ADULTTYPE %>%  table
-
-adult_merged_weights <- adult_panel %>% 
-                              filter(wave_1 == 1 | wave_2 == 1) %>% 
-                              mutate( pweight = if_else(wave_2 ==1, R02_A_PWGT, R01_A_PWGT)
+                  filter(wave_2 == 1) %>% 
+                  select(R02_CONTINUING_ADULT_LD,
+                         R02_NEW_BASELINE_ADULT_LD,
+                         ends_with('w2'), 
+                         starts_with('R02_A_PWGT')
 )
 
-adult_merged_weights %>%  select(pweight)   %>%  is.na %>%  table
-.grepl()
-rep_weights_mat_w1 <- adult_merged_weights %>% 
-                          select(starts_with('R01_A_PWGT')) %>% 
-                          select(-R01_A_PWGT) 
-
-rep_weights_mat_w2 <- adult_merged_weights %>% 
-                          select(starts_with('R02_A_PWGT')) %>% 
-                           select(-R02_A_PWGT)
-
-merged_rep_weights <- rep_weights_mat_w2
-merged_rep_weights[is.na(rep_weights_mat_w2)] <- rep_weights_mat_w1[is.na(rep_weights_mat_w2)]
-is.na(merged_rep_weights) %>%  sum
-
-adult_merged_weights[, grep('R02_A_PWGT[1-9]+', names(adult_merged_weights))] <- merged_rep_weights 
-names(adult_merged_weights_final ) %>%  tail
-
-  grep('R01_A_PWGT[1-9]+', names(adult_merged_weights)) 
-rep_weights_mat_w1 <-grep('R02_A_PWGT[1-9]+', names(adult_merged_weights)) 
-
-  mutate(missing_weight = is.na(pweight) )%>% 
-                                   group_by(missing_weight, wave_1) %>% 
-                                   count
-survey_merged <- svrepdesign(data = adult_merged_weights  ,
-                             weights = ~ pweight,
-                             repweights = 'R02_A_PWGT[1-9]+',
-                             type = 'Fay',
-                             rho = 0.3)
-
-survey_w2 <- svrepdesign(data = adult_sub_w2 ,
-                         weights = ~ R02_A_PWGT,
-                         repweights = 'R02_A_PWGT[1-9]+',
-                         type = 'Fay',
-                         rho = 0.3)
-adult_w2 %>% 
-  filter(R02_CONTINUING_ADULT_LD == '(1) 1 = Yes') %>% 
-  count(gender_w2) 
-
-
-continuing_adults_w2 <- svrepdesign(data = adult_sub_w2 ,
-                         weights = ~ R02_A_PWGT,
-                         repweights = 'R02_A_PWGT[1-9]+',
-                         type = 'Fay',
-                         rho = 0.3)
-
+#Keep only Continuing Adults
 continuing_adults <- adult_w2 %>% 
-  filter(R02_CONTINUING_ADULT_LD == '(1) 1 = Yes')
+                          filter(as.numeric(R02_CONTINUING_ADULT_LD)== 1)
 
-
-continuing_survey_w2 <- svrepdesign(data = continuing_adults ,
+#Keep only Continuing Adults
+continuing_adults_survey_w2 <- svrepdesign(data =continuing_adults,
                                     weights = ~ R02_A_PWGT,
                                     repweights = 'R02_A_PWGT[1-9]+',
                                     type = 'Fay',
                                     rho = 0.3)
 
-svymean(~gender_w2, design =continuing_survey_w2,
-        na.rm =T)
-
-svymean(~race_ethnicity_w2, design =continuing_survey_w2,
-        na.rm =T)
-
-svymean(~education_w2, design =continuing_survey_w2,
-        na.rm =T)
-
-
-svymean(~white_w2, design =continuing_survey_w2,
-        na.rm =T)
-continuing_adults %>% 
-  count(R02R_A_AM0018) 
-
-continuing_adults <- continuing_adults %>% 
-  mutate(white_w2 = fct_collapse(race_ethnicity_w2,
-    'NH White' =   'NH White',
-    'Other' = 'Hispanic',
-    'Other' = 'NH Black',
-    'Other' = 'Other' )) 
-
-continuing_adults %>% 
-  count(white_w2)
-
-
-  count(race_ethnicity_w2) 
-continuing_adults %>% 
-  count(education_w2) 
-adult_w2 %>% 
-  pull(cig_use_now_w2) %>% 
-  as.logical %>% 
-  sum(na.rm =T )
-  
-
-adult_sub_w2 %>%  
-  filter(R02_CONTINUING_ADULT_LD)
-svrepdesign(data = adult_sub_w2 ,
-            weights = ~ R02_A_PWGT,
-            repweights = 'R02_A_PWGT[1-9]+',
-            type = 'Fay',
-            rho = 0.3)
+#Check Means
 svymean(~gender_w2, 
-        design = survey_w2, 
+        design=continuing_adults_survey_w2, 
+        na.rm =T) *100 
+svymean(~race_ethnicity_w2, 
+        design=continuing_adults_survey_w2, 
+        na.rm =T)*100
+
+
+
+### DOUBLE CHECK EDUCATION
+#Education
+svymean(~education_w2, design =continuing_adults_survey_w2,
         na.rm =T)
-?svytable
+
+adult_panel %>% 
+  filter(as.numeric(R02_CONTINUING_ADULT_LD)==1) %>% 
+  count(education_w2)
+
+adult_panel$R02_AM0026
+
+grep('health', names(adult_panel), ignore.case = T)
+grep('ins', names(adult_panel), ignore.case = T)
+grep('cover', names(adult_panel), ignore.case = T)
+
+#### Current Est. Smokers ####
   
 adult_w2 %>% 
   count(R02_AE1004)

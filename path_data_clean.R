@@ -516,3 +516,4 @@ adult_panel <- adult_panel %>%
                            wave_3 = ifelse(is.na(wave_3), 0, wave_3)
 ) 
 
+
