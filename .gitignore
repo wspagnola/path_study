@@ -5,3 +5,4 @@
 *.Rproj.user
 *.tsv
 .Rproj.user
+.DS_Store

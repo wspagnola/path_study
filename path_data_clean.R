@@ -1,6 +1,6 @@
+
 #This data cleaning script uses equivalent commands from Stata do file
 source('source.R')
-
 
 #STATA <- TRUE  #TRUE to match STAT file
 STATA <- FALSE  #TRUE to match STAT file
@@ -8,32 +8,31 @@ STATA <- FALSE  #TRUE to match STAT file
 #### WAVE 1: Clean ####
 
 #Load Adult Waves 1
-load('Input/36498-1001-Data.rda')
+#load('Input/36498-1001-Data.rda')
+
+adult_w1 <- read_tsv('Input/36498-1001-Data.tsv')
 
 #Rename Variables (W1) and mutate PERSONID to character
-adult_w1 <- da36498.1001 %>%  
-  rename(gender_w1 = R01R_A_SEX,
-         race_w1 = R01R_A_RACECAT3,
-         hispanic_w1 = R01R_A_HISP,
-         sexual_orientation_w1 = R01R_A_SEXORIENT2,
-         poverty_w1 =R01R_POVCAT2,
-         region_w1 = R01X_CB_REGION,
-         cig_use_ever_w1 = R01_AC1002,
-         cig_current_freq_w1 = R01_AC1003,
-         cig_num_life_w1 = R01_AC1005) %>% 
-  mutate(
-        PERSONID = as.character(PERSONID)
+adult_w1 <- adult_w1  %>%  
+                rename(gender_w1 = R01R_A_SEX,
+                       race_w1 = R01R_A_RACECAT3,
+                       hispanic_w1 = R01R_A_HISP,
+                       sexual_orientation_w1 = R01R_A_SEXORIENT2,
+                       poverty_w1 =R01R_POVCAT2,
+                       region_w1 = R01X_CB_REGION,
+                       cig_use_ever_w1 = R01_AC1002,
+                       cig_current_freq_w1 = R01_AC1003,
+                       cig_num_life_w1 = R01_AC1005) %>% 
+                mutate(PERSONID = as.character(PERSONID)
 )
 
 #Race/Ethnicity Variable: NH-White, NH-black, Hispanic, Other (W1)
 adult_w1 <- adult_w1 %>% 
-  mutate(race_ethnicity_w1 = case_when(
-    race_w1=='(1) 1 = White alone'& 
-      hispanic_w1 == '(2) 2 = Not Hispanic'~ 'NH White',
-    race_w1=='(2) 2 = Black alone' &
-      hispanic_w1 == '(2) 2 = Not Hispanic' ~ 'NH Black', 
-    hispanic_w1=='(1) 1 = Hispanic' ~ 'Hispanic',
-    race_w1=='(3) 3 = Other' & hispanic_w1== '(2) 2 = Not Hispanic' ~ 'Other')
+              mutate(race_ethnicity_w1 = case_when(
+                              race_w1 =='(1) 1 = White alone' & hispanic_w1 == '(2) 2 = Not Hispanic' ~ 'NH White',
+                              race_w1 =='(2) 2 = Black alone' & hispanic_w1 == '(2) 2 = Not Hispanic' ~ 'NH Black', 
+                                                                hispanic_w1 == '(1) 1 = Hispanic'     ~ 'Hispanic',
+                                     race_w1=='(3) 3 = Other' & hispanic_w1 == '(2) 2 = Not Hispanic' ~ 'Other')
 )
 
 #Recode/Relevel Race, Sexual Orientation, Region, and Poverty Variables
@@ -134,6 +133,8 @@ adult_w1 <- adult_w1 %>%
 )
 
 adult_w1$wave_1 <- 1
+
+
 #### WAVE 2: Clean ####
 
 #Load Data and Rename Variables (W2)

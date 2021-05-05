@@ -1,8 +1,10 @@
-require(tidyverse)
-require(ggplot2)
-require(survey)
-require(srvyr) #Can use dplyr function with survey objects
-require(nnet) #For multinomial logistic regression (unweighted)
+
+
+library(tidyverse)
+library(ggplot2)
+library(survey)
+library(srvyr) #Can use dplyr function with survey objects
+library(nnet) #For multinomial logistic regression (unweighted)
 
 #### FUNCTIONS ####
 
@@ -20,8 +22,7 @@ recode_multi_choice <- function(x) {
 }
 
 prep_panel_data <- function(data, w1, w2, label){
-  require(tidyr)
-  require(dplyr)
+  
   wave_1 <- data[, w1]
   wave_2 <- data[, w2]
   d <- data.frame(wave_1, wave_2) 
