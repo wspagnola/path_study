@@ -1,9 +1,7 @@
 *.dta
 *.rda
-*.csv
 *.jpeg
 *.Rproj.user
-*.tsv
 .Rproj.user
 .DS_Store
 .Rhistory

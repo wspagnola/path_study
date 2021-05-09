@@ -10,7 +10,7 @@ STATA <- FALSE  #TRUE to match STAT file
 #Load Adult Waves 1
 #load('Input/36498-1001-Data.rda')
 
-adult_w1 <- read_tsv('Input/36498-1001-Data.tsv')
+adult_w1 <- read_tsv('data/Input/36498-1001-Data.tsv')
 
 #Rename Variables (W1) and mutate PERSONID to character
 adult_w1 <- adult_w1  %>%  
@@ -29,27 +29,32 @@ adult_w1 <- adult_w1  %>%
 #Race/Ethnicity Variable: NH-White, NH-black, Hispanic, Other (W1)
 adult_w1 <- adult_w1 %>% 
               mutate(race_ethnicity_w1 = case_when(
-                              race_w1 =='(1) 1 = White alone' & hispanic_w1 == '(2) 2 = Not Hispanic' ~ 'NH White',
-                              race_w1 =='(2) 2 = Black alone' & hispanic_w1 == '(2) 2 = Not Hispanic' ~ 'NH Black', 
-                                                                hispanic_w1 == '(1) 1 = Hispanic'     ~ 'Hispanic',
-                                     race_w1=='(3) 3 = Other' & hispanic_w1 == '(2) 2 = Not Hispanic' ~ 'Other')
+                              race_w1 == 1 & hispanic_w1 == 2  ~ 'NH White',
+                              race_w1 == 2 & hispanic_w1 == 2 ~ 'NH Black', 
+                              hispanic_w1 == 1   ~ 'Hispanic',
+                              race_w1== 3 & hispanic_w1 == 2 ~ 'Other')
 )
 
 #Recode/Relevel Race, Sexual Orientation, Region, and Poverty Variables
 adult_w1 <- adult_w1 %>% 
-  mutate(
-    race_ethnicity_w1 = as.factor(race_ethnicity_w1),
-    race_ethnicity_w1 = relevel(race_ethnicity_w1, ref = 'NH White'),
-    sexual_orientation_w1 = recode(sexual_orientation_w1,
-                                   '(1) 1 = Lesbian, Gay, Bisexual, Something else' = 'LGBT',
-                                   '(2) 2 = Straight' = 'Straight'),
-    sexual_orientation_w1 = relevel(sexual_orientation_w1, ref = 'Straight'),
-    poverty_w1 = recode(poverty_w1,
-                        '(1) 1 = Below poverty level (< 100% of poverty guideline)' = 'Below_Poverty',
-                        '(2) 2 = At or above poverty level (>= 100% of poverty guideline)' = 'Above_Poverty'),
-    poverty_w1 = as.factor(poverty_w1),
-    poverty_w1 = relevel(poverty_w1, ref = 'Above_Poverty')
+          mutate(race_ethnicity_w1 = as.factor(race_ethnicity_w1),
+                 race_ethnicity_w1 = relevel(race_ethnicity_w1, ref = 'NH White')
 )
+    
+
+#    
+# adult_w1$sexual_orientation_w1 
+#     ,
+#     sexual_orientation_w1 = recode(sexual_orientation_w1,
+#                                    '(1) 1 = Lesbian, Gay, Bisexual, Something else' = 'LGBT',
+#                                    '(2) 2 = Straight' = 'Straight'),
+#     sexual_orientation_w1 = relevel(sexual_orientation_w1, ref = 'Straight'),
+#     poverty_w1 = rsssecode(poverty_w1,
+#                         '(1) 1 = Below poverty level (< 100% of poverty guideline)' = 'Below_Poverty',
+#                         '(2) 2 = At or above poverty level (>= 100% of poverty guideline)' = 'Above_Poverty'),
+#     poverty_w1 = as.factor(poverty_w1),
+#     poverty_w1 = relevel(poverty_w1, ref = 'Above_Poverty')
+# )
 
 #Collapse variables: age, income, education, current cigarette use; Recode cigarette ever us
 adult_w1 <- adult_w1 %>% 
