@@ -143,10 +143,11 @@ adult_w1$wave_1 <- 1
 #### WAVE 2: Clean ####
 
 #Load Data and Rename Variables (W2)
-load('Input/36498-2001-Data.rda')
+# load('Input/36498-2001-Data.rda')
+adult_w2 <- read_tsv('data/Input/36498-2001-Data.tsv')
 
 #Rename Variables and mutate PERSONID to character
-adult_w2 <- da36498.2001 %>% 
+adult_w2 <- adult_w2 %>% 
   rename(gender_w2 = R02R_A_SEX,
          race_w2 = R02R_A_RACECAT3,
          hispanic_w2 = R02R_A_HISP,
@@ -166,11 +167,14 @@ adult_w2 <- da36498.2001 %>%
 #Race/Ethnicity Variable: NH-White, NH-black, Hispanic, Other (W2)
 adult_w2 <- adult_w2 %>% 
   mutate(race_ethnicity_w2 = case_when(
-    race_w2 =='(1) 1 = White alone'&  hispanic_w2 == '(2) 2 = Not Hispanic'~ 'NH White',
-    race_w2 =='(2) 2 = Black alone' & hispanic_w2 == '(2) 2 = Not Hispanic' ~ 'NH Black', 
-    hispanic_w2 =='(1) 1 = Hispanic' ~ 'Hispanic',
-    race_w2=='(3) 3 = Other' & hispanic_w2== '(2) 2 = Not Hispanic' ~ 'Other')
+    race_w2 == 1 &  hispanic_w2 == 2 ~ 'NH White',
+    race_w2 == 2 & hispanic_w2 == 2  ~ 'NH Black', 
+    hispanic_w2 == 1  ~ 'Hispanic',
+    race_w2== 3 & hispanic_w2 ==  2~ 'Other')
 )
+
+
+#-------------- NOTE: NEED TO CONVERT THESE TO FACTORS -------------*/
 
 #Recode/Relevel Race and Sexual Orientation Variables
 adult_w2 <- adult_w2 %>% 
