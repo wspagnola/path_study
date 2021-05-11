@@ -3,16 +3,14 @@
 library(tidyverse)
 library(ggplot2)
 library(survey)
-library(srvyr) #Can use dplyr function with survey objects
 library(nnet) #For multinomial logistic regression (unweighted)
 
 #### FUNCTIONS ####
 
-recode_binary <- function(x) {
-  
-  #Recode Yes/No as 1/0
-  recode(x, '(1) 1 = Yes' = 1, '(2) 2 = No' = 0 )
+recode_binary <- function(x){
+    abs(x -2) 
 }
+
 
 
 recode_multi_choice <- function(x) {
@@ -161,3 +159,17 @@ plot_sankey <- function( df, w1, w2, w3, sep = '_', useNA = T) {
   
   
 }
+
+
+
+#### Old Code ####
+
+# This package may have been removed from CRAN
+#library(srvyr) #Can use dplyr function with survey objects
+
+
+# recode_binary <- function(x) {
+#   
+#   #Recode Yes/No as 1/0
+#   recode(x, '(1) 1 = Yes' = 1, '(2) 2 = No' = 0 )
+# }
