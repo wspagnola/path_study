@@ -153,7 +153,6 @@ adult_w1$wave_1 <- 1
 #### WAVE 2: Clean ####
 
 #Load Data and Rename Variables (W2)
-# load('Input/36498-2001-Data.rda')
 adult_w2 <- read_tsv('data/Input/36498-2001-Data.tsv')
 
 #Rename Variables and mutate PERSONID to character
@@ -377,8 +376,8 @@ adult_w3$wave_3 <- 1
 #### MERGE WAVES ####
 
 #Note: Must by Full Join; Only use PERSONID for 'by' argument
-adult_panel <- adult_w1 %>%  
-  full_join(y = adult_w2, by = c('PERSONID')) %>% 
+adult_panel <- adult_w1 %>%
+  full_join(y = adult_w2, by = c('PERSONID')) %>%
   full_join(y= adult_w3, by = c('PERSONID')
 )
 
@@ -393,19 +392,19 @@ adult_panel <- adult_w1 %>%
 # WAVE 2: Quit Status at W2 for 'W1 Current Smokers'
 adult_panel <- adult_panel %>%
   mutate(quit_w1_w2  = case_when(
-    cig_use_now_w1== 1 & 
+    cig_use_now_w1== 1 &
       cig_use_now_w2== 1 ~ 'No',
-    cig_use_now_w1== 1 & 
-      (smoked_past12M_w2== 0 | 
+    cig_use_now_w1== 1 &
+      (smoked_past12M_w2== 0 |
          cig_use_now_w2== 0) ~ 'Yes'),
     quit_cat_w1_w2  = case_when(
-      cig_use_now_w1==1 & 
+      cig_use_now_w1==1 &
         cig_use_now_w2==1 ~ 'No',
-      cig_use_now_w1==1 & 
-        (as.numeric(smoked_past12M_w2)==2 | 
+      cig_use_now_w1==1 &
+        (as.numeric(smoked_past12M_w2)==2 |
            cig_use_now_w2==0) ~ 'Yes',
-      cig_use_now_w1==0 & 
-        (as.numeric(smoked_past12M_w2)==2 | 
+      cig_use_now_w1==0 &
+        (as.numeric(smoked_past12M_w2)==2 |
            cig_use_now_w2==0) ~ 'Stayed Non-Smoker')
 )
 
@@ -461,6 +460,7 @@ adult_panel <- adult_panel %>%
 
 
 #load('Input/36498-1001-Data.rda')
+# load('Input/36498-2001-Data.rda')
 
 
 
