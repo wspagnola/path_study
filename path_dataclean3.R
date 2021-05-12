@@ -154,5 +154,5 @@ adult_w3 <- adult_w3 %>%
     as.numeric(R03_AX0161) == 1 | as.numeric(R03_AX0163) == 1, 1, 0)
   )
 
-adult_w3$wave_2 <- 1
+adult_w3$wave_3 <- 1
 
