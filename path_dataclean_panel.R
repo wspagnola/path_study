@@ -86,7 +86,6 @@ adult_panel <- adult_panel %>%
 
 #### Recode NAs as Zero f####
 #For obs. that was not included in a given wave
-#Note: is this right move?
 adult_panel <- adult_panel %>% 
   mutate(wave_1 = ifelse(is.na(wave_1), 0, wave_1),
          wave_2 = ifelse(is.na(wave_2), 0, wave_2),
@@ -106,11 +105,18 @@ adult_panel %>%  group_by(cig_use_now_w1)    %>%  count
 
 cols <- names(adult_panel) %>%  str_subset("[a-z]")
 cols <- cols[!str_detect(cols, '\\.x|\\.y') ]
-adult_panel <- adult_panel %>%  select(PERSONID, all_of(cols))
+adult_panel <- adult_panel %>%  select(PERSONID, all_of(cols), R02_CONTINUING_ADULT_LD,R03_ADULTTYPE)
 
-object.size(adult_panel) # 24.5 mb
+object.size(adult_panel) # 25.6 mb
 
 write.csv(adult_panel, 'data/Output/adult_panel.csv')
 # note make sure git attributes includes csv files in lfs git system 
-
 # git lfs track "*.csv"
+
+
+#### Check Representation across waves ####
+adult_panel %>%  glimpse
+adult_panel %>%  group_by(wave_1, wave_2, wave_3, R02_CONTINUING_ADULT_LD, R03_ADULTTYPE) %>%  count
+# Note: Some inconsistencies (n= 3)
+# 1 adult in wave 1 and wave 2 but marked as NA for wave 2
+# 2 adults in all three waves but marked as NA for waves 2, 3 
