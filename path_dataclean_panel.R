@@ -112,7 +112,7 @@ object.size(adult_panel) # 25.6 mb
 write.csv(adult_panel, 'data/Output/adult_panel.csv')
 # note make sure git attributes includes csv files in lfs git system 
 # git lfs track "*.csv"
-
+# git lfs ls-files -> see files being tracked
 
 #### Check Representation across waves ####
 adult_panel %>%  glimpse
