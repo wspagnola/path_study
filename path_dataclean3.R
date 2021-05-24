@@ -128,8 +128,10 @@ adult_w3 <- adult_w3 %>%
 ## est_smoker = established smoker (current & former); smoked 100 cigs in lifetime
 #Smoking Status Full has all categories cur/fmr est/exp smoker and non-smoers
 #Smoking Status collapsed smoking status full into current, former, never
+# NOte: need to account for established smokers from previous wave
 adult_w3 <- adult_w3 %>%  
-  mutate(         est_smoker_w3 = if_else(as.numeric(cig_num_life_w3) == 6, 1, 0),
+  mutate(         est_smoker_w3 = if_else(as.numeric(cig_num_life_w3) == 6 ||
+                                          est_smoker_w2 == 1, 1, 0),
                   smoking_status_full_w3 = case_when(
                     cig_use_now_w3 == 1 & est_smoker_w3 == 1 ~ 'current_est_smoker',
                     cig_use_now_w3 == 0 & est_smoker_w3 == 1 ~ 'former_est_smoker',

@@ -1,4 +1,8 @@
 
+source('source.R')
+
+adult_panel <- read.csv('data/Output/adult_panel.csv')
+
 #### Sankey Plot: All 5 levels (Complete Cases)  ####
 
 

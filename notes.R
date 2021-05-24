@@ -1,4 +1,81 @@
+#### Codes ####
 
+
+#R01_AC1002: Ever smoked a cigarette, even one or two puffs
+#R01_AC0100: When last smoked a cigarette
+#R01_AC1003: Now smoke cigarettes
+#R01_AC1005: Number of cigarettes smoked in your entire life
+
+
+### Current Established Smoker #### 
+
+# R01R_A_CUR_ESTD_CIGS: DERIVED - Wave 1 Adult Current Established Cigarette User
+# Long Description: 
+#1) Has ever smoked a cigarette
+#2) as smoked more than 100 cigarettes in lifetime
+#3)and currently smokes every day or some days.
+
+# Algorithm:
+#   IF R01_AC1002=1 AND R01_AC1005=6 AND R01_AC1003 in (1, 2) THEN R01R_A_CUR_ESTD_CIGS = 1; 
+
+#ELSE IF R01_AC1002= 2 OR R01_AC1003= 3 OR (R01_AC1003 in (1,2,-7,-8,-9) AND R01_AC1005 in (1, 2, 3, 4, 5)) , THEN R01R_A_CUR_ESTD_CIGS =2;
+
+#ELSE IF R01_AC1002=-9 OR R01_AC1005=-9  OR R01_AC1003=-9 THEN R01R_A_CUR_ESTD_CIGS=-99999 
+
+#ELSE IF R01_AC1002=-8 OR R01_AC1005=-8 OR R01_AC1003=-8 THEN R01R_A_CUR_ESTD_CIGS=-99988 
+
+#ELSE IF R01_AC1002=-7 OR R01_AC1005=-7 OR R01_AC1003=-7 THEN R01R_A_CUR_ESTD_CIGS=-99977 ELSE IF R01_AC1002=-5 OR R01_AC1005=-5 OR R01_AC1003=-5 THEN R01R_A_CUR_ESTD_CIGS=-99955 
+
+#ELSE IF R01_AC1002=-1 OR R01_AC1005=-1 OR R01_AC1003=-1 THEN R01R_A_CUR_ESTD_CIGS=-99911
+
+
+# R01R_A_CUR_EXPR_CIGS: DERIVED - Wave 1 Adult Current Experimental Cigarette User
+#Long Description: Has ever smoked a cigarette, has not smoked more than 100 cigarettes in lifetime, and smokes every day or some days.
+
+# Algorithm:
+#   IF R01_AC1002=1 AND R01_AC1005 in (1, 2, 3, 4, 5) AND R01_AC1003 in (1, 2) THEN R01R_A_CUR_EXPR_CIGS = 1; ELSE
+# IF R01_AC1002= 2 OR R01_AC1003= 3 OR (R01_AC1003 in (1,2,-7,-8,-9) AND
+#                                       - 1092 -
+#                                         R01_AC1005 = 6), THEN R01R_A_CUR_EXPR_CIGS=2;
+# ELSE IF R01_AC1002=-9 OR R01_AC1005=-9 OR R01_AC1003=-9 THEN R01R_A_CUR_EXPR_CIGS=-99999 ELSE IF R01_AC1002=-8
+# OR R01_AC1005=-8 OR R01_AC1003=-8 THEN R01R_A_CUR_EXPR_CIGS=-99988 ELSE IF R01_AC1002=-7 OR R01_AC1005=-7 OR
+# R01_AC1003=-7 THEN R01R_A_CUR_EXPR_CIGS=-99977 ELSE IF R01_AC1002=-5
+# OR R01_AC1005=-5 OR R01_AC1003=-5 THEN
+# R01R_A_CUR_EXPR_CIGS=-99955 ELSE IF R01_AC1002=-1 OR R01_AC1005=-1 OR R01_AC1003=-1 THEN R01R_A_CUR_EXPR_CIGS=-99911
+# 
+# 
+
+
+# R01R_A_FMR_EXPR_CIGS: DERIVED - Wave 1 Adult Former Experimental Cigarette User
+# Long Description: Has ever smoked a cigarette, has not smoked more than 100 cigarettes in lifetime, and now does not smoke at all.
+# Algorithm:
+#   IF R01_AC1002=1 AND R01_AC1005 in (1, 2, 3, 4, 5) AND R01_AC1003 = 3 THEN R01R_A_FMR_EXPR_CIGS= 1; ELSE IF
+# - 1095 -
+#   R01_AC1002= 2 OR R01_AC1003 in (1,2) OR (R01_AC1003 in (3, -7,-8,-9) AND R01_AC1005 = 6) , THEN R01R_A_FMR_EXPR_CIGS=2;
+# ELSE IF R01_AC1002=-9 OR R01_AC1005=-9 OR R01_AC1003=-9 THEN R01R_A_FMR_EXPR_CIGS=-99999 ELSE IF R01_AC1002=-8
+# OR R01_AC1005=-8 OR R01_AC1003=-8 THEN R01R_A_FMR_EXPR_CIGS=-99988 ELSE IF R01_AC1002=-7 OR R01_AC1005=-7 OR
+# R01_AC1003=-7 THEN R01R_A_FMR_EXPR_CIGS=-99977 ELSE IF R01_AC1002=-5 OR R01_AC1005=-5 OR R01_AC1003=-5 THEN
+# R01R_A_FMR_EXPR_CIGS=-99955 ELSE IF R01_AC1002=-1 OR R01_AC1005=-1 OR R01_AC1003=-1 THEN R01R_A_FMR_EXPR_CIGS=-99911
+# 
+# # R01R_A_FMR_ESTD_CIGS: DERIVED - Wave 1 Adult Former Established Cigarette User
+# Long Description: Has ever smoked a cigarette, has smoked more than 100 cigarettes in lifetime, and now does not smoke at all.
+# Algorithm:
+#   IF R01_AC1002=1 AND R01_AC1005=6 AND R01_AC1003=3 THEN R01R_A_FMR_ESTD_CIGS = 1;
+#ELSE IF R01_AC1002= 2 OR R01_AC1003 In (1, 2) OR (R01_AC1003 in (3, -7,-8,-9) AND R01_AC1005 in (1,2, 3, 4, 5)) , 
+                                                    # THEN R01R_A_FMR_ESTD_CIGS=2;
+# ELSE IF R01_AC1002=-9 OR R01_AC1005=-9 OR R01_AC1003=-9 THEN R01R_A_FMR_ESTD_CIGS=-99999 ELSE IF R01_AC1002=-8
+# OR R01_AC1005=-8 OR R01_AC1003=-8 THEN R01R_A_FMR_ESTD_CIGS=-99988 ELSE IF R01_AC1002=-7 OR R01_AC1005=-7 OR
+# - 1093 -
+#   R01_AC1003=-7 THEN R01R_A_FMR_ESTD_CIGS=-99977 ELSE IF R01_AC1002=-5 OR R01_AC1005=-5 OR R01_AC1003=-5 THEN
+# R01R_A_FMR_ESTD_CIGS=-99955 ELSE IF R01_AC1002=-1 OR R01_AC1005=-1 OR R01_AC1003=-1 THEN R01R_A_FMR_ESTD_CIGS=-99911
+
+
+# R01R_A_NVR_CIGS: DERIVED - Wave 1 Adult Never Cigarette User
+# Long Description: Has never smoked a cigarette, even one or two puffs. Algorithm:
+#   IF R01_AC1002=2 THEN R01R_A_NVR_CIGS = 1; ELSE IF R01_AC1002=1 THEN R01R_A_NVR_CIGS = 2; ELSE IF
+#   R01_AC1002=-9 THEN R01R_A_NVR_CIGS=-99999 ELSE IF R01_AC1002=-8 THEN R01R_A_NVR_CIGS=-99988 ELSE IF R01_AC1002=-7
+#   THEN R01R_A_NVR_CIGS=-99977 ELSE IF R01_AC1002=-5 THEN R01R_A_NVR_CIGS=-99955 ELSE IF R01_AC1002=-1 THEN
+#   R01R_A_NVR_CIGS=-99911
 
 #### NOTES ####
 

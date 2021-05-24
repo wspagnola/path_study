@@ -58,10 +58,11 @@ adult_w2 <- adult_w2 %>%
 adult_w2 <- adult_w2 %>%  
   mutate(sexual_orientation_w2 = recode_factor(sexual_orientation_w2, 
                                                `1`='LGBTQIA+', 
-                                               `2`='Straight'),
-                    poverty_w2 = recode_factor(poverty_w2, 
-                                    `1`="Below poverty", 
-                                    `2`='At or above poverty')
+                                               `2`='Straight')
+         # ,
+         #            poverty_w2 = recode_factor(poverty_w2, 
+         #                            `1`="Below poverty", 
+         #                            `2`='At or above poverty')
 )
 
 
@@ -122,12 +123,19 @@ adult_w2 <- adult_w2 %>%
          cig_use_ever_w2 = recode_binary(cig_use_ever_w2)
   )
 
+adult_w2 %>%  count(cig_current_freq_w2)
+adult_w2 %>%  count(cig_use_now_w2)
+adult_w2 %>%  count(cig_num_life_w2) #R02_AC1005,
+
 #Create Smoking Status Factor Variable and Binary Variables 
 ## est_smoker = established smoker (current & former); smoked 100 cigs in lifetime
 #Smoking Status Full has all categories cur/fmr est/exp smoker and non-smoers
 #Smoking Status collapsed smoking status full into current, former, never
+
+# Note: need to account for established smokers from previous wave
 adult_w2 <- adult_w2 %>%  
-  mutate(         est_smoker_w2 = if_else(as.numeric(cig_num_life_w2) == 6, 1, 0),
+  mutate(         est_smoker_w2 = if_else(as.numeric(cig_num_life_w2) == 6 ||
+                                           est_smoker_w1 == 1 , 1, 0),
                   smoking_status_full_w2 = case_when(
                     cig_use_now_w2 == 1 & est_smoker_w2 == 1 ~ 'current_est_smoker',
                     cig_use_now_w2 == 0 & est_smoker_w2 == 1 ~ 'former_est_smoker',
@@ -145,6 +153,8 @@ adult_w2 <- adult_w2 %>%
                   never_smoker_w2 = if_else(smoking_status_full_w2 == 'never_smoker', 1, 0)
   )
 
+adult_w2 %>%  count(smoking_status_full_w2, est_smoker_w2)
+adult_w2 %>%  count(est_smoker_w2)
 
 # Psychological Variable: R02_AX0161 (Sad) or R02_AX0163 (Anxious) in past month
 adult_w2 <- adult_w2 %>% 

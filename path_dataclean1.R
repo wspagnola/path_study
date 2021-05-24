@@ -113,6 +113,9 @@ adult_w1 <- adult_w1 %>%
          cig_use_ever_w1 = recode_binary(cig_use_ever_w1)
   )
 
+adult_w1 %>%  count(cig_current_freq_w1)
+adult_w1 %>%  count(cig_use_now_w1)
+
 #Create Smoking Status Factor Variable and Binary Variables 
 ## est_smoker = established smoker (current & former); smoked 100 cigs in lifetime
 #Smoking Status Full has all categories cur/fmr est/exp smoker and non-smoers
@@ -135,7 +138,9 @@ adult_w1 <- adult_w1 %>%
          former_exp_smoker_w1 = if_else(smoking_status_full_w1 == 'former_exp_smoker', 1, 0),
          never_smoker_w1 = if_else(smoking_status_full_w1 == 'never_smoker', 1, 0)
   )
-
+adult_w1 %>%  count(smoking_status_full_w1, est_smoker_w1)
+adult_w1 %>%  count(est_smoker_w1)
+adult_w1 %>%  count(cig_use_now_w1)
 
 # Psychological Variable: R01_AX0161 (Sad) or R01_AX0163 (Anxious) in past month
 adult_w1 <- adult_w1 %>% 
