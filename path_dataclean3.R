@@ -129,26 +129,6 @@ adult_w3 <- adult_w3 %>%
 #Smoking Status Full has all categories cur/fmr est/exp smoker and non-smoers
 #Smoking Status collapsed smoking status full into current, former, never
 # NOte: need to account for established smokers from previous wave
-adult_w3 <- adult_w3 %>%  
-  mutate(         est_smoker_w3 = if_else(as.numeric(cig_num_life_w3) == 6 ||
-                                          est_smoker_w2 == 1, 1, 0),
-                  smoking_status_full_w3 = case_when(
-                    cig_use_now_w3 == 1 & est_smoker_w3 == 1 ~ 'current_est_smoker',
-                    cig_use_now_w3 == 0 & est_smoker_w3 == 1 ~ 'former_est_smoker',
-                    cig_use_now_w3 == 1 & est_smoker_w3 == 0 ~ 'current_exp_smoker',
-                    cig_use_now_w3 == 0 & est_smoker_w3 == 0 &
-                      cig_use_ever_w3 == 1 ~ 'former_exp_smoker',
-                    cig_use_ever_w3 == 0 ~'never_smoker'), 
-                  smoking_status_w3 = fct_collapse(smoking_status_full_w3,
-                                                   'current' = c('current_est_smoker', 'current_exp_smoker'),
-                                                   'former' = c('former_est_smoker', 'former_exp_smoker')),
-                  current_est_smoker_w3 = if_else(smoking_status_full_w3 == 'current_est_smoker', 1, 0),
-                  former_est_smoker_w3 = if_else(smoking_status_full_w3 == 'former_est_smoker', 1, 0),
-                  current_exp_smoker_w3 = if_else(smoking_status_full_w3 == 'current_exp_smoker', 1, 0),
-                  former_exp_smoker_w3 = if_else(smoking_status_full_w3 == 'former_exp_smoker', 1, 0),
-                  never_smoker_w3 = if_else(smoking_status_full_w3 == 'never_smoker', 1, 0)
-  )
-
 
 # Psychological Variable: R03_AX0161 (Sad) or R03_AX0163 (Anxious) in past month
 adult_w3 <- adult_w3 %>% 
