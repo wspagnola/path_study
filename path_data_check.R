@@ -2,8 +2,8 @@
 
 #Smoking Trajectories Wave 1-3 among ALL Smokers
 
-adult_panel$smo
-adult_w1$smoking
+#adult_panel$smo
+#adult_w1$smoking
 
 
 

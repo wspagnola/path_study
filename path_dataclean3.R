@@ -10,13 +10,13 @@ adult_w3 <- read_tsv('data/Input/36498-3001-Data.tsv')
 
 
 #Rename Variables and mutate PERSONID to character
+# Note: missing povery and region categories
+# Note: missing some attempt quit variable
 adult_w3 <- adult_w3 %>% 
   rename(gender_w3 = R03R_A_SEX,
          race_w3 = R03R_A_RACECAT3,
          hispanic_w3 = R03R_A_HISP,
          sexual_orientation_w3 = R03R_A_SEXORIENT2,
-         # poverty_w2 =R02R_POVCAT2,
-         # region_w2 = R02X_CB_REGION,
          cig_current_freq_w3 = R03_AC1003,
          cig_num_life_w3 = R03_AC1005,
          smoked_past12M_w3 = R03_AC1002_12M,
@@ -25,22 +25,27 @@ adult_w3 <- adult_w3 %>%
          # attempt_quit_reduce = R03_AN0105_02, 
          # attempt_reduce = R03_AN0105_03, 
          # attempt_none = R03_AN0105_04,
-         cig_use_ever_w3 = R03R_A_EVR_CIGS) %>% 
+         quit_nonresp_reason_w3 = R03_AC1010, 
+         cig_use_ever_w3 = R03R_A_EVR_CIGS,
+         adult_cont_w3 = R03_ADULTTYPE) %>% 
   mutate(PERSONID = as.character(PERSONID)
   )
 
+
+adult_w3 <- adult_w3 %>%  filter(adult_cont_w3 != -97777)
 
 # Check missing codes 
 adult_w3 %>%  group_by(gender_w3, race_w3) %>%  count
 
 # Recode Missing Codes to NA
 adult_w3  <- adult_w3 %>%  
-  mutate(across(where(is.numeric), ~na_if(., -99999)),
-         across(where(is.numeric), ~na_if(., -99988)),
+  mutate(across(where(is.numeric), ~na_if(., -99988)),
          across(where(is.numeric), ~na_if(., -99977)),
-         across(where(is.numeric), ~na_if(., -97777))
-         
-)
+         # across(where(is.numeric), ~na_if(., -97777)),
+         across(where(is.numeric), ~na_if(., -99999)),
+         across(where(is.numeric), ~na_if(., -99966)),
+         across(where(is.numeric), ~na_if(.,  -99911))
+  )
 
 
 #Race/Ethnicity Variable: NH-White, NH-black, Hispanic, Other (w3)
@@ -57,14 +62,9 @@ adult_w3 <- adult_w3 %>%
 
 # Recode Sexual Orientation and Poverty as factors
 adult_w3 <- adult_w3 %>%  
-  mutate(sexual_orientation_w3 = recode_factor(sexual_orientation_w3, 
-                                               `1`='LGBTQIA+', 
-                                               `2`='Straight')
-         # ,
-         # poverty_w3 = recode_factor(poverty_w3, 
-         #                            `1`="Below poverty", 
-         #                            `2`='At or above poverty')
-  )
+                mutate(sexual_orientation_w3 = recode_factor(sexual_orientation_w3, `1`='LGBTQIA+', `2`='Straight')
+)
+ 
 
 
 # ------------ Finish Recoding this ------------#

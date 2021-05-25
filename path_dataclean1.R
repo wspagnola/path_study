@@ -38,14 +38,16 @@ adult_w1 <- adult_w1 %>%
          race_ethnicity_w1 = relevel(race_ethnicity_w1, ref = 'NH White')
   )
 
-
-# Recode NAs 
+# Recode Missing Codes to NA
 adult_w1  <- adult_w1 %>%  
   mutate(across(where(is.numeric), ~na_if(., -99988)),
          across(where(is.numeric), ~na_if(., -99977)),
-         across(where(is.numeric), ~na_if(.,-97777))
-         
+         # across(where(is.numeric), ~na_if(., -97777)),
+         across(where(is.numeric), ~na_if(., -99999)),
+         across(where(is.numeric), ~na_if(., -99966)),
+         across(where(is.numeric), ~na_if(.,  -99911))
   )
+
 
 
 adult_w1 <- adult_w1 %>%  
@@ -121,22 +123,23 @@ adult_w1 %>%  count(cig_use_now_w1)
 #Smoking Status Full has all categories cur/fmr est/exp smoker and non-smoers
 #Smoking Status collapsed smoking status full into current, former, never
 adult_w1 <- adult_w1 %>%  
-  mutate(         est_smoker_w1 = if_else(as.numeric(cig_num_life_w1) == 6, 1, 0),
-         smoking_status_full_w1 = case_when(
-                                     cig_use_now_w1 == 1 & est_smoker_w1 == 1 ~ 'current_est_smoker',
-                                     cig_use_now_w1 == 0 & est_smoker_w1 == 1 ~ 'former_est_smoker',
-                                     cig_use_now_w1 == 1 & est_smoker_w1 == 0 ~ 'current_exp_smoker',
-                                     cig_use_now_w1 == 0 & est_smoker_w1 == 0 &
-                                                         cig_use_ever_w1 == 1 ~ 'former_exp_smoker',
-                                                         cig_use_ever_w1 == 0 ~'never_smoker'), 
-         smoking_status_w1 = fct_collapse(smoking_status_full_w1,
-                                          'current' = c('current_est_smoker', 'current_exp_smoker'),
-                                          'former' = c('former_est_smoker', 'former_exp_smoker')),
-         current_est_smoker_w1 = if_else(smoking_status_full_w1 == 'current_est_smoker', 1, 0),
-         former_est_smoker_w1 = if_else(smoking_status_full_w1 == 'former_est_smoker', 1, 0),
-         current_exp_smoker_w1 = if_else(smoking_status_full_w1 == 'current_exp_smoker', 1, 0),
-         former_exp_smoker_w1 = if_else(smoking_status_full_w1 == 'former_exp_smoker', 1, 0),
-         never_smoker_w1 = if_else(smoking_status_full_w1 == 'never_smoker', 1, 0)
+               mutate(est_smoker_w1 = case_when(                       cig_num_life_w1 == 6 ~ 1,
+                                                cig_num_life_w1 >= 1 & cig_num_life_w1 <= 5 ~ 0),
+             smoking_status_full_w1 = case_when(
+                                         cig_use_now_w1 == 1 & est_smoker_w1 == 1 ~ 'current_est_smoker',
+                                         cig_use_now_w1 == 0 & est_smoker_w1 == 1 ~ 'former_est_smoker',
+                                         cig_use_now_w1 == 1 & est_smoker_w1 == 0 ~ 'current_exp_smoker',
+                                         cig_use_now_w1 == 0 & est_smoker_w1 == 0 &
+                                                             cig_use_ever_w1 == 1 ~ 'former_exp_smoker',
+                                                             cig_use_ever_w1 == 0 ~'never_smoker'), 
+             smoking_status_w1 = fct_collapse(smoking_status_full_w1,
+                                              'current' = c('current_est_smoker', 'current_exp_smoker'),
+                                              'former' = c('former_est_smoker', 'former_exp_smoker')),
+             current_est_smoker_w1 = if_else(smoking_status_full_w1 == 'current_est_smoker', 1, 0),
+             former_est_smoker_w1 = if_else(smoking_status_full_w1 == 'former_est_smoker', 1, 0),
+             current_exp_smoker_w1 = if_else(smoking_status_full_w1 == 'current_exp_smoker', 1, 0),
+             former_exp_smoker_w1 = if_else(smoking_status_full_w1 == 'former_exp_smoker', 1, 0),
+             never_smoker_w1 = if_else(smoking_status_full_w1 == 'never_smoker', 1, 0)
   )
 adult_w1 %>%  count(smoking_status_full_w1, est_smoker_w1)
 adult_w1 %>%  count(est_smoker_w1)
@@ -150,3 +153,31 @@ adult_w1 <- adult_w1 %>%
 
 adult_w1$wave_1 <- 1
 
+
+
+#### Check ####
+
+
+# cig_use_ever_w1 = R01_AC1002
+# cig_current_freq_w1 = R01_AC1003
+# cig_num_life_w1 = R01_AC1005
+adult_w1 %>%  names %>%  str_subset('EVR')
+adult_w1 %>%  names %>%  str_subset('NVR')
+
+adult_w1 %>% 
+  filter(current_exp_smoker_w1==1) %>% 
+  count(cig_use_ever_w1, cig_current_freq_w1, cig_num_life_w1) %>% 
+  View
+  
+adult_w1 %>%  count(current_exp_smoker_w1)
+adult_w1 %>%  count(former_exp_smoker_w1)
+
+adult_w1 %>% 
+  filter(cig_use_ever_w1 >= 0, 
+         cig_current_freq_w1 %in% c(1,2), 
+         cig_num_life_w1 <= 5 & cig_num_life_w1 >= 1) %>% 
+  count(current_exp_smoker_w1)
+
+adult_w1 %>% 
+  count(cig_use_ever_w1, cig_current_freq_w1, cig_num_life_w1)  %>% 
+  View

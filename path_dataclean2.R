@@ -8,6 +8,7 @@ source('source.R')
 #Load Data and Rename Variables (W2)
 adult_w2 <- read_tsv('data/Input/36498-2001-Data.tsv')
 
+#Note: no-region or poverty variable
 
 #Rename Variables and mutate PERSONID to character
 adult_w2 <- adult_w2 %>% 
@@ -15,8 +16,7 @@ adult_w2 <- adult_w2 %>%
                      race_w2 = R02R_A_RACECAT3,
                      hispanic_w2 = R02R_A_HISP,
                      sexual_orientation_w2 = R02R_A_SEXORIENT2,
-                     # poverty_w2 =R02R_POVCAT2,
-                     # region_w2 = R02X_CB_REGION,
+                
                      cig_current_freq_w2 = R02_AC1003,
                      cig_num_life_w2 = R02_AC1005,
                      smoked_past12M_w2 = R02_AC1002_12M,
@@ -25,20 +25,27 @@ adult_w2 <- adult_w2 %>%
                      attempt_quit_reduce = R02_AN0105_02, 
                      attempt_reduce = R02_AN0105_03, 
                      attempt_none = R02_AN0105_04,
-                     cig_use_ever_w2 = R02R_A_EVR_CIGS) %>% 
+                     cig_use_ever_w2 = R02R_A_EVR_CIGS,
+                     quit_nonresp_reason_w2 = R02_AC1132,
+                     adult_cont_w2 = R02_CONTINUING_ADULT_LD) %>% 
               mutate(PERSONID = as.character(PERSONID)
 )
+
+# Filter out respondents who opted out 
+adult_w2 <- adult_w2 %>%   filter( adult_cont_w2  != -97777)
+
 
 # Check missing codes 
 adult_w2 %>%  group_by(gender_w2) %>%  count
 
-names(adult_w2) %>%  str_subset('pov')
 # Recode Missing Codes to NA
 adult_w2  <- adult_w2 %>%  
   mutate(across(where(is.numeric), ~na_if(., -99988)),
          across(where(is.numeric), ~na_if(., -99977)),
-         across(where(is.numeric), ~na_if(., -97777))
-         
+         # across(where(is.numeric), ~na_if(., -97777)),
+         across(where(is.numeric), ~na_if(., -99999)),
+         across(where(is.numeric), ~na_if(., -99966)),
+         across(where(is.numeric), ~na_if(.,  -99911))
   )
 
 
@@ -133,8 +140,6 @@ adult_w2 %>%  count(cig_num_life_w2) #R02_AC1005,
 
 # Note: need to account for established smokers from previous wave
 
-adult_w2 %>%  count(smoking_status_full_w2, est_smoker_w2)
-adult_w2 %>%  count(est_smoker_w2)
 
 # Psychological Variable: R02_AX0161 (Sad) or R02_AX0163 (Anxious) in past month
 adult_w2 <- adult_w2 %>% 
@@ -143,4 +148,9 @@ adult_w2 <- adult_w2 %>%
   )
 
 adult_w2$wave_2 <- 1
+
+#### Check ####
+
+adult_w2 %>%  names %>%  str_subset('EVR')
+adult_w2 %>%  names %>%  str_subset('NVR')
 
