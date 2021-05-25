@@ -18,12 +18,12 @@ adult_panel %>%  filter(wave_2 == 1, wave_3==1, wave_1 ==1) %>%  count()
 adult_panel <- adult_panel %>%
                     mutate(quit_w1_w2  = case_when(
                                                          cig_use_now_w1 == 1 & cig_use_now_w2 == 1  ~ 'No',
-                                cig_use_now_w1 == 1 & (smoked_past12M_w2 == 0 | cig_use_now_w2 == 0) ~ 'Yes'),
+                                cig_use_now_w1 == 1 & (cig_use_past12M_w2 == 0 | cig_use_now_w2 == 0) ~ 'Yes'),
                            
                            quit_cat_w1_w2  = case_when(
                                                           cig_use_now_w1 == 1 & cig_use_now_w2 == 1  ~ 'No',
-                                cig_use_now_w1 == 1 & (smoked_past12M_w2 == 2 | cig_use_now_w2 == 0) ~ 'Yes',
-                                cig_use_now_w1 == 0 & (smoked_past12M_w2 == 2 | cig_use_now_w2 == 0) ~ 'Stayed Non-Smoker')
+                                cig_use_now_w1 == 1 & (cig_use_past12M_w2 == 2 | cig_use_now_w2 == 0) ~ 'Yes',
+                                cig_use_now_w1 == 0 & (cig_use_past12M_w2 == 2 | cig_use_now_w2 == 0) ~ 'Stayed Non-Smoker')
   )
 
 
@@ -34,12 +34,12 @@ adult_panel <- adult_panel %>%
                   mutate(
                     quit_w1_w3  = case_when(
                                                   cig_use_now_w1 == 1 & cig_use_now_w3 == 1 ~  'No',
-                        cig_use_now_w1 == 1 & (smoked_past12M_w3 == 0 | cig_use_now_w3 == 0) ~ 'Yes'),
+                        cig_use_now_w1 == 1 & (cig_use_past12M_w3 == 0 | cig_use_now_w3 == 0) ~ 'Yes'),
                     
                     quit_cat_w1_w3  = case_when(
                                                 cig_use_now_w1 == 1 & cig_use_now_w3 == 1  ~ 'No',
-                      cig_use_now_w1 == 1 & (smoked_past12M_w3 == 1 | cig_use_now_w3 == 0) ~ 'Yes',
-                      cig_use_now_w1 == 0 & (smoked_past12M_w3 == 1 | cig_use_now_w3 == 0) ~ 'Stayed Non-Smoker')
+                      cig_use_now_w1 == 1 & (cig_use_past12M_w3 == 1 | cig_use_now_w3 == 0) ~ 'Yes',
+                      cig_use_now_w1 == 0 & (cig_use_past12M_w3 == 1 | cig_use_now_w3 == 0) ~ 'Stayed Non-Smoker')
   ) 
 
 ##### W2 -> W3:  Quit Status at W3 for 'W2 Current Smokers'  ####
@@ -47,12 +47,12 @@ adult_panel <- adult_panel %>%
                     mutate(
                         quit_w2_w3  = case_when(
                                                   cig_use_now_w2 == 1 & cig_use_now_w3 == 1  ~  'No',
-                        cig_use_now_w2 == 1 & (smoked_past12M_w3 == 0 | cig_use_now_w3 == 0) ~ 'Yes'),
+                        cig_use_now_w2 == 1 & (cig_use_past12M_w3 == 0 | cig_use_now_w3 == 0) ~ 'Yes'),
                         
                       quit_cat_w2_w3  = case_when(
                                                   cig_use_now_w2 == 1 & cig_use_now_w3 == 1  ~ 'No',
-                        cig_use_now_w2 == 1 & (smoked_past12M_w3 == 1 | cig_use_now_w3 == 0) ~ 'Yes',
-                        cig_use_now_w2 == 0 & (smoked_past12M_w3 == 1 | cig_use_now_w3 == 0) ~ 'Stayed Non-Smoker'),
+                        cig_use_now_w2 == 1 & (cig_use_past12M_w3 == 1 | cig_use_now_w3 == 0) ~ 'Yes',
+                        cig_use_now_w2 == 0 & (cig_use_past12M_w3 == 1 | cig_use_now_w3 == 0) ~ 'Stayed Non-Smoker'),
   ) 
 
 
@@ -74,7 +74,7 @@ adult_panel <- adult_panel %>%
 # adult_panel <- adult_panel %>% 
 #   mutate( quit_p30d_w2_w3  = case_when(
 #     cig_use_now_w2==1 & cig_use_now_w3==1 ~  'No',
-#     cig_use_now_w2==1 & (smoked_past12M_w3==0 | cig_use_now_w3== 0) ~ 'Yes')
+#     cig_use_now_w2==1 & (cig_use_past12M_w3==0 | cig_use_now_w3== 0) ~ 'Yes')
 #   )
 
 
@@ -90,7 +90,7 @@ adult_panel <- adult_panel %>%
 
 
 # Note: recode -8, -7, -1 as NA?
-adult_panel %>%  group_by(smoked_past12M_w2) %>%  count
+adult_panel %>%  group_by(cig_use_past12M_w2) %>%  count
 adult_panel %>%  group_by(cig_use_now_w2)    %>%  count
 adult_panel %>%  group_by(cig_use_now_w1)    %>%  count
 
@@ -108,9 +108,9 @@ adult_panel <- adult_panel %>%
                   mutate( est_smoker_w2 = case_when(cig_num_life_w2== 6 | est_smoker_w1 == 1 ~1,
                                                     cig_num_life_w2 >= 1 & cig_num_life_w2 <= 5 ~ 0),
                                smoking_status_full_w2 = case_when(cig_current_freq_w2 %in% c(1,2) & est_smoker_w2 == 1 ~ 'current_est_smoker',
-                    (cig_use_now_w2 == 0  | smoked_past12M_w2 ==2) & est_smoker_w2 == 1 & quit_nonresp_reason_w2  != 1 ~ 'former_est_smoker',
+                    (cig_use_now_w2 == 0  | cig_use_past12M_w2 ==2) & est_smoker_w2 == 1 & quit_nonresp_reason_w2  != 1 ~ 'former_est_smoker',
                                                                               cig_use_now_w2 == 1 & est_smoker_w2 == 0 ~ 'current_exp_smoker',
-                    (cig_use_now_w2 == 0  | smoked_past12M_w2 ==2)  & est_smoker_w2 == 0 & quit_nonresp_reason_w2 != 1 ~ 'former_exp_smoker',
+                    (cig_use_now_w2 == 0  | cig_use_past12M_w2 ==2)  & est_smoker_w2 == 0 & quit_nonresp_reason_w2 != 1 ~ 'former_exp_smoker',
                                                                                                   cig_use_ever_w2 == 0 ~'never_smoker'),
                           smoking_status_full_w2 = as.factor(smoking_status_full_w2),
                   smoking_status_w2 = fct_collapse(smoking_status_full_w2,
@@ -127,7 +127,7 @@ adult_panel <- adult_panel %>%
 #### New Variable Codes #### 
 # R02_AC1003: cig_current_freq_w2 
 # R02_AC1005: cig_num_life_w2
-# R02_AC1002_12M: smoked_past12M_w2  
+# R02_AC1002_12M: cig_use_past12M_w2  
 # R01_YC1005: from youth survey
 # R02R_A_EVR_CIGS: cig_use_ever_w2
 # R02_AC1132: quit_nonresp_reason_w2
@@ -152,9 +152,9 @@ adult_panel <- adult_panel %>%
   mutate( est_smoker_w3 = case_when(cig_num_life_w3== 6 | est_smoker_w2 == 1 ~1,
                                     cig_num_life_w3 >= 1 & cig_num_life_w3 <= 5 ~ 0),
           smoking_status_full_w3 = case_when(cig_current_freq_w3 %in% c(1,2) & est_smoker_w3 == 1 ~ 'current_est_smoker',
-        (cig_use_now_w3 == 0  | smoked_past12M_w3 ==2) & est_smoker_w3 == 1 & quit_nonresp_reason_w3  != 3 ~ 'former_est_smoker',
+        (cig_use_now_w3 == 0  | cig_use_past12M_w3 ==2) & est_smoker_w3 == 1 & quit_nonresp_reason_w3  != 3 ~ 'former_est_smoker',
                                              cig_use_now_w3 == 1 & est_smoker_w3 == 0 ~ 'current_exp_smoker',
-        (cig_use_now_w3 == 0  | smoked_past12M_w3 ==2)  & est_smoker_w3 == 0 & quit_nonresp_reason_w3 != 3 ~ 'former_exp_smoker',
+        (cig_use_now_w3 == 0  | cig_use_past12M_w3 ==2)  & est_smoker_w3 == 0 & quit_nonresp_reason_w3 != 3 ~ 'former_exp_smoker',
                                              cig_use_ever_w3 == 0 ~'never_smoker'),
           smoking_status_full_w3 = as.factor(smoking_status_full_w3),
           smoking_status_w3 = fct_collapse(smoking_status_full_w3,
@@ -187,16 +187,23 @@ adult_panel %>%
 
 cols <- names(adult_panel) %>%  str_subset("[a-z]")
 cols <- cols[!str_detect(cols, '\\.x|\\.y') ]
+cols
 
-
-derived_vars <- c(R01R_A_CUR_ESTD_CIGS, R01R_A_CUR_EXPR_CIGS, R01R_A_FMR_EXPR_CIGS , R01R_A_FMR_EXPR_CIGS,
-          R02R_A_CUR_ESTD_CIGS ,  R02R_A_CUR_EXPR_CIGS  ,  R02R_A_FMR_ESTD_CIGS_REV, R02R_A_FMR_EXPR_CIGS_REV,
-          R03R_A_CUR_ESTD_CIGS , R03R_A_CUR_EXPR_CIGS, R03R_A_FMR_ESTD_CIGS_REV, R03R_A_FMR_EXPR_CIGS_REV)     
+derived_vars <- c("R01R_A_CUR_ESTD_CIGS", 
+                  "R01R_A_CUR_EXPR_CIGS", 
+                  "R01R_A_FMR_EXPR_CIGS" , 
+                  "R01R_A_FMR_EXPR_CIGS",
+                  "R02R_A_CUR_ESTD_CIGS", 
+                  "R02R_A_CUR_EXPR_CIGS",  
+                  "R02R_A_FMR_ESTD_CIGS_REV",
+                  "R02R_A_FMR_EXPR_CIGS_REV",
+                  "R03R_A_CUR_ESTD_CIGS" , 
+                  "R03R_A_CUR_EXPR_CIGS", 
+                  "R03R_A_FMR_ESTD_CIGS_REV", 
+                  "R03R_A_FMR_EXPR_CIGS_REV")     
 
 # R01R_A RO2R_A , RO3R_A : Derived Variables
-adult_panel_final <- adult_panel %>%  select(PERSONID, 
-                                             all_of(cols), 
-                                             all_of(derived_vars))
+adult_panel_final <- adult_panel %>%  select(PERSONID, all_of(cols),  all_of(derived_vars))
                                     
 
 object.size(adult_panel_final) # 25.6 mb
@@ -245,7 +252,7 @@ adult_panel %>%  count(R02R_A_CUR_EXPR_CIGS)
 adult_panel$smoking_status_full_w3 %>%  table
 adult_panel%>%   filter(  adult_cont_w3 ==1 ) %>%  count(smoking_status_full_w3)
 
-adult_panel %>%  select(starts_with('R03R_A_EVR')) %>%  View # Cann't finn ever cigarette
+#adult_panel %>%  select(starts_with('R03R_A_EVR')) %>%  View # Cann't finn ever cigarette
 adult_panel %>% count(  R03R_A_FMR_ESTD_CIGS_REV ) 
 adult_panel %>%  count(R03R_A_CUR_ESTD_CIGS)
 adult_panel %>%  count(R03R_A_FMR_EXPR_CIGS_REV)
@@ -254,8 +261,9 @@ adult_panel %>%  count(R03R_A_CUR_EXPR_CIGS)
 
 #### checkes ####
 
-adult_panel %>%  count(est_smoker_w2, cig_num_life_w1, cig_num_life_w2)  %>% 
-  filter(est_smoker_w2 == 1) %>%  View
+# adult_panel %>%  
+#   count(est_smoker_w2, cig_num_life_w1, cig_num_life_w2)  %>% 
+#   filter(est_smoker_w2 == 1) %>%  View
 
 adult_panel %>%  
   count(R02R_A_CUR_ESTD_CIGS)
@@ -271,10 +279,11 @@ adult_panel %>%
 adult_panel %>% 
   filter(wave_1 == 1, wave_2 == 1) %>% 
   filter(smoking_status_full_w2 == 'current_est_smoker') %>%  count
-
-adult_panel %>% 
-  filter(  adult_cont_w2  == 1, cig_num_life_w2 >= 0, cig_use_now_w2 >= 0)  %>% 
-  count(R02R_A_CUR_EXPR_CIGS, cig_num_life_w2,cig_use_now_w2, est_smoker_w2, smoking_status_full_w2 )  %>%  View
+# 
+# adult_panel %>% 
+#   filter(  adult_cont_w2  == 1, cig_num_life_w2 >= 0, cig_use_now_w2 >= 0)  %>% 
+#   count(R02R_A_CUR_EXPR_CIGS, cig_num_life_w2,cig_use_now_w2, est_smoker_w2, smoking_status_full_w2 )  %>% 
+#   View
 
 adult_panel %>% 
   filter(  adult_cont_w2  == 1,  smoking_status_full_w2 == 'current_exp_smoker')  %>% 
@@ -282,10 +291,13 @@ adult_panel %>%
 
 adult_panel %>% 
   filter(  adult_cont_w2  == 1, smoking_status_full_w2 == 'former_est_smoker') %>% 
-  count( R02R_A_FMR_ESTD_CIGS_REV, smoking_status_full_w2,  est_smoker_w2, cig_use_now_w2, smoked_past12M_w2 )
+  count( R02R_A_FMR_ESTD_CIGS_REV, smoking_status_full_w2,  est_smoker_w2, cig_use_now_w2, cig_use_past12M_w2 )
 
-adult_panel %>%  count(   cig_current_freq_w2, est_smoker_w2) %>% 
-  filter_all(all_vars(. >= 0)) %>%  View
+# adult_panel %>%  
+#   count(cig_current_freq_w2, est_smoker_w2) %>% 
+#   filter_all(all_vars(. >= 0)) %>%  
+#   View
+
 adult_panel %>%  count(cig_use_ever_w2)
 adult_panel %>%  count(R01R_A_CUR_ESTD_CIGS) 
 
@@ -296,8 +308,10 @@ adult_panel %>%  count(cig_use_now_w1, quit_cat_w1_w2)
 
 # Think I missing youths who reached 100 lifetime cigarette during youth survey
 # Also think there are some new adults in wave 3
-adult_panel %>% count(R03R_A_THRSHLD_CIGS,   adult_cont_w3,   adult_cont_w2 ,
-                      est_smoker_w3, est_smoker_w2, est_smoker_w1) %>%  View
+
+# adult_panel %>% 
+#   count(R03R_A_THRSHLD_CIGS, adult_cont_w3, adult_cont_w2 ,est_smoker_w3, est_smoker_w2, est_smoker_w1) %>% 
+#   View
 
 #remove(list = c('adult_w1', 'adult_w2', 'adult_w3'))
 #remove(list = c('adult_w1', 'adult_w2', 'adult_w3', 'adult_panel'))

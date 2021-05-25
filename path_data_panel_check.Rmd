@@ -10,7 +10,7 @@ source('source.R')
 
 path_panel <- read.csv('data/Output/adult_panel.csv') 
 
-#path_panel %>%  names
+path_panel %>%  names %>%  as.data.frame
 
 
 ```
@@ -26,7 +26,8 @@ path_panel %>%  filter(adult_cont_w2==1,  adult_cont_w3== 1 ) %>%  count
 path_panel %>%  filter(wave_1==1, wave_2==1, wave_3==1) %>%  count
 ```
 
-#### Wave 1
+## Wave 1
+
 ```{r wave_1_new}
 path_panel %>% 
     filter(wave_1 == 1, wave_2 == 1, wave_3 ==1 ) %>% 
@@ -46,6 +47,8 @@ path_panel %>%
     count(R01R_A_CUR_ESTD_CIGS, R01R_A_CUR_EXPR_CIGS, R01R_A_FMR_ESTD_CIGS,  R01R_A_FMR_EXPR_CIGS )
 
 ```
+
+## Wave 2
 
 ```{r wave_2_new}
 path_panel %>% 
@@ -67,6 +70,7 @@ path_panel %>%
 
 ```
 
+# Wave 3
 ```{r wave_3_new}
 path_panel %>% 
     filter(wave_1 == 1, wave_2 == 1, wave_3 ==1 ) %>% 
@@ -87,8 +91,7 @@ path_panel %>%
 ```
 
 
-
-
+## All Waves
 ```{r check_all_waves}
 path_panel %>% 
     filter(wave_1 == 1, wave_2 == 1, wave_3 ==1 ) %>% 
@@ -102,28 +105,132 @@ path_panel %>%
 -1 = Inapplicable
 
 
+## Wave 1: Missing Data Analysis 
+
+** 99 missings **
+```{r}
+path_panel %>%  filter(wave_1 == 1, wave_2 == 1, wave_3 == 1, is.na(smoking_status_full_w1)) %>% count(smoking_status_full_w1)
+```
+** 11: note 9 & 100 seem like mistakes ** 
+```{r wave1_NA_cig_use_ever}
+
+path_panel %>%  
+  filter(wave_1 == 1, wave_2 == 1, wave_3 == 1,
+         is.na(smoking_status_full_w1),
+         cig_use_ever_w1 > 2) %>%
+  count(cig_use_ever_w1, cig_current_freq_w1, cig_use_past30D_w1)
+
+```
+** 12 did not respond to current frequency question **
+```{r}
+
+path_panel %>%  
+  filter(wave_1 == 1, wave_2 == 1, wave_3 == 1,
+         is.na(smoking_status_full_w1), 
+         cig_use_ever_w1 == 1,
+         cig_current_freq_w1 < -1) %>% 
+  count(cig_current_freq_w1)
+
+
+```
+
+** Remaining 76 did not answer question about liftime cigarette usage
+```{r}
+
+path_panel %>%  
+  filter(wave_1 == 1, wave_2 == 1, wave_3 == 1,
+         is.na(smoking_status_full_w1), 
+         cig_current_freq_w1 >= 1) %>% 
+  count(cig_current_freq_w1, cig_num_life_w1)
+
+#19 + 10 + 5 + 5 + 24 +13 = 76
+```
+
+
+## Wave 2: Missing Data Analysis 
 
 ```{r}
 path_panel %>% 
     filter(wave_1 == 1, wave_2 == 1, wave_3 ==1 ,is.na(smoking_status_full_w2)) %>% 
-    count(cig_use_now_w2, cig_use_ever_w2, cig_num_life_w2)
+    count(cig_use_now_w2,cig_current_freq_w2  , cig_use_ever_w2, cig_num_life_w2)
+  
 ```
 
-## ASK Specifications: 
- - IF R03_AC1004 = 1 OR R03_AC1002_12M = 1 OR (R02_EVER_NEVER_CIGS = 1 AND R03_AC1002_12M = -8, -7).
+
+**7 non-response to cig use ever**
+```{r wave2_NA_cig_use_ever}
+path_panel %>%  
+  filter(wave_1 == 1, wave_2 == 1, wave_3 == 1,
+         is.na(smoking_status_full_w2), is.na(cig_use_ever_w2)) %>% 
+  count(cig_use_ever_w2)
+```
+**4 non-response to smoke past 30 days**
 ```{r}
- # cig_current_freq_w3 = R03_AC1003,
- #         cig_num_life_w3 = R03_AC1005,
- #         smoked_past12M_w3 = R03_AC1002_12M,
+
+path_panel %>% 
+    filter(wave_1==1, wave_2==1, wave_3==1, !is.na(cig_use_ever_w2), is.na(smoking_status_full_w2)) %>% 
+    count(cig_use_past30D_w2)
+```
+
+** 3 did not responde to cig use past 12 months question **
+**709 did not get asked current frequency because they did not smoke in past 30 days or past 12 months**
+```{r}
+path_panel %>%  
+  filter(wave_1 == 1, wave_2 == 1, wave_3 == 1,
+         is.na(smoking_status_full_w2), !is.na(cig_use_ever_w2), cig_use_past30D_w2 != 1) %>% 
+  count(cig_use_ever_w2, cig_use_past30D_w2, cig_use_past12M_w2 ,cig_current_freq_w2)
+```
+
+
+**3 non-response to current frequency**
+```{r wave2_NA_cig_use_ever}
+path_panel %>%  
+  filter(wave_1 == 1, wave_2 == 1, wave_3 == 1,
+         is.na(smoking_status_full_w2), !is.na(cig_use_ever_w2), cig_current_freq_w2 < -1) %>% 
+  count(cig_use_past30D_w2, cig_current_freq_w2, cig_use_now_w2)
+```
+**Can't account for 351 students missing data on cig_num_life_w2**
+```{r}
+path_panel %>% 
+  filter(wave_1 == 1, wave_2 == 1, wave_3 ==1,
+         cig_use_ever_w2 == 1, 
+         cig_current_freq_w2 == -1, 
+         cig_use_past30D_w2==2, 
+         cig_use_past12M_w2==2,
+         is.na(smoking_status_w2)) %>% 
+  count(cig_num_life_w2)
+
+
+# 233 + 87 + 38 = 358
+```
+
+
+```{r}
+path_panel %>% 
+  filter(wave_1 == 1, wave_2 == 1, wave_3 ==1,
+         cig_use_ever_w2 == 1, 
+         cig_current_freq_w2 == -1, 
+         cig_use_past30D_w2==2, 
+         cig_use_past12M_w2==2,
+         cig_num_life_w2 == -1,
+         is.na(smoking_status_w2)) %>% 
+  count(adult_cont_w2,cig_use_ever_w1, cig_use_ever_w2, cig_num_life_w1, cig_num_life_w2)
+
+```
+
+
+
+
+## Wave 3: Missing Data Analysis 
+
+```{r}
+ 
 path_panel %>% 
     filter(wave_1 == 1, wave_2 == 1, wave_3 ==1 ,is.na(smoking_status_full_w3)) %>% 
     count( cig_use_ever_w3, smoked_past12M_w3, cig_use_now_w3, cig_num_life_w3)
 ```
 
 ```{r}
-
-# cig_use_now: -1, -7 , -8
-# cig_num_life: -1, -7 , -8
 
 path_panel %>% 
     filter(wave_1 == 1, wave_2 == 1, wave_3 ==1 ,is.na(smoking_status_full_w3)) %>% 

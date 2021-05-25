@@ -9,6 +9,8 @@ source('source.R')
 adult_w2 <- read_tsv('data/Input/36498-2001-Data.tsv')
 
 #Note: no-region or poverty variable
+#Note: weird ordering of cig_use_past12M and cig_use_past30Ds
+#Note: Not sure about derived variable:  smoked_past30D_w2 = R02R_A_P30D_CIGS,
 
 #Rename Variables and mutate PERSONID to character
 adult_w2 <- adult_w2 %>% 
@@ -16,10 +18,10 @@ adult_w2 <- adult_w2 %>%
                      race_w2 = R02R_A_RACECAT3,
                      hispanic_w2 = R02R_A_HISP,
                      sexual_orientation_w2 = R02R_A_SEXORIENT2,
-                
+                     cig_use_past12M_w2 = R02_AC1002_12M,
+                     cig_use_past30D_w2 = R02_AC1004, 
                      cig_current_freq_w2 = R02_AC1003,
                      cig_num_life_w2 = R02_AC1005,
-                     smoked_past12M_w2 = R02_AC1002_12M,
                      smoked_past30D_w2 = R02R_A_P30D_CIGS,
                      attempt_quit_completely = R02_AN0105_01,
                      attempt_quit_reduce = R02_AN0105_02, 

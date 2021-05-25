@@ -19,7 +19,7 @@ adult_w3 <- adult_w3 %>%
          sexual_orientation_w3 = R03R_A_SEXORIENT2,
          cig_current_freq_w3 = R03_AC1003,
          cig_num_life_w3 = R03_AC1005,
-         smoked_past12M_w3 = R03_AC1002_12M,
+         cig_use_past12M_w3 = R03_AC1002_12M,
          smoked_past30D_w3 = R03R_A_P30D_CIGS,
          # attempt_quit_completely = R03_AN0105_01,
          # attempt_quit_reduce = R03_AN0105_02, 

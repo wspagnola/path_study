@@ -1,0 +1,63 @@
+---
+title: "Questions"
+author: "William Spagnola"
+date: "5/25/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#PATH Survey Questions
+
+## Wave 1
+  - **R01_AC1002 (cig_use_ever_w1)** 
+      - Ever smoked a cigarette, even one or two puffs 
+      - *ASK*
+          - All Respondents
+  - **R01_AC1003 (cig_current_freq_w1)**
+      - Now smoke cigarettes 
+      -  cig_use_now_w1
+      - *ASK*
+          - Respondents who have ever smoked a cigarette (R01_AC1002 = 1).
+  - **R01_AC1004**
+      - In the past 30 days, have you smoked a cigarette, even one or two puffs?
+      - *ASK* 
+          - Respondents who have ever smoked a cigarette (R01_AC1002 = 1) AND 
+          - do not currently smoke every day or some days (R01_AC1003 = 3, -8 or -7).
+  - **R01_AC1005**
+      - How many cigarettes have you smoked in your entire life?
+      - *ASK*
+          - Respondents who have ever smoked a cigarette (R01_EVER_USER_CIGS = 1).
+
+## Wave 2 
+  - **R02_AC1004 (cig_use_past30D_w2)**
+      - In past 30 days, smoked a cigarette, even one or two puffs
+      - *ASK*
+          - All adult respondents
+      - *Go To*
+          - If Yes (1), Go to R02_AC1003.
+  - **R02_AC1002_12M**
+      - In past 12 months, smoked a cigarette, even one or two puffs
+      - *ASK* 
+          -Adult respondents who have not smoked a cigarette in the past 30 days OR
+          -Adult respondents did not know or refused to report if they have smoked a cigarette in the past 30 days.
+          -IF R02_AC1004 = 2, -8, -7.
+  - **R02_AC1003 (cig_current_freq_w2)**
+      - Now smoke cigarettes
+      - *ASK*
+          - Adult respondents who have smoked a cigarette in the past 30 days OR
+          - Adult respondents who have smoked a cigarette in the past 12 months.
+  - **R02_AC1005 (cig_num_life_w2**
+      - Number of cigarettes smoked in your entire life
+      - How many cigarettes have you smoked in your entire life? 
+      - *ASK*
+          - Adult respondents who have ever smoked a cigarette
+          -  AND Had not smoked 100 or more cigarettes in their lifetime as of their last completed interview.
+          - IF R02_EVER_USER_CIGS = 1 AND ((R02_NEW_BASELINE_ADULT_LD = 1 AND R01_YC1005 != 7) OR 
+          - (R02_CONTINUING_ADULT_LD = 1 AND R01_AC1005 != 6)).
+
+
+[PROGRAM NOTE: See Box R02_ACR13, R02_ACT01, and R02_ACR11 in the questionnaire for important information about temporary variables and navigation that will be referenced in this section.]
+ 

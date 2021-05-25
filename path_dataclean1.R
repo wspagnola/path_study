@@ -18,6 +18,7 @@ adult_w1 <- adult_w1  %>%
          region_w1 = R01X_CB_REGION,
          cig_use_ever_w1 = R01_AC1002,
          cig_current_freq_w1 = R01_AC1003,
+         cig_use_past30D_w1 = R01_AC1004,
          cig_num_life_w1 = R01_AC1005) %>% 
   mutate(PERSONID = as.character(PERSONID)
   )
