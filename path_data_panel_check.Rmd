@@ -1,0 +1,131 @@
+---
+title: "R Notebook"
+output: pdf_document
+---
+
+# Try to use title
+
+```{r message = FALSE}
+source('source.R')
+
+path_panel <- read.csv('data/Output/adult_panel.csv') 
+
+#path_panel %>%  names
+
+
+```
+
+
+```{r}
+path_panel %>%  filter(adult_cont_w2==1,  adult_cont_w3== 1 ) %>%  count
+  
+```
+
+```{r}
+#
+path_panel %>%  filter(wave_1==1, wave_2==1, wave_3==1) %>%  count
+```
+
+#### Wave 1
+```{r wave_1_new}
+path_panel %>% 
+    filter(wave_1 == 1, wave_2 == 1, wave_3 ==1 ) %>% 
+    count(smoking_status_full_w1)
+```
+
+
+```{r wave_1_check}
+
+path_panel %>%  
+    filter(adult_cont_w2==1, 
+           adult_cont_w3== 1, 
+           !is.na(R01R_A_CUR_ESTD_CIGS), 
+           !is.na(R01R_A_CUR_EXPR_CIGS),
+           !is.na(R01R_A_FMR_ESTD_CIGS),  
+           !is.na(R01R_A_FMR_EXPR_CIGS )) %>% 
+    count(R01R_A_CUR_ESTD_CIGS, R01R_A_CUR_EXPR_CIGS, R01R_A_FMR_ESTD_CIGS,  R01R_A_FMR_EXPR_CIGS )
+
+```
+
+```{r wave_2_new}
+path_panel %>% 
+    filter(wave_1 == 1, wave_2 == 1, wave_3 ==1 ) %>% 
+    count(smoking_status_full_w2)
+```
+
+
+```{r wave_2_check}
+
+path_panel %>%  
+    filter(adult_cont_w2==1, 
+           adult_cont_w3== 1, 
+           !is.na(R02R_A_CUR_ESTD_CIGS), 
+           !is.na(R02R_A_CUR_EXPR_CIGS),
+           !is.na(R02R_A_FMR_ESTD_CIGS_REV),  
+           !is.na(R02R_A_FMR_EXPR_CIGS_REV)) %>% 
+    count(R02R_A_CUR_ESTD_CIGS, R02R_A_CUR_EXPR_CIGS, R02R_A_FMR_ESTD_CIGS_REV,  R02R_A_FMR_EXPR_CIGS_REV)
+
+```
+
+```{r wave_3_new}
+path_panel %>% 
+    filter(wave_1 == 1, wave_2 == 1, wave_3 ==1 ) %>% 
+    count(smoking_status_full_w3)
+```
+
+```{r wave_3_check}
+
+path_panel %>%  
+    filter(adult_cont_w2==1, 
+           adult_cont_w3== 1, 
+           !is.na(R03R_A_CUR_ESTD_CIGS), 
+           !is.na(R03R_A_CUR_EXPR_CIGS),
+           !is.na(R03R_A_FMR_ESTD_CIGS_REV),  
+           !is.na(R03R_A_FMR_EXPR_CIGS_REV)) %>% 
+    count(R03R_A_CUR_ESTD_CIGS, R03R_A_CUR_EXPR_CIGS, R03R_A_FMR_ESTD_CIGS_REV,  R03R_A_FMR_EXPR_CIGS_REV)
+
+```
+
+
+
+
+```{r check_all_waves}
+path_panel %>% 
+    filter(wave_1 == 1, wave_2 == 1, wave_3 ==1 ) %>% 
+    count(smoking_status_full_w1, smoking_status_full_w2, smoking_status_full_w3)
+```
+
+# Missings
+-9 = Missing 
+-8 = Don't know 5 0.0 %
+-7 = Refused 10 0.0 %
+-1 = Inapplicable
+
+
+
+```{r}
+path_panel %>% 
+    filter(wave_1 == 1, wave_2 == 1, wave_3 ==1 ,is.na(smoking_status_full_w2)) %>% 
+    count(cig_use_now_w2, cig_use_ever_w2, cig_num_life_w2)
+```
+
+## ASK Specifications: 
+ - IF R03_AC1004 = 1 OR R03_AC1002_12M = 1 OR (R02_EVER_NEVER_CIGS = 1 AND R03_AC1002_12M = -8, -7).
+```{r}
+ # cig_current_freq_w3 = R03_AC1003,
+ #         cig_num_life_w3 = R03_AC1005,
+ #         smoked_past12M_w3 = R03_AC1002_12M,
+path_panel %>% 
+    filter(wave_1 == 1, wave_2 == 1, wave_3 ==1 ,is.na(smoking_status_full_w3)) %>% 
+    count( cig_use_ever_w3, smoked_past12M_w3, cig_use_now_w3, cig_num_life_w3)
+```
+
+```{r}
+
+# cig_use_now: -1, -7 , -8
+# cig_num_life: -1, -7 , -8
+
+path_panel %>% 
+    filter(wave_1 == 1, wave_2 == 1, wave_3 ==1 ,is.na(smoking_status_full_w3)) %>% 
+    count(cig_use_now_w3, cig_use_ever_w3, cig_num_life_w3)
+```
