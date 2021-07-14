@@ -1,8 +1,13 @@
 # Path Study
 
-## This is a study of smoking cessation based on the Population Assessment of Tobacco and Health survey.
+## Objective: 
+ - Analyze smoking cessation over time using longitudinal data from the Population Assessment of Tobacco and Health survey.
 
+## Data 
+ - Data/Outputadult_panel.csv
 
+## Blog Post
+ - https://wspagnola.netlify.app/2021/05/20/2021-05-20-exploring-states-of-tobacco-use-with-sankey-plots/
 
 ## Notes
 I originally did this project as part of my internship.   I made some changes from my original data-processing steps.  I also not some different strategies I would have used given what I know now about data processing. 
