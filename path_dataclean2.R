@@ -152,7 +152,9 @@ adult_w2 <- adult_w2 %>%
 adult_w2$wave_2 <- 1
 
 #### Check ####
-
+#R02R_A_EVR_CIGS: DERIVED - Wave 2 Adult Ever Cigarette Smoker
 adult_w2 %>%  names %>%  str_subset('EVR')
 adult_w2 %>%  names %>%  str_subset('NVR')
+
+adult_w2 %>%  count(R02R_A_NEW_CIGS)
 

@@ -189,7 +189,8 @@ cols <- names(adult_panel) %>%  str_subset("[a-z]")
 cols <- cols[!str_detect(cols, '\\.x|\\.y') ]
 cols
 
-derived_vars <- c("R01R_A_CUR_ESTD_CIGS", 
+derived_vars <- c( "R01R_A_NVR_CIGS",
+                   "R01R_A_CUR_ESTD_CIGS", 
                   "R01R_A_CUR_EXPR_CIGS", 
                   "R01R_A_FMR_EXPR_CIGS" , 
                   "R01R_A_FMR_EXPR_CIGS",

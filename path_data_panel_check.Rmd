@@ -1,9 +1,9 @@
 ---
-title: "R Notebook"
+title: "Check Output Data"
 output: pdf_document
 ---
 
-# Try to use title
+# Check Data in adult_panel.csv
 
 ```{r message = FALSE}
 source('source.R')
